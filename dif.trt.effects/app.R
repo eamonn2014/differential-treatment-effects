@@ -52,6 +52,20 @@ inv_logit <- function(logit) exp(logit) / (1 + exp(logit))
 is.even <- function(x){ x %% 2 == 0 } # function to id. odd maybe useful
 options(width=200)
 
+# trt      <- sample(1:3, n, replace=TRUE)      # trt 3 levels
+# age      <- sample(18:65, n, replace=TRUE)    # continuous 
+# bmi      <- sample(1:3, n, replace=TRUE)      # assume 3 equal groups?
+# smoking  <- sample(1:3, n, replace=TRUE)      # categorical assume 3 equal groups?
+# crp      <- round(runif(n,0,3),2)  
+# berlin   <- round(runif(n,0,10),2)  
+# vas      <- sample(1:30, n, replace=TRUE)
+# time     <- round(runif(n,0,10),2)            # years
+# joints   <- sample(1:50, n, replace=TRUE)
+# nails    <- sample(0:1, n, replace=TRUE)
+# evidence <- sample(0:1, n, replace=TRUE)
+# sex      <- sample(0:1, n, replace=TRUE)
+
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/packages/shinythemes/versions/1.1.2
                 # paper
@@ -99,44 +113,45 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                           tags$style(HTML('#resample{background-color:orange}'))
                                       ),
                                       
+                                      textInput('n',
+                                                div(h5(tags$span(style="color:blue", "Sample size"))), value= "1000"),
+                                      
+                                      tags$hr(),
                                       
                                       splitLayout(
-                                        textInput("m1", div(h5(tags$span(style="color:blue", "covariate 1 coef"))), value= "1000"),
-                                        textInput("m1", div(h5(tags$span(style="color:blue", "covariate 2 coef"))), value= "1000"),
-                                        textInput("m1", div(h5(tags$span(style="color:blue", "covariate 3 coef"))), value= "1000")
+                                        textInput("v1", div(h5(tags$span(style="color:blue", "covariate 1 coef"))), value= "1"),
+                                        textInput("v2", div(h5(tags$span(style="color:blue", "covariate 2 coef"))), value= "1"),
+                                        textInput("v3", div(h5(tags$span(style="color:blue", "covariate 3 coef"))), value= "1")
                                      
                                       ),
 
 
                                       splitLayout(
-                                        textInput("m1", div(h5(tags$span(style="color:blue", "covariate 4 coef"))), value= "1000"),
-                                        textInput("m1", div(h5(tags$span(style="color:blue", "covariate 5 coef"))), value= "1000"),
-                                        textInput("m1", div(h5(tags$span(style="color:blue", "covariate 6 coef"))), value= "1000")
+                                        textInput("v4", div(h5(tags$span(style="color:blue", "covariate 4 coef"))), value= "1"),
+                                        textInput("v5", div(h5(tags$span(style="color:blue", "covariate 5 coef"))), value= "1"),
+                                        textInput("v6", div(h5(tags$span(style="color:blue", "covariate 6 coef"))), value= "1")
                                         
                                       ),
 
                                       splitLayout(
-                                        textInput("m1", div(h5(tags$span(style="color:blue", "covariate 7 coef"))), value= "1000"),
-                                        textInput("m1", div(h5(tags$span(style="color:blue", "covariate 8 coef"))), value= "1000"),
-                                        textInput("m1", div(h5(tags$span(style="color:blue", "covariate 9 coef"))), value= "1000")
+                                        textInput("v7", div(h5(tags$span(style="color:blue", "covariate 7 coef"))), value= "1"),
+                                        textInput("v8", div(h5(tags$span(style="color:blue", "covariate 8 coef"))), value= "1"),
+                                        textInput("v9", div(h5(tags$span(style="color:blue", "covariate 9 coef"))), value= "1")
                                         
                                       ),
                                       
                                       
                                       splitLayout(
-                                        textInput("m1", div(h5(tags$span(style="color:blue", "covariate 10 coef"))), value= "1000"),
-                                        textInput("m1", div(h5(tags$span(style="color:blue", "covariate 11 coef"))), value= "1000"),
-                                        textInput("m1", div(h5(tags$span(style="color:blue", "covariate 12 coef"))), value= "1000")
+                                        textInput("v10", div(h5(tags$span(style="color:blue", "covariate 10 coef"))), value= "1"),
+                                        textInput("v11", div(h5(tags$span(style="color:blue", "covariate 11 coef"))), value= "1"),
+                                        textInput("v12", div(h5(tags$span(style="color:blue", "covariate 12 coef"))), value= "1")
                                         
                                       ),
                                       
                                       
                                       
                                       
-                                      textInput('X1',
-                                                div(h5(tags$span(style="color:blue", "Treatment coefficient"))), value= "1000"),
-
-                                      tags$hr(),
+                                    
                                       textInput('X2',
                                                 div(h5(tags$span(style="color:blue", "Age coefficient"))), "22,21"),
 
@@ -250,11 +265,11 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                   
                                   tabPanel("1 xxxxxxxxxx", value=7, 
                                            h4("xxxxxxxxxxxxxxxxxxxxx."),
-                                           
+                                         
                                            
                                            fluidRow(
                                                column(width = 6, offset = 0, style='padding:1px;',
-                                                      
+                                                      div( verbatimTextOutput("datx") )
                                                       #div(plotOutput("beta",  width=fig.width7, height=fig.height7)),
                                                       
                                                ) ,
@@ -314,7 +329,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                   
-                                  tabPanel("4 xxxxxxxxxxxxxxxxxxx", value=3, 
+                                  tabPanel("4 xxxxxxxxxx", value=3, 
                                            
                                           # h5(paste("Enter 999 in the box below to see all the levels or enter level(s) of interest separated by a comma")), 
                                            #textInput('rcat2', 
@@ -465,7 +480,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                   ),
                                   
                                   
-                                  tabPanel("10 xxxxxxxxxxxx", value=3, 
+                                  tabPanel("10 xxxxxxxx", value=3, 
                                            
                                            #div(plotOutput("ecdfs", width=fig.width1, height=fig.height3)),
                                            h4(" ."), 
@@ -480,7 +495,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                   ),
                                   
                                   
-                                  tabPanel("11 xxxxxxxxxxxxxxxx", 
+                                  tabPanel("11 xxxxxxxxx", 
                                            
                                            fluidRow(
                                                column(width = 3, offset = 0, style='padding:1px;',
@@ -539,31 +554,31 @@ server <- shinyServer(function(input, output   ) {
         
         foo <- input$resample
         
-        dis <- as.numeric(unlist(strsplit(input$dist,",")))
+        n <- as.numeric(input$n )
         
-        trt <- as.numeric(unlist(strsplit(input$n,",")))
+        v1 <- as.numeric(input$v1 )
+        v2 <- as.numeric(input$v2 )
+        v3 <- as.numeric(input$v3 )
         
-        ctr <- as.numeric(unlist(strsplit(input$levels,",")))
+        v4 <- as.numeric(input$v4 )
+        v5 <- as.numeric(input$v5 )
+        v6 <- as.numeric(input$v6 )
         
-        n1y1 <- log(as.numeric(unlist(strsplit(input$or1,","))))   # user enter odds , need log for the maths
+        v7 <- as.numeric(input$v7 )
+        v8 <- as.numeric(input$v8 )
+        v9 <- as.numeric(input$v9 )
         
-        n2y2 <- log(as.numeric(unlist(strsplit(input$or2,","))))    # user enter odds , need log for the maths
+        v10 <- as.numeric(input$v10 )
+        v11 <- as.numeric(input$v11 )
+        v12 <- as.numeric(input$v12 )
         
         
-        base<- as.numeric(unlist(strsplit(input$base,",")))
         
+      
         
         return(list(  
-            n=trt[1],  
-            lev=ctr[1],
-            or1=n1y1[1], 
-            or2=n2y2[1],
-            shape1=dis[1], 
-            shape2=dis[2],
-            base=base[1]
-            
-            
-        ))
+            n=n, v1=v1, v2=v2, v3=v3, v4=v4, v5=v5, v6=v6, v7=v7, v9=v8, v9=v9, v10=v10, v11=v11, v12=v12   
+         ))
         
     })
     
@@ -574,26 +589,49 @@ server <- shinyServer(function(input, output   ) {
         
         sample <- random.sample()
         
-        n    <- sample$n
-        levz <- sample$lev
-        b1  <- sample$or1
-        b2  <- sample$or2
-        shape1  <- sample$shape1
-        shape2  <- sample$shape2
-        group  <- sample$group
-        rcat  <- sample$rcat
-        bas1  <- sample$bas1
-        bas2  <- sample$bas2
-        
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        n   <- sample$n
+        v1  <- sample$v1
+        v2  <- sample$v2
+        v3  <- sample$v3
+        v4  <- sample$v4
+        v5  <- sample$v5
+        v6  <- sample$v6
+        v7  <- sample$v7
+        v8  <- sample$v8
+        v9  <- sample$v9
+        v10  <- sample$v10
+        v11  <- sample$v11
+        v12  <- sample$v12
        
-        #      sf1 <- summary(f1, antilog=TRUE, verbose=FALSE)
+        trt      <- sample(1:3,   n, replace=TRUE)      # trt 3 levels
+        age      <- sample(18:65, n, replace=TRUE)      # continuous 
+        bmi      <- sample(1:3,   n, replace=TRUE)      # assume 3 equal groups?
+        smoking  <- sample(1:3,   n, replace=TRUE)      # categorical assume 3 equal groups?
+        crp      <- round(runif(n,0,3),2)  
+        berlin   <- round(runif(n,0,10),2)  
+        vas      <- sample(1:30, n, replace=TRUE)
+        time     <- round(runif(n,0,10),2)              # years
+        joints   <- sample(1:50, n, replace=TRUE)
+        nails    <- sample(0:1,  n, replace=TRUE)
+        evidence <- sample(0:1,  n, replace=TRUE)
+        sex      <- sample(0:1,  n, replace=TRUE)
         
+        dat <- as.data.frame(cbind(trt, age, bmi, smoking,crp,berlin, vas, time, joints, nails , evidence, sex)) 
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return(list(  dat=dat )) 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     })
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DO THE ANALYSIS~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    output$datx <- renderPrint({
+      
+     return(print(mcmc()$dat, digits=3))
+     # print(mcmc()$dat, digits=3)
+      
+    }) 
+    
+    
     
     analysis <- reactive({
         
@@ -732,12 +770,7 @@ server <- shinyServer(function(input, output   ) {
     })
     
     
-    output$assump <- renderPrint({
-        
-     #   return(print(assump()$s, digits=3))
-        
-    }) 
-    
+  
     
     output$textWithNumber1 <- renderText({ 
         
