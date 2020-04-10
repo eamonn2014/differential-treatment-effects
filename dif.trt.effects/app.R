@@ -40,6 +40,34 @@ fig.height7 <- 600
 fig.width9 <- 1380
 fig.height9 <- 500
 
+
+# Enter a value on the log odds scale. 
+# 
+# For example in the case of treatment the default mean treatment level 2 coefficient expectation is 1 and treatment level 3 coefficient expectation is 2.
+# 
+# In the case of age, the default true effect is a change of 1 log odds over the age range. 
+# 
+# For smoking, the default is a log odds ratio of 0.4, so we expect 'smoking=2' to be 0.4 and 'smoking=3' to be 0.8. 
+# 
+# The true coefficient for BMI is 0. We expect a log odds ratios for BMI levels to be zero.
+# 
+# Crp is a continuous variable and the true coefficient for crp is 1/3 so for each unit change in crp the log odds of p(y=1|x) increases by 1/3.
+# 
+# Berlin is also a continuous coefficient and the true coefficient is -0.05, so for each unit change in berlin the log odds of p(y=1|x) decrease by -0.05. 
+# 
+# Vas again is continuous and the true coeffient is 0.008. So for each unit change in berlin the log odds of p(y=1|x) increase by 0.008. 
+# 
+# Time is continuous and the true coeffient is -0.001. So for each unit change in time the log odds of p(y=1|x) decrease by -0.001.
+# 
+# joint is treated as continuous and the coeffient 0.02. So for each unit change in joints the log odds of p(y=1|x) increase by -0.02.
+# 
+# Nails, Evidence and Sex are binary predictors. For nails the default coefficent is 0.693, So for the change to the next level of Nails results in a 0.693 increase in the log odds of p(y=1|x).
+# 
+# For evidence in truth there is no effect and we expect the log odds to be 0.
+# 
+# Sex =1 compared to sex in 0 in truth the coefficient is -0.693
+
+
 ## convenience functions
 p0 <- function(x) {formatC(x, format="f", digits=1)}
 p1 <- function(x) {formatC(x, format="f", digits=1)}
@@ -119,16 +147,16 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                       tags$hr(),
                                       
                                       selectInput("Design",
-                                                  strong("Select modelling preference:"),
-                                                  choices=c( "Treatment interacts will all variables" , 
-                                                             "Treatment interacts will smoking only" ,
+                                                  strong("Select design preference:"),
+                                                  choices=c( "Treatment interacts with all variables" , 
+                                                             "Treatment interacts with smoking only" ,
                                                              "Main effects model" ), width='70%'),
                                       
                                       selectInput("Model",
                                                   strong("Select modelling preference:"),
-                                                  choices=c( "Treatment interacts will all variables" , 
-                                                             "Treatment interacts will smoking only" ,
-                                                             "Moan effects model" ), width='70%'),
+                                                  choices=c( "Treatment interacts with all variables" , 
+                                                             "Treatment interacts with smoking only" ,
+                                                             "Main effects model" ), width='70%'),
                                       
                                       # trt.coef       <- 1           # log odds ratio so 1 -> 2.718, so 1 is LARGE
                                       # age.coef       <- 1/(65-18)   # log odds of 1 over the age range
@@ -145,31 +173,31 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                       
                                       splitLayout(
                                         textInput("v1", div(h5(tags$span(style="color:blue", "treatment coef"))), value= "1"),
-                                        textInput("v2", div(h5(tags$span(style="color:blue", "covariate 2 coef"))), value= "1/(65-18)"),
-                                        textInput("v3", div(h5(tags$span(style="color:blue", "covariate 3 coef"))), value= "0.4")
+                                        textInput("v2", div(h5(tags$span(style="color:blue", "age coef"))), value= "1/(65-18)"),
+                                        textInput("v3", div(h5(tags$span(style="color:blue", "smoking coef"))), value= "0.4")
                                      
                                       ),
 
 
                                       splitLayout(
-                                        textInput("v4", div(h5(tags$span(style="color:blue", "covariate 4 coef"))), value= "0"),
-                                        textInput("v5", div(h5(tags$span(style="color:blue", "covariate 5 coef"))), value= "1/3"),
-                                        textInput("v6", div(h5(tags$span(style="color:blue", "covariate 6 coef"))), value= "-.5/10")
+                                        textInput("v4", div(h5(tags$span(style="color:blue", "bmi coef"))), value= "0"),
+                                        textInput("v5", div(h5(tags$span(style="color:blue", "crp coef"))), value= "1/3"),
+                                        textInput("v6", div(h5(tags$span(style="color:blue", "berlin coef"))), value= "-.5/10")
                                         
                                       ),
 
                                       splitLayout(
-                                        textInput("v7", div(h5(tags$span(style="color:blue", "covariate 7 coef"))), value= "0.25/30"),
-                                        textInput("v8", div(h5(tags$span(style="color:blue", "covariate 8 coef"))), value= "-.1/10"),
-                                        textInput("v9", div(h5(tags$span(style="color:blue", "covariate 9 coef"))), value= "1/50")
+                                        textInput("v7", div(h5(tags$span(style="color:blue", "vas coef"))), value= "0.25/30"),
+                                        textInput("v8", div(h5(tags$span(style="color:blue", "time coef"))), value= "-.1/10"),
+                                        textInput("v9", div(h5(tags$span(style="color:blue", "joints coef"))), value= "1/50")
                                         
                                       ),
                                       
                                       
                                       splitLayout(
-                                        textInput("v10", div(h5(tags$span(style="color:blue", "covariate 10 coef"))), value= "log(2)"),
-                                        textInput("v11", div(h5(tags$span(style="color:blue", "covariate 11 coef"))), value= "log(1)"),
-                                        textInput("v12", div(h5(tags$span(style="color:blue", "covariate 12 coef"))), value= "log(0.5)")
+                                        textInput("v10", div(h5(tags$span(style="color:blue", "nails coef"))), value= "log(2)"),
+                                        textInput("v11", div(h5(tags$span(style="color:blue", "evidence coef"))), value= "log(1)"),
+                                        textInput("v12", div(h5(tags$span(style="color:blue", "sex coef"))), value= "log(0.5)")
                                         
                                       ),
                                       
@@ -316,13 +344,20 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                           # div(plotOutput("reg.plot99", width=fig.width1, height=fig.height1)),
                                            
                                            fluidRow(
-                                               column(width = 7, offset = 0, style='padding:1px;',
+                                               column(width = 6, offset = 0, style='padding:1px;',
                                                       h4(paste("Figure 3. xxxxxxxxxxxxxxxxxx")), 
-                                                      div( verbatimTextOutput("Ax") ),
+                                                      div( verbatimTextOutput("Cx") ),
                                                       div( verbatimTextOutput("Bx") ),
-                                                      div( verbatimTextOutput("Cx") )
-                                               )),
+                                                      div( verbatimTextOutput("Ax") )
+                                               ),
                                            
+                                          fluidRow(
+                                            column(width = 6, offset = 0, style='padding:1px;',
+                                                   h4(paste("Figure 3. xxxxxxxxxxxxxxxxxx")), 
+                                                    
+                                            ))),
+                                          
+                                          
                                            
                                   ),
                                   
@@ -526,16 +561,9 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                   tabPanel("11 Data", 
                                            
                                            fluidRow(
+                                             
+                                             
                                                column(width = 3, offset = 0, style='padding:1px;',
-                                                      h4("Table 9 xxxxxxxxxxxxx"),
-                                                      div( verbatimTextOutput("datx") ),
-                                               ),
-                                               
-                                               column(width = 9, offset = 0, style='padding:1px;',
-                                                     # h4("Notes"),
-                                                      h4("xxxxxxxxxxxxxxxxx
-                                                  \n"),
-                                                    
                                                       tags$hr(),
                                                       div(h4("References:")),  
                                                       tags$a(href = "https://stats.stackexchange.com/search?q=proportional+odds+model", tags$span(style="color:blue", "[1] Proportional odds model"),),   
@@ -549,6 +577,16 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                       tags$a(href = "https://rdrr.io/cran/rms/man/predict.lrm.html", tags$span(style="color:blue", "[4] Prediction of model mean"),),  
                                                       div(p(" ")),
                                                       tags$hr()
+                                               ),
+                                               
+                                               
+                                               
+                                               column(width = 9, offset = 0, style='padding:1px;',
+                                                     # h4("Notes"),
+                                                     h4("Table 9 xxxxxxxxxxxxx"),
+                                                     div( verbatimTextOutput("datx") ),
+                                                    
+                                                   
                                                       
                                                )
                                                
@@ -650,10 +688,10 @@ server <- shinyServer(function(input, output   ) {
         
         dat <- as.data.frame(cbind(trt, age, bmi, smoking,crp,berlin, vas, time, joints, nails , evidence, sex)) 
         
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return(list(  dat=dat,
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    return(list(  dat=dat,
                       n=n, v1=v1, v2=v2, v3=v3, v4=v4, v5=v5, v6=v6, v7=v7, v8=v8, v9=v9, v10=v10, v11=v11, v12=v12   )) 
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     })
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -664,7 +702,8 @@ server <- shinyServer(function(input, output   ) {
   
     }) 
     
-   
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     
     analysis <- reactive({
       
@@ -686,30 +725,30 @@ server <- shinyServer(function(input, output   ) {
       evidence <-d$evidence  
       sex      <-d$sex       
        
-      trt.coef       <- coefs$v1           # log odds ratio so 1 -> 2.718, so 1 is LARGE
-      age.coef       <- coefs$v2   # log odds of 1 over the age range
-      smoke.coef     <- coefs$v3        # this is odds of 1.5
-      bmi.coef       <- coefs$v4           # this is an odds of 1..50:50
-      crp.coef       <- coefs$v5         # log odds 1 over range of 3
-      berlin.coef    <- coefs$v6      # log odds -.05 per unit change
+      trt.coef       <- coefs$v1     # log odds ratio so 1 -> 2.718, so 1 is LARGE
+      age.coef       <- coefs$v2     # log odds of 1 over the age range
+      smoke.coef     <- coefs$v3     # this is odds of 1.5
+      bmi.coef       <- coefs$v4     # this is an odds of 1..50:50
+      crp.coef       <- coefs$v5     # log odds 1 over range of 3
+      berlin.coef    <- coefs$v6     # log odds -.05 per unit change
       vas.coef       <- coefs$v7     # log odds .008 per unit change. log odds .25 over 30 units odds 1.27
       time.coef      <- coefs$v8     # log odds -.01 per year, log odds -.1 over 10 years or odds .90
-      joints.coef    <- coefs$v9       # log odds 0.02 per joint, log odds 1 over 50 units or odds 2.7
-      nails.coef     <- coefs$v10      # log odds 0.693 per change in binary, or odds of 2   
-      evidence.coef  <- coefs$v11      # log odds 0 per change in binary, or odds of 1  
+      joints.coef    <- coefs$v9     # log odds 0.02 per joint, log odds 1 over 50 units or odds 2.7
+      nails.coef     <- coefs$v10    # log odds 0.693 per change in binary, or odds of 2   
+      evidence.coef  <- coefs$v11    # log odds 0 per change in binary, or odds of 1  
       sex.coef       <- coefs$v12    # log odds -0.693 per change in binary, or odds of .5  
       
       intercept <- -5
       
       
-      if (input$Design == "Treatment interacts will all variables" )  {
+      if (input$Design == "Treatment interacts with all variables" )  {
         
                   lp = intercept + trt*trt.coef*(smoking*smoke.coef   +   age*age.coef  + bmi*bmi.coef + crp*crp.coef +
                                          berlin*berlin.coef + vas*vas.coef + time*time.coef + joints*joints.coef +
                                          nails*nails.coef +
                                          evidence*evidence.coef + sex*sex.coef) 
  
-              }   else if (input$Design == "Treatment interacts will smoking only" ) {    
+              }   else if (input$Design == "Treatment interacts with smoking only" ) {    
                 
                 # truth  only smoking interacts  with trt
                 lp = intercept + (trt*trt.coef*smoking*smoke.coef)   +   age*age.coef   + bmi*bmi.coef + crp*crp.coef +
@@ -740,14 +779,14 @@ server <- shinyServer(function(input, output   ) {
       d <<- datadist(y,  trt ,  smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi)
       options(datadist="d")
       
-       A<-lrm(y~   trt * (smoking  + age  + bmi + crp + berlin + vas + time + joints + nails + evidence +sex)) # all interact with trt
+      A<-lrm(y~   trt * (smoking  + age  + bmi + crp + berlin + vas + time + joints + nails + evidence +sex)) # all interact with trt
       B<-lrm(y~  (trt *  smoking) + age  + bmi + crp + berlin + vas + time + joints + nails + evidence +sex)  # smoking * trt only
       C<-lrm(y~   trt +  smoking  + age +  bmi + crp + berlin + vas + time + joints + nails + evidence +sex)  # main effect
       
-      if (input$Model == "Treatment interacts will all variables" )  {
+      if (input$Model == "Treatment interacts with all variables" )  {
         f <- A
        
-      }   else if (input$Model == "Treatment interacts will smoking only" ) {    
+      }   else if (input$Model == "Treatment interacts with smoking only" ) {    
        # all interact with trt
         f <- B
         
@@ -755,26 +794,6 @@ server <- shinyServer(function(input, output   ) {
         
         f <- C
       }
-      # truth all interact with trt
-      
-      
-    
-      
-      
-      
-      
-      
-  
-      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      
-     # A <- B <- C <- NULL
-    #  A<-lrm(y~   trt * (smoking  + age  + bmi + crp + berlin + vas + time + joints + nails + evidence +sex)) # all interact with trt
-    #  B<-lrm(y~  (trt *  smoking) + age  + bmi + crp + berlin + vas + time + joints + nails + evidence +sex)  # smoking * trt only
-    #  C<-lrm(y~   trt +  smoking  + age +  bmi + crp + berlin + vas + time + joints + nails + evidence +sex)  # main effects
-      # lrtest(A,C)
-      # C
-      # C <- A
-      
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       return(list(  lp=lp , y=y , A=A, B=B, C=C)) 
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -782,6 +801,8 @@ server <- shinyServer(function(input, output   ) {
       
       
     })
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     
     output$Ax <- renderPrint({
@@ -794,9 +815,75 @@ server <- shinyServer(function(input, output   ) {
       return(print(analysis()$C, digits=3))
     }) 
     
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    output$textWithNumber <- renderText({ 
+      
+      A <- analysis()$f2     
+      
+      d <- analysis()$d
+      
+      dat <- mcmc()$dat
+      
+      dat$y <- as.numeric(as.character(dat$y))
+      
+      sample <- random.sample()
+      levz <- sample$lev
+      
+      f <- A$coefficients
+      x <-length(f) -2
+      
+      diff <- d$limits["High:effect","baseline"]-d$limits["Low:effect","baseline"]
+      
+      c1  <-expit(f[1][[1]]  + f['baseline'][[1]])
+      
+      c10 <- expit(f[x][[1]]  + f['baseline'][[1]])
+      
+      HTML(paste0( "Let's interpret the output on the left. The coefficient alongside y>=",min(dat$y)+1," is "
+                   , tags$span(style="color:red", p2( f     [1][[1]]) ) ,
+                   " this is the log odds of having a response in categories ",min(dat$y)+1," and above, when treatment and baseline are 0. 
+                So convert this to a probability after adding the contribution on the log scale of being in baseline category 1, for example gives "
+                   , tags$span(style="color:red", p3(c1)) , 
+                   " and subtract from one to give the probability of being in the lowest category "
+                   , tags$span(style="color:red", p3(1-  c1 )) ," for a patient in reference treatment group (placebo).",
+                   br(), br(),  
+                   
+                   " The coefficient alongside y>=",max(dat$y)," is "
+                   , tags$span(style="color:red", p2( f     [x][[1]]) ) ,
+                   ", this is the log odds of having a response in the top category only, converting this to a probability 
+                 after adding on the log scale the contribution of being in baseline category 1, for example gives "
+                   , tags$span(style="color:red", p3(c10)) , 
+                   " for a patient in reference treatment group (placebo)."
+                   , tags$span(style="color:red"),  ". Check these probabilities to the top left cell and top right cell of Table 3, tab 6 !" ,
+                   br(), br(),  
+                   
+                   " The coefficient left, 'baseline' is a log odds ratio
+                 comparing an individual one baseline category higher whilst being identical in all other predictors and is "
+                   , tags$span(style="color:red", p3(f['baseline'])[[1]])  , 
+                   ", we can exponentiate this to give "
+                   , tags$span(style="color:red", p3(exp(f['baseline']))[[1]])  ,
+                   " . We can see the effect of changing multiple categories on the outcome by multiplying " 
+                   , tags$span(style="color:red", p3(f['baseline'])[[1]]),  
+                   " unit change by the 'Diff.'= ",
+                   tags$span(style="color:red", diff ) 
+                   ," which is selectable above and exponentiating...to give..." 
+                   , tags$span(style="color:red", p3(exp(f['baseline']*diff) ) [[1]] )  , 
+                   " and so on.",
+                   br(), br(),  
+                   " The coefficient left, 'treatment' is a log odds ratio
+                 comparing an individual in the treated group to the placebo group whilst 
+                being identical in all other predictors and is "
+                   , tags$span(style="color:red", p3(f['treatment'])[[1]])  , 
+                   ", we can exponentiate this to give the odds ratio: "
+                   , tags$span(style="color:red", p3(exp(f['treatment']))[[1]])     , 
+                   " "
+                   
+      ))    
+      
+    })
     
     
-    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~
     
     
     
