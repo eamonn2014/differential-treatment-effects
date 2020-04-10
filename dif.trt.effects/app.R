@@ -118,33 +118,47 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                       
                                       tags$hr(),
                                       
+                                      
+                                      # trt.coef       <- 1           # log odds ratio so 1 -> 2.718, so 1 is LARGE
+                                      # age.coef       <- 1/(65-18)   # log odds of 1 over the age range
+                                      # smoke.coef     <-          # this is odds of 1.5
+                                      # bmi.coef       <- 0           # this is an odds of 1..50:50
+                                      # crp.coef       <- 1/3         # log odds 1 over range of 3
+                                      # berlin.coef    <- -.5/10      # log odds -.05 per unit change
+                                      # vas.coef       <- 0.25/30     # log odds .008 per unit change. log odds .25 over 30 units odds 1.27
+                                      # time.coef      <- -.1/10      # log odds -.01 per year, log odds -.1 over 10 years or odds .90
+                                      # joints.coef    <- 1/50        # log odds 0.02 per joint, log odds 1 over 50 units or odds 2.7
+                                      # nails.coef     <- log(2)      # log odds 0.693 per change in binary, or odds of 2   
+                                      # evidence.coef  <- log(1)      # log odds 0 per change in binary, or odds of 1  
+                                      # sex.coef       <- log(0.5)    # log odds -0.693 per change in binary, or odds of .5  
+                                      
                                       splitLayout(
-                                        textInput("v1", div(h5(tags$span(style="color:blue", "covariate 1 coef"))), value= "1"),
-                                        textInput("v2", div(h5(tags$span(style="color:blue", "covariate 2 coef"))), value= "1"),
-                                        textInput("v3", div(h5(tags$span(style="color:blue", "covariate 3 coef"))), value= "1")
+                                        textInput("v1", div(h5(tags$span(style="color:blue", "treatment coef"))), value= "1"),
+                                        textInput("v2", div(h5(tags$span(style="color:blue", "covariate 2 coef"))), value= "1/(65-18)"),
+                                        textInput("v3", div(h5(tags$span(style="color:blue", "covariate 3 coef"))), value= "0.4")
                                      
                                       ),
 
 
                                       splitLayout(
-                                        textInput("v4", div(h5(tags$span(style="color:blue", "covariate 4 coef"))), value= "1"),
-                                        textInput("v5", div(h5(tags$span(style="color:blue", "covariate 5 coef"))), value= "1"),
-                                        textInput("v6", div(h5(tags$span(style="color:blue", "covariate 6 coef"))), value= "1")
+                                        textInput("v4", div(h5(tags$span(style="color:blue", "covariate 4 coef"))), value= "0"),
+                                        textInput("v5", div(h5(tags$span(style="color:blue", "covariate 5 coef"))), value= "1/3"),
+                                        textInput("v6", div(h5(tags$span(style="color:blue", "covariate 6 coef"))), value= "-.5/10")
                                         
                                       ),
 
                                       splitLayout(
-                                        textInput("v7", div(h5(tags$span(style="color:blue", "covariate 7 coef"))), value= "1"),
-                                        textInput("v8", div(h5(tags$span(style="color:blue", "covariate 8 coef"))), value= "1"),
-                                        textInput("v9", div(h5(tags$span(style="color:blue", "covariate 9 coef"))), value= "1")
+                                        textInput("v7", div(h5(tags$span(style="color:blue", "covariate 7 coef"))), value= "0.25/30"),
+                                        textInput("v8", div(h5(tags$span(style="color:blue", "covariate 8 coef"))), value= "-.1/10"),
+                                        textInput("v9", div(h5(tags$span(style="color:blue", "covariate 9 coef"))), value= "1/50")
                                         
                                       ),
                                       
                                       
                                       splitLayout(
-                                        textInput("v10", div(h5(tags$span(style="color:blue", "covariate 10 coef"))), value= "1"),
-                                        textInput("v11", div(h5(tags$span(style="color:blue", "covariate 11 coef"))), value= "1"),
-                                        textInput("v12", div(h5(tags$span(style="color:blue", "covariate 12 coef"))), value= "1")
+                                        textInput("v10", div(h5(tags$span(style="color:blue", "covariate 10 coef"))), value= "log(2)"),
+                                        textInput("v11", div(h5(tags$span(style="color:blue", "covariate 11 coef"))), value= "log(1)"),
+                                        textInput("v12", div(h5(tags$span(style="color:blue", "covariate 12 coef"))), value= "log(0.5)")
                                         
                                       ),
                                       
@@ -269,15 +283,16 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                            
                                            fluidRow(
                                                column(width = 6, offset = 0, style='padding:1px;',
-                                                      div( verbatimTextOutput("datx") )
+                                                    
                                                       #div(plotOutput("beta",  width=fig.width7, height=fig.height7)),
-                                                      
+                                                      div( verbatimTextOutput("checky") ),
+                                                      div( verbatimTextOutput("lpx") ),
                                                ) ,
                                                
                                                
                                                fluidRow(
                                                    column(width = 5, offset = 0, style='padding:1px;',
-                                                          
+                                                          div( verbatimTextOutput("yx") ),
                                                         #  div(plotOutput("reg.plotx",  width=fig.width7, height=fig.height7)) 
                                                           
                                                    ))),
@@ -292,7 +307,9 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                            fluidRow(
                                                column(width = 7, offset = 0, style='padding:1px;',
                                                       h4(paste("Figure 3. xxxxxxxxxxxxxxxxxx")), 
-                                                      
+                                                      div( verbatimTextOutput("Ax") ),
+                                                      div( verbatimTextOutput("Bx") ),
+                                                      div( verbatimTextOutput("Cx") )
                                                )),
                                            
                                            
@@ -495,19 +512,19 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                   ),
                                   
                                   
-                                  tabPanel("11 xxxxxxxxx", 
+                                  tabPanel("11 Data", 
                                            
                                            fluidRow(
                                                column(width = 3, offset = 0, style='padding:1px;',
                                                       h4("Table 9 xxxxxxxxxxxxx"),
-                                                      #div( verbatimTextOutput("dat")),
+                                                      div( verbatimTextOutput("datx") ),
                                                ),
                                                
                                                column(width = 9, offset = 0, style='padding:1px;',
                                                      # h4("Notes"),
                                                       h4("xxxxxxxxxxxxxxxxx
                                                   \n"),
-                                                      
+                                                    
                                                       tags$hr(),
                                                       div(h4("References:")),  
                                                       tags$a(href = "https://stats.stackexchange.com/search?q=proportional+odds+model", tags$span(style="color:blue", "[1] Proportional odds model"),),   
@@ -556,28 +573,32 @@ server <- shinyServer(function(input, output   ) {
         
         n <- as.numeric(input$n )
         
-        v1 <- as.numeric(input$v1 )
-        v2 <- as.numeric(input$v2 )
-        v3 <- as.numeric(input$v3 )
+        # writing like this I can write log and fraction into input boxes!
+        v1 <- as.numeric(    eval(parse(text= (input$v1)) ) )
+        v2 <- as.numeric(    eval(parse(text= (input$v2)) ) )
+         
         
-        v4 <- as.numeric(input$v4 )
-        v5 <- as.numeric(input$v5 )
-        v6 <- as.numeric(input$v6 )
+        v3 <- as.numeric(    eval(parse(text= (input$v3)) ) )    
+         
+        v4 <- as.numeric(    eval(parse(text= (input$v4)) ) )   
+        v5 <- as.numeric(    eval(parse(text= (input$v5)) ) )  
+        v6 <- as.numeric(    eval(parse(text= (input$v6)) ) ) 
         
-        v7 <- as.numeric(input$v7 )
-        v8 <- as.numeric(input$v8 )
-        v9 <- as.numeric(input$v9 )
+        v7 <- as.numeric(    eval(parse(text= (input$v7)) ) )
+        v8 <- as.numeric(    eval(parse(text= (input$v8)) ) )
+        v9 <- as.numeric(    eval(parse(text= (input$v9)) ) )
         
-        v10 <- as.numeric(input$v10 )
-        v11 <- as.numeric(input$v11 )
-        v12 <- as.numeric(input$v12 )
+        v10 <- as.numeric(    eval(parse(text= (input$v10)) ) )
+        v11 <- as.numeric(    eval(parse(text= (input$v11)) ) )
+        v12 <- as.numeric(    eval(parse(text= (input$v12)) ) )
         
+  
+        check =c(v1 , v2 , v3 , v4 , v5,  v6, v7,  v8 , v9 , v10 , v11 , v12  )
         
-        
-      
-        
-        return(list(  
-            n=n, v1=v1, v2=v2, v3=v3, v4=v4, v5=v5, v6=v6, v7=v7, v9=v8, v9=v9, v10=v10, v11=v11, v12=v12   
+        return(list(
+            n=n, v1=v1, v2=v2, v3=v3, v4=v4, v5=v5, v6=v6, v7=v7, v8=v8, v9=v9, v10=v10, v11=v11, v12=v12 ,
+            check=check
+            
          ))
         
     })
@@ -617,35 +638,148 @@ server <- shinyServer(function(input, output   ) {
         sex      <- sample(0:1,  n, replace=TRUE)
         
         dat <- as.data.frame(cbind(trt, age, bmi, smoking,crp,berlin, vas, time, joints, nails , evidence, sex)) 
+        
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return(list(  dat=dat )) 
+        return(list(  dat=dat,
+                      n=n, v1=v1, v2=v2, v3=v3, v4=v4, v5=v5, v6=v6, v7=v7, v8=v8, v9=v9, v10=v10, v11=v11, v12=v12   )) 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     })
     
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DO THE ANALYSIS~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     output$datx <- renderPrint({
       
      return(print(mcmc()$dat, digits=3))
-     # print(mcmc()$dat, digits=3)
+  
+    }) 
+    
+   
+    
+    analysis <- reactive({
       
+      coefs <- mcmc()
+      
+      d <-coefs$dat  #data
+      
+      n <- d$n
+      trt      <-d$trt      
+      age      <-d$age       
+      bmi      <-d$bmi       
+      smoking  <-d$smoking  
+      crp      <-d$crp      
+      berlin   <-d$berlin   
+      vas      <-d$vas       
+      time     <-d$time      
+      joints   <-d$joints    
+      nails    <-d$nails     
+      evidence <-d$evidence  
+      sex      <-d$sex       
+      
+     
+
+      
+      trt.coef       <- coefs$v1           # log odds ratio so 1 -> 2.718, so 1 is LARGE
+      age.coef       <- coefs$v2   # log odds of 1 over the age range
+      smoke.coef     <- coefs$v3        # this is odds of 1.5
+      bmi.coef       <- coefs$v4           # this is an odds of 1..50:50
+      crp.coef       <- coefs$v5         # log odds 1 over range of 3
+      berlin.coef    <- coefs$v6      # log odds -.05 per unit change
+      vas.coef       <- coefs$v7     # log odds .008 per unit change. log odds .25 over 30 units odds 1.27
+      time.coef      <- coefs$v8     # log odds -.01 per year, log odds -.1 over 10 years or odds .90
+      joints.coef    <- coefs$v9       # log odds 0.02 per joint, log odds 1 over 50 units or odds 2.7
+      nails.coef     <- coefs$v10      # log odds 0.693 per change in binary, or odds of 2   
+      evidence.coef  <- coefs$v11      # log odds 0 per change in binary, or odds of 1  
+      sex.coef       <- coefs$v12    # log odds -0.693 per change in binary, or odds of .5  
+      
+      intercept <- -5
+      # truth all interact with trt
+      lp = intercept + trt*trt.coef*(smoking*smoke.coef   +   age*age.coef  + bmi*bmi.coef + crp*crp.coef +
+                                       berlin*berlin.coef + vas*vas.coef + time*time.coef + joints*joints.coef +
+                                       nails*nails.coef +
+                                       evidence*evidence.coef + sex*sex.coef) 
+      
+      # truth  only smoking interacts  with trt
+      lp = intercept + (trt*trt.coef*smoking*smoke.coef)   +   age*age.coef   + bmi*bmi.coef + crp*crp.coef +
+        berlin*berlin.coef + vas*vas.coef + time*time.coef + joints*joints.coef + nails*nails.coef +
+        evidence*evidence.coef + sex*sex.coef
+      
+      # truth no interactions
+      lp = intercept + trt*trt.coef + smoking*smoke.coef + age*age.coef  + bmi*bmi.coef + crp*crp.coef +
+        berlin*berlin.coef + vas*vas.coef + time*time.coef + joints*joints.coef + nails*nails.coef +
+        evidence*evidence.coef + sex*sex.coef
+      
+      
+      trt <-     factor(trt)
+      smoking <- factor(smoking)
+      nails <-   factor(nails)
+      evidence <-factor(evidence)
+      sex <-     factor(sex)
+      bmi <-     factor(bmi)
+      
+      y <- ifelse(runif(n) < plogis(lp), 1, 0)   # one liner
+      
+      d <<- datadist(y,  trt ,  smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi)
+      options(datadist="d")
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      
+      A <- B <- C <- NULL
+      A<-lrm(y~   trt * (smoking  + age  + bmi + crp + berlin + vas + time + joints + nails + evidence +sex)) # all interact with trt
+      B<-lrm(y~  (trt *  smoking) + age  + bmi + crp + berlin + vas + time + joints + nails + evidence +sex)  # smoking * trt only
+      C<-lrm(y~   trt +  smoking  + age +  bmi + crp + berlin + vas + time + joints + nails + evidence +sex)  # main effects
+      # lrtest(A,C)
+      # C
+      # C <- A
+      
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      return(list(  lp=lp , y=y , A=A, B=B, C=C)) 
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      
+      
+      
+    })
+    
+    
+    output$Ax <- renderPrint({
+      return(print(analysis()$A, digits=3))
+    }) 
+    output$Bx <- renderPrint({
+      return(print(analysis()$B, digits=3))
+    }) 
+    output$Cx <- renderPrint({
+      return(print(analysis()$C, digits=3))
     }) 
     
     
     
-    analysis <- reactive({
-        
-        
-    })
     
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # beta dist plot 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~     
     
-    output$beta <- renderPlot({        
-        
-       
-    })
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    output$checky <- renderPrint({
+      
+      #return(print(analysis()$lp, digits=3))
+      return(print(random.sample()$check, digits=3))
+    }) 
+    
+    output$lpx <- renderPrint({
+     
+      return(print(analysis()$lp, digits=3))
+    }) 
+    
+    output$yx <- renderPrint({
+      
+      return(print(analysis()$y, digits=3))
+    }) 
+    
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     #  end ggplot barplot of beta distribution
