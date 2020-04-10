@@ -118,6 +118,17 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                       
                                       tags$hr(),
                                       
+                                      selectInput("Design",
+                                                  strong("Select modelling preference:"),
+                                                  choices=c( "Treatment interacts will all variables" , 
+                                                             "Treatment interacts will smoking only" ,
+                                                             "Main effects model" ), width='70%'),
+                                      
+                                      selectInput("Model",
+                                                  strong("Select modelling preference:"),
+                                                  choices=c( "Treatment interacts will all variables" , 
+                                                             "Treatment interacts will smoking only" ,
+                                                             "Moan effects model" ), width='70%'),
                                       
                                       # trt.coef       <- 1           # log odds ratio so 1 -> 2.718, so 1 is LARGE
                                       # age.coef       <- 1/(65-18)   # log odds of 1 over the age range
@@ -674,10 +685,7 @@ server <- shinyServer(function(input, output   ) {
       nails    <-d$nails     
       evidence <-d$evidence  
       sex      <-d$sex       
-      
-     
-
-      
+       
       trt.coef       <- coefs$v1           # log odds ratio so 1 -> 2.718, so 1 is LARGE
       age.coef       <- coefs$v2   # log odds of 1 over the age range
       smoke.coef     <- coefs$v3        # this is odds of 1.5
@@ -692,21 +700,32 @@ server <- shinyServer(function(input, output   ) {
       sex.coef       <- coefs$v12    # log odds -0.693 per change in binary, or odds of .5  
       
       intercept <- -5
-      # truth all interact with trt
-      lp = intercept + trt*trt.coef*(smoking*smoke.coef   +   age*age.coef  + bmi*bmi.coef + crp*crp.coef +
-                                       berlin*berlin.coef + vas*vas.coef + time*time.coef + joints*joints.coef +
-                                       nails*nails.coef +
-                                       evidence*evidence.coef + sex*sex.coef) 
       
-      # truth  only smoking interacts  with trt
-      lp = intercept + (trt*trt.coef*smoking*smoke.coef)   +   age*age.coef   + bmi*bmi.coef + crp*crp.coef +
-        berlin*berlin.coef + vas*vas.coef + time*time.coef + joints*joints.coef + nails*nails.coef +
-        evidence*evidence.coef + sex*sex.coef
       
-      # truth no interactions
-      lp = intercept + trt*trt.coef + smoking*smoke.coef + age*age.coef  + bmi*bmi.coef + crp*crp.coef +
-        berlin*berlin.coef + vas*vas.coef + time*time.coef + joints*joints.coef + nails*nails.coef +
-        evidence*evidence.coef + sex*sex.coef
+      if (input$Design == "Treatment interacts will all variables" )  {
+        
+                  lp = intercept + trt*trt.coef*(smoking*smoke.coef   +   age*age.coef  + bmi*bmi.coef + crp*crp.coef +
+                                         berlin*berlin.coef + vas*vas.coef + time*time.coef + joints*joints.coef +
+                                         nails*nails.coef +
+                                         evidence*evidence.coef + sex*sex.coef) 
+ 
+              }   else if (input$Design == "Treatment interacts will smoking only" ) {    
+                
+                # truth  only smoking interacts  with trt
+                lp = intercept + (trt*trt.coef*smoking*smoke.coef)   +   age*age.coef   + bmi*bmi.coef + crp*crp.coef +
+                  berlin*berlin.coef + vas*vas.coef + time*time.coef + joints*joints.coef + nails*nails.coef +
+                  evidence*evidence.coef + sex*sex.coef
+                
+   
+              }   else if (input$Design == "Main effects model" ) {  
+                
+                # truth no interactions
+                lp = intercept + trt*trt.coef + smoking*smoke.coef + age*age.coef  + bmi*bmi.coef + crp*crp.coef +
+                  berlin*berlin.coef + vas*vas.coef + time*time.coef + joints*joints.coef + nails*nails.coef +
+                  evidence*evidence.coef + sex*sex.coef
+                
+                
+              }
       
       
       trt <-     factor(trt)
@@ -720,12 +739,38 @@ server <- shinyServer(function(input, output   ) {
       
       d <<- datadist(y,  trt ,  smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi)
       options(datadist="d")
+      
+       A<-lrm(y~   trt * (smoking  + age  + bmi + crp + berlin + vas + time + joints + nails + evidence +sex)) # all interact with trt
+      B<-lrm(y~  (trt *  smoking) + age  + bmi + crp + berlin + vas + time + joints + nails + evidence +sex)  # smoking * trt only
+      C<-lrm(y~   trt +  smoking  + age +  bmi + crp + berlin + vas + time + joints + nails + evidence +sex)  # main effect
+      
+      if (input$Model == "Treatment interacts will all variables" )  {
+        f <- A
+       
+      }   else if (input$Model == "Treatment interacts will smoking only" ) {    
+       # all interact with trt
+        f <- B
+        
+      }   else if (input$Model == "Main effects model" ) {  
+        
+        f <- C
+      }
+      # truth all interact with trt
+      
+      
+    
+      
+      
+      
+      
+      
+  
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       
-      A <- B <- C <- NULL
-      A<-lrm(y~   trt * (smoking  + age  + bmi + crp + berlin + vas + time + joints + nails + evidence +sex)) # all interact with trt
-      B<-lrm(y~  (trt *  smoking) + age  + bmi + crp + berlin + vas + time + joints + nails + evidence +sex)  # smoking * trt only
-      C<-lrm(y~   trt +  smoking  + age +  bmi + crp + berlin + vas + time + joints + nails + evidence +sex)  # main effects
+     # A <- B <- C <- NULL
+    #  A<-lrm(y~   trt * (smoking  + age  + bmi + crp + berlin + vas + time + joints + nails + evidence +sex)) # all interact with trt
+    #  B<-lrm(y~  (trt *  smoking) + age  + bmi + crp + berlin + vas + time + joints + nails + evidence +sex)  # smoking * trt only
+    #  C<-lrm(y~   trt +  smoking  + age +  bmi + crp + berlin + vas + time + joints + nails + evidence +sex)  # main effects
       # lrtest(A,C)
       # C
       # C <- A
