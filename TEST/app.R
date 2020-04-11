@@ -2,7 +2,7 @@
 # Rshiny ideas from on https://gallery.shinyapps.io/multi_regression/
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 rm(list=ls()) 
-set.seed(333) # reproducible
+set.seed(3333) # reproducible
 #library(directlabels)
 library(shiny) 
 library(shinyWidgets)
@@ -43,15 +43,14 @@ fig.heightx <- 268
 fig.height7 <- 600
 fig.width9 <- 1380
 fig.height9 <- 500
-
  
-
 
 ## convenience functions
 p0 <- function(x) {formatC(x, format="f", digits=1)}
 p1 <- function(x) {formatC(x, format="f", digits=1)}
 p2 <- function(x) {formatC(x, format="f", digits=2)}
 p3 <- function(x) {formatC(x, format="f", digits=3)}
+p4 <- function(x) {formatC(x, format="f", digits=4)}
 p5 <- function(x) {formatC(x, format="f", digits=5)}
 logit <- function(p) log(1/(1/p-1))
 expit <- function(x) 1/(1/exp(x) + 1)
@@ -71,7 +70,11 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                 
                 h2("Differential treatment effects"), 
                 
-                h4("xxxxxxxxxxxxxxxxxx
+                h4("It is is desired to investigate if there is evidence of different treatment effects depending levels of factor variables or the level 
+                of continuous variables following a RCT. One or more interactions between baseline covariates and treatment are then investigated.
+                Here we investigate a binary response. Note this objective will be extremely underpowered, typically wants to detect a
+                differential effect that is smaller than the overall detectable treatment effect [FH Ref]
+                
          "), 
                 
                 h3("  "), 
@@ -184,8 +187,23 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                             .navbar-default .navbar-nav > li > a[data-value='t2'] {color: blue;background-color: lightblue;}
                             .navbar-default .navbar-nav > li > a[data-value='t3'] {color: green;background-color: lightgreen;}
                    ")),
-                                  
-                                tabPanel("1 All 3 models", value=3, 
+                                  tabPanel("1 Main effects", 
+                                           
+                                           fluidRow(
+                                             column(width = 6, offset = 0, style='padding:1px;',
+                                                    h4(paste("Table 1. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
+                                                    div( verbatimTextOutput("Cx2") )
+                                                    
+                                                    
+                                             ),
+                                             
+                                             fluidRow(
+                                               column(width = 5, offset = 0, style='padding:1px;',
+                                                      h4(paste("An explanation of the inputs")), 
+                                                      h4(htmlOutput("textWithNumber",) ),
+                                               ))),
+                                  ),
+                                tabPanel("2 All 3 models", value=3, 
                                 
                                            fluidRow(
                                                column(width = 6, offset = 0, style='padding:1px;',
@@ -202,22 +220,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                    ))),
                                      
                                   ),
-                                   tabPanel("2 Main effects", 
-                                           
-                                            fluidRow(
-                                              column(width = 6, offset = 0, style='padding:1px;',
-                                                     h4(paste("Figure 3. xxxxxxxxxxxxxxxxxx")), 
-                                                     div( verbatimTextOutput("Cx2") )
-                                                    
-                                                     
-                                              ),
-                                              
-                                              fluidRow(
-                                                column(width = 5, offset = 0, style='padding:1px;',
-                                                       h4(paste("Figure 3. xxxxxxxxxxxxxxxxxx")), 
-                                                       h4(htmlOutput("textWithNumber",) ),
-                                                ))),
-                                   ),
+                                  
                                 tabPanel("3 LR tests", value=7, 
                                          
                                          fluidRow(
@@ -373,96 +376,101 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                          
                                 ),
                                 
-                                tabPanel("7 xxxxxxxxxxxx", value=3, 
-                                         h4("Tables 5 & 6 and Figure 7"),
+                                tabPanel("7 Rel. expl. variaton", value=3, 
+                                       #  h4("Tables 5 & 6 and Figure 7"),
                                          
-                                         
+                                         h4(htmlOutput("textWithNumber1",) ),
                                          fluidRow(
                                            column(width = 6, offset = 0, style='padding:1px;',
-                                                  
+                                                  # div( verbatimTextOutput("rev1" ) ),
+                                                  # div( verbatimTextOutput("rev2" ) ),
+                                                  # div( verbatimTextOutput("rev3" ) ),
                                                   #  div( verbatimTextOutput("reg.summary4") )
                                            ) ,
                                            
                                            fluidRow(
                                              column(width = 5, offset = 0, style='padding:1px;',
-                                                    
+                                                 #   div( verbatimTextOutput("AIC1" ) ),
+                                                  #  div( verbatimTextOutput("AIC2" ) ),
+                                                   # div( verbatimTextOutput("AIC3" ) ),
                                                     #     div( verbatimTextOutput("reg.summary5")),
                                                     #    div(plotOutput("predictl", width=fig.widthx, height=fig.heightx)),
                                                     
                                              ))),
                                          #           h4("Perhaps fit the model with restricted cubic splines for the baseline predictor to test or describe non linear relationships."),
                                 ),
+                       
                                 
-                                tabPanel("8 xxxxxxx", value=3, 
-                                         
-                                         fluidRow(
-                                           column(width = 6, offset = 0, style='padding:1px;',
-                                                  #h4("Sometimes it is helpful to present the mean Y as a function of one or more model predictors. 
-                                                  #    \n Enter an intercept for the ordinal model in the box below.."),
-                                                  #textInput('kints',
-                                                  #         div(h5(tags$span(style="color:blue",
-                                                  #                         ""))), ""), 
-                                                  
-                                                  #div(plotOutput("PP.plot", width=fig.width7, height=fig.height6)),
-                                                  h4("Figure 8 xxxxxxxxxxxxxx"),
-                                                  br() , 
-                                                  
-                                                  h4(""),
-                                                  
-                                                  h4("Table 7 xxxxxxxxxxxx"),
-                                                  #div( verbatimTextOutput("predz"), width = 2), # 
-                                           ),
-                                           
-                                           fluidRow(
-                                             
-                                             
-                                             #  h4(" This assumes a spacing for the Y levels."),
-                                             #  h4("Try different odds ratios to see when the linear model 
-                                             #         and PO model are no longer similar."),
-                                             br(), br(), br() ,  
-                                             
-                                             
-                                             column(width = 5, offset = 0, style='padding:0px;',
-                                                    
-                                                    #      div(plotOutput("PP.plot2", width=fig.width7, height=fig.height6)),
-                                                    #       h4("Figure 9 Predictions for each model arm by trial arm to assess similarity in the two model predictions"),
-                                                    
-                                             )))
-                                         
-                                ) ,
+                                # tabPanel("8 xxxxxxx", value=3, 
+                                #          
+                                #          fluidRow(
+                                #            column(width = 6, offset = 0, style='padding:1px;',
+                                #                   #h4("Sometimes it is helpful to present the mean Y as a function of one or more model predictors. 
+                                #                   #    \n Enter an intercept for the ordinal model in the box below.."),
+                                #                   #textInput('kints',
+                                #                   #         div(h5(tags$span(style="color:blue",
+                                #                   #                         ""))), ""), 
+                                #                   
+                                #                   #div(plotOutput("PP.plot", width=fig.width7, height=fig.height6)),
+                                #                   h4("Figure 8 xxxxxxxxxxxxxx"),
+                                #                   br() , 
+                                #                   
+                                #                   h4(""),
+                                #                   
+                                #                   h4("Table 7 xxxxxxxxxxxx"),
+                                #                   #div( verbatimTextOutput("predz"), width = 2), # 
+                                #            ),
+                                #            
+                                #            fluidRow(
+                                #              
+                                #              
+                                #              #  h4(" This assumes a spacing for the Y levels."),
+                                #              #  h4("Try different odds ratios to see when the linear model 
+                                #              #         and PO model are no longer similar."),
+                                #              br(), br(), br() ,  
+                                #              
+                                #              
+                                #              column(width = 5, offset = 0, style='padding:0px;',
+                                #                     
+                                #                     #      div(plotOutput("PP.plot2", width=fig.width7, height=fig.height6)),
+                                #                     #       h4("Figure 9 Predictions for each model arm by trial arm to assess similarity in the two model predictions"),
+                                #                     
+                                #              )))
+                                #          
+                                # ) ,
+                                # 
+                                # 
+                                # tabPanel("9 xxxxxxxxxx", value=3, 
+                                #          
+                                #          #h5(paste("Checking assumptions")), 
+                                #          # div(plotOutput("assumption", width=fig.width1, height=fig.height3)),
+                                #          h4("Figure 10 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
+                                #          #       h4( "Checking assumptions, for each predictor separately We stratify each predictor and calculate the logit of all proportions pf the form 
+                                #          #Y>=j, j=1,2,...,k.
+                                #          #   When proportional odds hold, the differences in logits between different values of j should be the same for all values of X. (This may
+                                #          #  get crowded with many levels of Y)" ),
+                                #          h4("xxxxxxxxxxxxxxxx"),
+                                #          #      div( verbatimTextOutput("assump")),  
+                                #          
+                                # ),
+                                # 
+                                # 
+                                # tabPanel("10 xxxxxxxx", value=3, 
+                                #          
+                                #          #div(plotOutput("ecdfs", width=fig.width1, height=fig.height3)),
+                                #          h4(" ."), 
+                                #          h4(" "), 
+                                #          # div(plotOutput("logitseries", width=fig.width1, height=fig.height3)),
+                                #          
+                                #          
+                                #          h4("Figure 12 xxxxxxxxxxxxxxxxxxxxxxxxxxx"),  
+                                #          
+                                #          h4("xxxxxxxxxxxxxxxxx")
+                                #          
+                                # ),
                                 
                                 
-                                tabPanel("9 xxxxxxxxxx", value=3, 
-                                         
-                                         #h5(paste("Checking assumptions")), 
-                                         # div(plotOutput("assumption", width=fig.width1, height=fig.height3)),
-                                         h4("Figure 10 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
-                                         #       h4( "Checking assumptions, for each predictor separately We stratify each predictor and calculate the logit of all proportions pf the form 
-                                         #Y>=j, j=1,2,...,k.
-                                         #   When proportional odds hold, the differences in logits between different values of j should be the same for all values of X. (This may
-                                         #  get crowded with many levels of Y)" ),
-                                         h4("xxxxxxxxxxxxxxxx"),
-                                         #      div( verbatimTextOutput("assump")),  
-                                         
-                                ),
-                                
-                                
-                                tabPanel("10 xxxxxxxx", value=3, 
-                                         
-                                         #div(plotOutput("ecdfs", width=fig.width1, height=fig.height3)),
-                                         h4(" ."), 
-                                         h4(" "), 
-                                         # div(plotOutput("logitseries", width=fig.width1, height=fig.height3)),
-                                         
-                                         
-                                         h4("Figure 12 xxxxxxxxxxxxxxxxxxxxxxxxxxx"),  
-                                         
-                                         h4("xxxxxxxxxxxxxxxxx")
-                                         
-                                ),
-                                
-                                
-                                tabPanel("11 Data", 
+                                tabPanel("7 Data/References", 
                                          
                                          fluidRow(
                                            
@@ -470,17 +478,17 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                            column(width = 3, offset = 0, style='padding:1px;',
                                                   tags$hr(),
                                                   div(h4("References:")),  
-                                                  tags$a(href = "https://stats.stackexchange.com/search?q=proportional+odds+model", tags$span(style="color:blue", "[1] Proportional odds model"),),   
+                                                  tags$a(href = "https://www.fharrell.com/post/varyor/", tags$span(style="color:blue", "[1] Frank Harrell"),),   
                                                   div(p(" ")),
-                                                  tags$a(href = "hhttps://en.wikipedia.org/wiki/Ordered_logit",  tags$span(style="color:blue", "[2] Proportional odds wiki"),),   
-                                                  div(p(" ")),
+                                                  # tags$a(href = "hhttps://en.wikipedia.org/wiki/Ordered_logit",  tags$span(style="color:blue", "[2] Proportional odds wiki"),),   
+                                                  # div(p(" ")),
                                                   #  tags$a(href = "https://projecteuclid.org/download/pdf_1/euclid.aos/1176344552", tags$span(style="color:blue", "[3] Krushke"),),
                                                   #  div(p(" ")),
-                                                  tags$a(href = "http://hbiostat.org/doc/rms.pdf", tags$span(style="color:blue", "[3] Regression modelling strategies"),),  
-                                                  div(p(" ")),
-                                                  tags$a(href = "https://rdrr.io/cran/rms/man/predict.lrm.html", tags$span(style="color:blue", "[4] Prediction of model mean"),),  
-                                                  div(p(" ")),
-                                                  tags$hr()
+                                                  # tags$a(href = "http://hbiostat.org/doc/rms.pdf", tags$span(style="color:blue", "[3] Regression modelling strategies"),),  
+                                                  # div(p(" ")),
+                                                  # tags$a(href = "https://rdrr.io/cran/rms/man/predict.lrm.html", tags$span(style="color:blue", "[4] Prediction of model mean"),),  
+                                                  # div(p(" ")),
+                                                  # tags$hr()
                                            ),
                                            
                                            
@@ -744,6 +752,58 @@ server <- shinyServer(function(input, output   ) {
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
     })
+    
+    # relative explained variation on the risk scale, see frank harrell
+    
+    rexv <- reactive({
+      
+      X <- analysis() 
+      
+      L1 <-   var(predict(X$B, type='fitted')) / 
+              var(predict(X$A, type='fitted')) 
+      
+      L2 <-   var(predict(X$C, type='fitted')) / 
+              var(predict(X$A, type='fitted')) 
+      
+      L3 <-   var(predict(X$C, type='fitted')) / 
+              var(predict(X$B, type='fitted')) 
+      
+      AICA <-   AIC(X$A)  
+      AICB <-   AIC(X$B)  
+      AICC <-   AIC(X$C) 
+      
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      return(list(  L1=L1, L2= L2, L3= L3, AICA = AICA, AICB = AICB, AICC = AICC)) 
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      
+    })
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    output$rev1 <- renderPrint({
+      return(print(rexv()$L1, digits=3))
+    }) 
+    output$rev2 <- renderPrint({
+      return(print(rexv()$L2, digits=3))
+    }) 
+    output$rev3<- renderPrint({
+      return(print(rexv()$L3, digits=3))
+    }) 
+   
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    output$AIC1 <- renderPrint({
+      return(print(rexv()$AICA, digits=3))
+    }) 
+    output$AIC2 <- renderPrint({
+      return(print(rexv()$AICB, digits=3))
+    }) 
+    output$AIC3<- renderPrint({
+      return(print(rexv()$AICC, digits=3))
+    }) 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    
+    
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     lrtestx<- reactive({
@@ -772,38 +832,182 @@ server <- shinyServer(function(input, output   ) {
       return(print(lrtestx()$L3, digits=3))
     }) 
     
+ 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     output$textWithNumber <- renderText({ 
       
-    HTML(paste0( "Enter a value on the log odds scale. 
+      v1 <- as.numeric(    eval(parse(text= (input$v1)) ) )
+      v2 <- as.numeric(    eval(parse(text= (input$v2)) ) )
+      v3 <- as.numeric(    eval(parse(text= (input$v3)) ) )
+      v4 <- as.numeric(    eval(parse(text= (input$v4)) ) )
+      v5 <- as.numeric(    eval(parse(text= (input$v5)) ) )
+      v6 <- as.numeric(    eval(parse(text= (input$v6)) ) )
 
-For example in the case of treatment the default mean treatment level 2 coefficient expectation is 1 and treatment level 3 coefficient expectation is 2.
+      v7 <- as.numeric(    eval(parse(text= (input$v7)) ) )
+      v8 <- as.numeric(    eval(parse(text= (input$v8)) ) )
+      v9 <- as.numeric(    eval(parse(text= (input$v9)) ) )
 
-In the case of age, the default true effect is a change of 1 log odds over the age range.
+      v10 <- as.numeric(    eval(parse(text= (input$v10)) ) )
+      v11 <- as.numeric(    eval(parse(text= (input$v11)) ) )
+      v12 <- as.numeric(    eval(parse(text= (input$v12)) ) )
+      
+    HTML(paste0( "In the case of treatment  mean treatment level 2 coefficient expectation is "
+ , tags$span(style="color:red",  p4( v1*1) ) ,
+" and treatment level 3 coefficient expectation is "
+  , tags$span(style="color:red",  p4(v1*2) ) ,
 
-For smoking, the default is a log odds ratio of 0.4, so we expect 'smoking=2' to be 0.4 and 'smoking=3' to be 0.8.
+br(), br(),  
+"For smoking, the true log odds is "
+, tags$span(style="color:red",  p4(v3) ) , 
+" so we expect 'smoking=2' to be "
+, tags$span(style="color:red",  p4(v3*1) ) , 
+" and 'smoking=3' to be "
+, tags$span(style="color:red",  p4(v3*2) ) ,
 
-The true coefficient for BMI is 0. We expect a log odds ratios for BMI levels to be zero.
+br(), br(),  
+" In the case of age, the true effect is a change of "
+, tags$span(style="color:red",  p4(v2) ) ,
+" log odds over the age range. ",
 
-Crp is a continuous variable and the true coefficient for crp is 1/3 so for each unit change in crp the log odds of p(y=1|x) increases by 1/3.
+br(), br(),  
 
-Berlin is also a continuous coefficient and the true coefficient is -0.05, so for each unit change in berlin the log odds of p(y=1|x) decrease by -0.05.
+" The true coefficient for BMI is "
+, tags$span(style="color:red",  p4(v4) ) ,
+" CRP is a continuous variable and the true coefficient for CRP is "
+, tags$span(style="color:red",  p4(v5) ) ,
+" so for each unit change in CRP the log odds of p(y=1|x) increases by  "
+, tags$span(style="color:red",  p4(v5) ) ,
 
-Vas again is continuous and the true coeffient is 0.008. So for each unit change in berlin the log odds of p(y=1|x) increase by 0.008.
+br(), br(),  
+"Berlin is also continuous and the true coefficient is "
+, tags$span(style="color:red",  p4(v6) ) , 
+". So for each unit change in berlin the log odds of p(y=1|x) changes by "
+, tags$span(style="color:red",  p4(v6) ) , 
 
-Time is continuous and the true coeffient is -0.001. So for each unit change in time the log odds of p(y=1|x) decrease by -0.001.
+br(), br(), 
+" Vas again is continuous and the true coeffient is "
+, tags$span(style="color:red",  p4(v7) ) , 
+". So for each unit change in vas the log odds of p(y=1|x) changes by "
+, tags$span(style="color:red",  p4(v7) ) , 
 
-joint is treated as continuous and the coeffient 0.02. So for each unit change in joints the log odds of p(y=1|x) increase by -0.02.
+br(), br(), 
+"Time is continuous and the true coeffient is "
+, tags$span(style="color:red",  p4(v8) ) , 
+". So for each unit change in time the log odds of p(y=1|x) shifts by "
+, tags$span(style="color:red",  p4(v8) ) , 
 
-Nails, Evidence and Sex are binary predictors. For nails the default coefficent is 0.693, So for the change to the next level of Nails results in a 0.693 increase in the log odds of p(y=1|x).
+br(), br(),
 
-For evidence in truth there is no effect and we expect the log odds to be 0.
-
-Sex =1 compared to sex in 0 in truth the coefficient is -0.693"
+"Joint is treated as continuous and the coeffient "
+, tags$span(style="color:red",  p4(v9) ) , 
+". So for each unit change in joints the log odds of p(y=1|x) shifts by "
+, tags$span(style="color:red",  p4(v9) ) , 
+br(), br(),
+"Nails, Evidence and Sex are binary predictors. For nails the default coefficent is "
+, tags$span(style="color:red",  p4(v10) ) , 
+". So  the change to the next level of Nails results in a "
+, tags$span(style="color:red",  p4(v10) ) ,  
+" shift in the log odds of p(y=1|x).",
+br(), br(),
+"For evidence, in truth there is an effect in truth of "
+, tags$span(style="color:red",  p4(v11) ) , 
+". So  the change to the next level results in a "
+, tags$span(style="color:red",  p4(v11) ) ,   
+". sex =1 compared to sex=0 in truth the coefficient is "
+, tags$span(style="color:red",  p4(v12) ) ,""
                      
         ))    
         
       })
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    # rexv <- reactive({
+    #   
+    #   X <- analysis() 
+    #   
+    #   L1 <-   var(predict(X$B, type='fitted')) / 
+    #     var(predict(X$A, type='fitted')) 
+    #   
+    #   L2 <-   var(predict(X$C, type='fitted')) / 
+    #     var(predict(X$A, type='fitted')) 
+    #   
+    #   L3 <-   var(predict(X$C, type='fitted')) / 
+    #     var(predict(X$B, type='fitted')) 
+    #   
+    #   AICA <-   AIC(X$A)  
+    #   AICB <-   AIC(X$B)  
+    #   AICC <-   AIC(X$C) 
+    #   
+    #   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #   return(list(  L1=L1, L2= L2, L3= L3, AICA = AICA, AICB = AICB, AICC = AICC)) 
+    #   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #   
+    # })
+    
+    output$textWithNumber1 <- renderText({ 
+      
+      est <- rexv()
+ 
+      HTML(paste0(  tags$hr(),
+      "Comparing the model with treatment x smoking interaction to 
+                   the one with all covarites interacting with treatment the relative explained variation on the risk scale is "  
+                   , tags$span(style="color:red",  p4( est$L1)  ),
+                   " From this we see that even without penalizing for overfitting, 
+                   all the treatment interactions 
+                   account for only "  
+                   , tags$span(style="color:red",  p4(1- est$L1) ) ,
+                   " of the predictive information. The treatment x smoking 
+                   model is at least "
+                  , tags$span(style="color:red",  p4( est$L1)  ),
+                  " adequate on a scale from 0 to 1.", 
+                  br(), br(),
+                  "Comparing the main effects model to 
+                   the one with all covarites interacting with treatment the relative explained variation on the risk scale is "    
+                  , tags$span(style="color:red",  p4( est$L2)  ),
+                  " From this we see that even without penalizing for overfitting, 
+                   all the treatment interactions 
+                   account for only "  
+                  , tags$span(style="color:red",  p4(1- est$L2) ) ,
+                  " of the predictive information. The no-interaction logit-additive 
+                   model that assumes constancy of treatment ORs is at least "
+                  , tags$span(style="color:red",  p4( est$L2)  ),
+                  " adequate on a scale from 0 to 1. ",
+                  br(), br(),
+                  "Comparing the main effects model to 
+                   the one with only smoking interacting with treatment the relative explained variation on the risk scale is "    
+                  , tags$span(style="color:red",  p4( est$L3)  ),
+                  " From this we see that even without penalizing for overfitting, 
+                   all the treatment interactions 
+                   account for only "  
+                  , tags$span(style="color:red",  p4(1- est$L3) ) ,
+                  " of the predictive information. The no-interaction logit-additive 
+                   model that assumes constancy of treatment ORs is at least "
+                  , tags$span(style="color:red",  p4( est$L3)  ),
+                  " adequate on a scale from 0 to 1. ",
+                  tags$hr(),
+                  # br(), br(),
+                  "We can also use AIC to assess whether allowing for interactions will likely result in better patient-specific outcome predictions. 
+                  The lower the AIC the better:",
+                  br(), br(),
+                  "The AIC of the  no-interaction logit-additive model that assumes constancy of treatment ORs "  
+                  , tags$span(style="color:red",  p4( est$AICC)  ),
+                  br(), br(),
+                  "The AIC of the  treatment X smoking interaction model is "  
+                  , tags$span(style="color:red",  p4( est$AICB)  ),
+                  br(), br(),
+                  "The AIC of the  treatment X all predictor interaction model is "  
+                  , tags$span(style="color:red",  p4( est$AICA)  ),
+                  br(), br()
+                  
+                  
+                  
+      ))    
+      
+    })  
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # FULL INTERACTION MODEL
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
