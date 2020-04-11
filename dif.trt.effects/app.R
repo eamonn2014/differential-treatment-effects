@@ -3,25 +3,14 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 rm(list=ls()) 
 set.seed(3333) # reproducible
-#library(directlabels)
 library(shiny) 
 library(shinyWidgets)
 library(shinythemes)  # more funky looking apps
-#library(DT)
 library(shinyalert)
-#library(Hmisc)
 library(reshape)
 library(rms)
 
-#pkg <- "package:ormPlot"
-
-#detach(pkg, character.only = TRUE)
-#library(ormPlot)
-#library(ordinal)
-#library(ggplot2)
-#library(tidyverse)
-#options(mc.cores = parallel::detectCores())
-#rstan_options(auto_write = TRUE)
+ 
 options(max.print=1000000)    
 fig.width <- 400
 fig.height <- 300
@@ -361,20 +350,85 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                        #   )),
                               ),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                              # tabPanel("6 Forest plot main effects",
+                              #          # h4(paste("Table 3 Predicted probabilities, the estimated mean Y (meanY) is calculated by summing values of Y multiplied by the estimated Prob(Y=j)")),
+                              #          fluidRow(
+                              #            column(width = 12, offset = 0, style='padding:1px;',
+                              #                   div(plotOutput("f.plot3", width=fig.width4, height=fig.height7)),
+                              #                   #           div( verbatimTextOutput("reg.summaryp") ),
+                              #                   #          h4(paste("Table 4 Predicted cummulative probabilities ")),
+                              #                   #         div( verbatimTextOutput("reg.summaryc") ),
+                              #                   div( verbatimTextOutput("int.trt1C" ) ),
+                              #            ) ,
+                              #            
+                              #          ),
+                              #          
+                              # ),
+                              
+                              
                               tabPanel("6 Forest plot main effects",
-                                       # h4(paste("Table 3 Predicted probabilities, the estimated mean Y (meanY) is calculated by summing values of Y multiplied by the estimated Prob(Y=j)")),
-                                       fluidRow(
-                                         column(width = 12, offset = 0, style='padding:1px;',
-                                                div(plotOutput("f.plot3", width=fig.width4, height=fig.height7)),
-                                                #           div( verbatimTextOutput("reg.summaryp") ),
-                                                #          h4(paste("Table 4 Predicted cummulative probabilities ")),
-                                                #         div( verbatimTextOutput("reg.summaryc") ),
-                                                div( verbatimTextOutput("int.trt1C" ) ),
-                                         ) ,
-                                         
+                                      
+                                                
+                                                #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                                fluidRow(
+                                                  column(width = 6, offset = 0, style='padding:1px;',
+                                                         #          h4(paste("Figure 4. Plot of the predicted probabilities")), 
+                                                         div(plotOutput("f.plot3", width=fig.width4, height=fig.height7)),
+                                                         
+                                                  )),
+                                                #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                                
+                                                fluidRow(
+                                                  column(12,
+                                                         #  div( verbatimTextOutput("int.trt1" ) ),
+                                                         fluidRow(
+                                                           column(12,
+                                                                  #  div( verbatimTextOutput("int.trt2" ) ),
+                                                                  fluidRow(
+                                                                    column(6, 
+                                                                           div( verbatimTextOutput("int.trt1C" ) )),
+                                                                    # column(4,
+                                                                    #        div( verbatimTextOutput("int.trt2B" ) )),
+                                                                    # column(4,
+                                                                    #        div( verbatimTextOutput("int.trt3B" ) )),
+                                                                    
+                                                                  )
+                                                           )#,
+                                                           #column(width = 6,
+                                                           # "Fluid 6")
+                                                         )
+                                                  )
+                                                ),
+                                                
+                                                
+                                                #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                                
+                                                # fluidRow(
+                                                #   column(width = 4, offset = 0, style='padding:1px;',
+                                                #          
+                                                #          div( verbatimTextOutput("int.trt1" ) ),
+                                                #          div( verbatimTextOutput("int.trt2" ) )
+                                                #         # div( verbatimTextOutput("int.trt2" ) )
+                                                #   )),
                                        ),
-                                       
-                              ),
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
                               
                               tabPanel("7 Rel. expl. variaton", value=3, 
                                        #  h4("Tables 5 & 6 and Figure 7"),
@@ -780,26 +834,26 @@ server <- shinyServer(function(input, output   ) {
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
-  output$rev1 <- renderPrint({
-    return(print(rexv()$L1, digits=3))
-  }) 
-  output$rev2 <- renderPrint({
-    return(print(rexv()$L2, digits=3))
-  }) 
-  output$rev3<- renderPrint({
-    return(print(rexv()$L3, digits=3))
-  }) 
-  
+  # output$rev1 <- renderPrint({
+  #   return(print(rexv()$L1, digits=3))
+  # }) 
+  # output$rev2 <- renderPrint({
+  #   return(print(rexv()$L2, digits=3))
+  # }) 
+  # output$rev3<- renderPrint({
+  #   return(print(rexv()$L3, digits=3))
+  # }) 
+  # 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  output$AIC1 <- renderPrint({
-    return(print(rexv()$AICA, digits=3))
-  }) 
-  output$AIC2 <- renderPrint({
-    return(print(rexv()$AICB, digits=3))
-  }) 
-  output$AIC3<- renderPrint({
-    return(print(rexv()$AICC, digits=3))
-  }) 
+  # output$AIC1 <- renderPrint({
+  #   return(print(rexv()$AICA, digits=3))
+  # }) 
+  # output$AIC2 <- renderPrint({
+  #   return(print(rexv()$AICB, digits=3))
+  # }) 
+  # output$AIC3<- renderPrint({
+  #   return(print(rexv()$AICC, digits=3))
+  # }) 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
   
@@ -824,13 +878,13 @@ server <- shinyServer(function(input, output   ) {
   
   output$L1a <- renderPrint({
     return(print(lrtestx()$L1, digits=3))
-  }) 
+  })
   output$L1b <- renderPrint({
     return(print(lrtestx()$L2, digits=3))
-  }) 
+  })
   output$L1c <- renderPrint({
     return(print(lrtestx()$L3, digits=3))
-  }) 
+  })
   
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
