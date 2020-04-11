@@ -95,56 +95,57 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                   tags$head(
                                     tags$style(HTML('#resample{background-color:orange}'))
                                   ),
-                                  
+                                  tags$hr(),
                                   textInput('n',
                                             div(h5(tags$span(style="color:blue", "Sample size"))), value= "1000"),
                                   
-                                  tags$hr(),
+                                  
                                   
                                   selectInput("Design",
-                                              strong("Select design preference:"),
+                                              #strong("Select design preference:"),
+                                              div(h5(tags$span(style="color:blue", "Select design preference:"))),
                                               
                                               choices=c(  "Main effects model",
                                                           "Treatment interacts with smoking only" ,
                                                           "Treatment interacts with all variables" 
-                                              ), width='70%'),
+                                              ), width='80%'),
                                   
                                   
                                   
-                                  selectInput("Model",
-                                              strong("Select modelling preference:"),
-                                              choices=c(  "Main effects model",
-                                                          "Treatment interacts with smoking only" ,
-                                                          "Treatment interacts with all variables" 
-                                              ), width='70%'),
+                                  # selectInput("Model",
+                                  #             strong("Select modelling preference:"),
+                                  #             choices=c(  "Main effects model",
+                                  #                         "Treatment interacts with smoking only" ,
+                                  #                         "Treatment interacts with all variables" 
+                                  #             ), width='70%'),
                                   
                                   splitLayout(
-                                    textInput("v1", div(h5(tags$span(style="color:blue", "treatment coef"))), value= "1"),
-                                    textInput("v2", div(h5(tags$span(style="color:blue", "age coef"))), value= "1/(65-18)"),
-                                    textInput("v3", div(h5(tags$span(style="color:blue", "smoking coef"))), value= "0.4")
+                                    textInput("v1", div(h5(tags$span(style="color:blue", "treatment coefficient"))), value= "1"),
+                                    textInput("v2", div(h5(tags$span(style="color:blue", "age coefficient"))), value= "1/(65-18)"),
+                                    textInput("v3", div(h5(tags$span(style="color:blue", "smoking coefficient"))), value= "0.4")
                                     
                                   ),
                                   
                                   splitLayout(
-                                    textInput("v4", div(h5(tags$span(style="color:blue", "bmi coef"))), value= "0"),
-                                    textInput("v5", div(h5(tags$span(style="color:blue", "crp coef"))), value= "1/3"),
-                                    textInput("v6", div(h5(tags$span(style="color:blue", "berlin coef"))), value= "-.5/10")
+                                    textInput("v4", div(h5(tags$span(style="color:blue", "bmi coefficient"))), value= "0"),
+                                    textInput("v5", div(h5(tags$span(style="color:blue", "crp coefficient"))), value= "1/3"),
+                                    textInput("v6", div(h5(tags$span(style="color:blue", "berlin coefficient"))), value= "-.5/10")
                                     
                                   ),
                              
                                   
                                   splitLayout(
-                                    textInput("v7", div(h5(tags$span(style="color:blue", "vas coef"))), value= "0.25/30"),
-                                    textInput("v8", div(h5(tags$span(style="color:blue", "time coef"))), value= "-.1/10"),
-                                    textInput("v9", div(h5(tags$span(style="color:blue", "joints coef"))), value= "1/50")
+                                    textInput("v7", div(h5(tags$span(style="color:blue", "vas coefficient"))), value= "0.25/30"),
+                                    textInput("v8", div(h5(tags$span(style="color:blue", "time coefficient"))), value= "-.1/10"),
+                                    textInput("v9", div(h5(tags$span(style="color:blue", "joints coefficient"))), value= "1/50")
                                     
                                   ),
                                   
                                   
                                   splitLayout(
-                                    textInput("v10", div(h5(tags$span(style="color:blue", "nails coef"))), value= "log(2)"),
-                                    textInput("v11", div(h5(tags$span(style="color:blue", "evidence coef"))), value= "log(1)"),
-                                    textInput("v12", div(h5(tags$span(style="color:blue", "sex coef"))), value= "log(0.5)")
+                                    textInput("v10", div(h5(tags$span(style="color:blue", "nails coefficient"))), value= "log(2)"),
+                                    textInput("v11", div(h5(tags$span(style="color:blue", "evidence coefficient"))), value= "log(1)"),
+                                    textInput("v12", div(h5(tags$span(style="color:blue", "sex coefficient"))), value= "log(0.5)")
                                     
                                   ),
                                   
@@ -214,18 +215,18 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                        
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
-                                                h4("Table 2 [Main effects model] vrs [Treatment x Smoking interaction model]"), 
+                                                h4("Table 3 [Main effects model] vrs [Treatment x Smoking interaction model]"), 
                                                 div( verbatimTextOutput("L1c") ),
-                                                h4("Table 3 [Main effects model] vrs [Treatment x all predcitors interaction mode]l"), 
+                                                h4("Table 4 [Main effects model] vrs [Treatment x all predcitors interaction mode]l"), 
                                                 div( verbatimTextOutput("L1b") ),
-                                                h4("Table 4 [Treatment x Smoking interaction model] vrs [Treatment x all predcitors interaction model]"), 
+                                                h4("Table 5 [Treatment x Smoking interaction model] vrs [Treatment x all predcitors interaction model]"), 
                                                 div( verbatimTextOutput("L1a") )
                                                 
                                          ) ,
                                          
                                          
                                          
-                                         h4("Table 2 xxxxxxxxxxxxxxxxx"),
+                                        # h4("Table 2 xxxxxxxxxxxxxxxxx"),
                                          fluidRow(
                                            column(width = 6, offset = 0, style='padding:1px;',
                                                   h4("A small P-Value in the top most table provides evidence against
@@ -646,17 +647,17 @@ server <- shinyServer(function(input, output   ) {
     B<-lrm(y~  (trt *  smoking) + age  + bmi + crp + berlin + vas + time + joints + nails + evidence +sex, da)  # smoking * trt only
     C<-lrm(y~   trt +  smoking  + age +  bmi + crp + berlin + vas + time + joints + nails + evidence +sex, da)  # main effect
     
-    if (  (input$Model) == "Treatment interacts with all variables" )  {
-      f <- A
-      
-    }   else if (  (input$Model) == "Treatment interacts with smoking only" ) {    
-      
-      f <- B
-      
-    }   else if (  (input$Model) == "Main effects model" ) {  
-      
-      f <- C
-    }
+    # if (  (input$Model) == "Treatment interacts with all variables" )  {
+    #   f <- A
+    #   
+    # }   else if (  (input$Model) == "Treatment interacts with smoking only" ) {    
+    #   
+    #   f <- B
+    #   
+    # }   else if (  (input$Model) == "Main effects model" ) {  
+    #   
+    #   f <- C
+    # }
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return(list(  A=A, B=B, C=C)) 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
