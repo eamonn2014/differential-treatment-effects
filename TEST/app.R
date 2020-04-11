@@ -277,80 +277,194 @@ server <- shinyServer(function(input, output   ) {
         randomi <- randomness()$randomi
         
         sample <- random.sample()
+        n <- as.numeric(input$n )
+        v1 <- as.numeric(    eval(parse(text= (input$v1)) ) )
+        v2 <- as.numeric(    eval(parse(text= (input$v2)) ) )
+        v3 <- as.numeric(    eval(parse(text= (input$v3)) ) )    
+        v4 <- as.numeric(    eval(parse(text= (input$v4)) ) )   
+        v5 <- as.numeric(    eval(parse(text= (input$v5)) ) )  
+        v6 <- as.numeric(    eval(parse(text= (input$v6)) ) ) 
+        v7 <- as.numeric(    eval(parse(text= (input$v7)) ) )
+        v8 <- as.numeric(    eval(parse(text= (input$v8)) ) )
+        v9 <- as.numeric(    eval(parse(text= (input$v9)) ) )
+        v10 <- as.numeric(    eval(parse(text= (input$v10)) ) )
+        v11 <- as.numeric(    eval(parse(text= (input$v11)) ) )
+        v12 <- as.numeric(    eval(parse(text= (input$v12)) ) )
         
-        n <-            as.numeric(input$n )
+        trt.coef       <-  v1     # log odds ratio so 1 -> 2.718, so 1 is LARGE
+        age.coef       <-  v2     # log odds of 1 over the age range
+        smoke.coef     <-  v3     # this is odds of 1.5
+        bmi.coef       <-  v4     # this is an odds of 1..50:50
+        crp.coef       <-  v5     # log odds 1 over range of 3
+        berlin.coef    <-  v6     # log odds -.05 per unit change
+        vas.coef       <-  v7     # log odds .008 per unit change. log odds .25 over 30 units odds 1.27
+        time.coef      <-  v8     # log odds -.01 per year, log odds -.1 over 10 years or odds .90
+        joints.coef    <-  v9     # log odds 0.02 per joint, log odds 1 over 50 units or odds 2.7
+        nails.coef     <-  v10    # log odds 0.693 per change in binary, or odds of 2   
+        evidence.coef  <-  v11    # log odds 0 per change in binary, or odds of 1  
+        sex.coef       <-  v12    # log odds -0.693 per change in binary, or odds of .5  
+        
+        intercept <- -5
         
         trt      <- sample(1:3,   n, replace=TRUE)      # trt 3 levels
         age      <- sample(18:65, n, replace=TRUE)      # continuous
         bmi      <- sample(1:3,   n, replace=TRUE)      # assume 3 equal groups?
         smoking  <- sample(1:3,   n, replace=TRUE)      # categorical assume 3 equal groups?
+        crp      <- round(runif(n,0,3),2)
+        berlin   <- round(runif(n,0,10),2)
+        vas      <- sample(1:30, n, replace=TRUE)
+        time     <- round(runif(n,0,10),2)              # years
+        joints   <- sample(1:50, n, replace=TRUE)
+        nails    <- sample(0:1,  n, replace=TRUE)
+        evidence <- sample(0:1,  n, replace=TRUE)
+        sex      <- sample(0:1,  n, replace=TRUE)
         
-        
-        trt.coef      <-as.numeric(    eval(parse(text= (input$v1)) ) )    
-        age.coef      <-as.numeric(    eval(parse(text= (input$v2)) ) )      
-        smoke.coef    <-as.numeric(    eval(parse(text= (input$v3)) ) )       
-        bmi.coef      <-as.numeric(    eval(parse(text= (input$v4)) ) ) 
         
        
          
         #randomi <- runif(n)
         
-        return(list(trt=trt,
-                    age=age,
-                    bmi=bmi, 
-                    smoking=smoking,   
-                    trt.coef=trt.coef,
-                    age.coef=age.coef,
-                    smoke.coef=smoke.coef,
-                    bmi.coef=bmi.coef, 
-                    randomi=randomi)
-             )
+        # return(list(trt=trt,
+        #             age=age,
+        #             bmi=bmi, 
+        #             smoking=smoking,   
+        #             trt.coef=trt.coef,
+        #             age.coef=age.coef,
+        #             smoke.coef=smoke.coef,
+        #             bmi.coef=bmi.coef, 
+        #             randomi=randomi)
+        #      )
+        # 
+        # 
+        
+        return(list(    
+          
+          trt.coef       =trt.coef ,
+          age.coef       =age.coef,
+          smoke.coef     =smoke.coef,
+          bmi.coef       =bmi.coef,
+          crp.coef       =crp.coef,
+          berlin.coef    =berlin.coef,
+          vas.coef       =vas.coef,
+          time.coef      =time.coef,
+          joints.coef    =joints.coef,
+          nails.coef     =nails.coef,
+          evidence.coef  =evidence.coef,
+          sex.coef       =sex.coef,
+          
+          trt= trt, 
+          age=age, 
+          bmi=bmi, 
+          smoking=smoking,
+          crp=crp,
+          berlin=berlin, 
+          vas=vas, 
+          time=time, 
+          joints=joints, 
+          nails=nails , 
+          evidence=evidence, 
+          sex=sex,
+          
+          randomi=randomi))
+        
+        
+        
+        
+        
         
         
     })    
         
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     lp1 <- reactive({
         
         
           d <- design()
+        
           
-           trt=d$trt
-           age=d$age
-           bmi=d$bmi 
-           smoking=d$smoking
-           
-           trt.coef=d$trt.coef
-           age.coef=d$age.coef
-           smoke.coef=d$smoke.coef
-           bmi.coef=d$bmi.coef
+          trt      <-d$trt      
+          age      <-d$age       
+          bmi      <-d$bmi       
+          smoking  <-d$smoking  
+          crp      <-d$crp      
+          berlin   <-d$berlin   
+          vas      <-d$vas       
+          time     <-d$time      
+          joints   <-d$joints    
+          nails    <-d$nails     
+          evidence <-d$evidence  
+          sex      <-d$sex  
+         
+           trt.coef      =d$trt.coef 
+           age.coef      =d$age.coef
+           smoke.coef    =d$smoke.coef
+           bmi.coef      =d$bmi.coef
+           crp.coef      =d$crp.coef
+           berlin.coef   =d$berlin.coef
+           vas.coef      =d$vas.coef
+           time.coef     =d$time.coef
+           joints.coef   =d$joints.coef
+           nails.coef    =d$nails.coef
+           evidence.coef =d$evidence.coef
+           sex.coef      =d$sex.coef
         
            randomi <- d$randomi
            intercept <- -3
         
-        if ( (input$Design) == "Treatment interacts with all variables" )  {
-            
-            lp = intercept + trt*trt.coef*(smoking*smoke.coef   +   age*age.coef  + bmi*bmi.coef   ) 
-            
-        }   else if ( (input$Design ) == "Treatment interacts with smoking only" ) {    
-            
-            # truth  only smoking interacts  with trt
-            lp = intercept + (trt*trt.coef*smoking*smoke.coef)   +   age*age.coef   + bmi*bmi.coef  
-            
-        }   else if ( (input$Design) == "Main effects model" ) {  
-            
-            # truth no interactions
-            lp = intercept + trt*trt.coef + smoking*smoke.coef + age*age.coef  + bmi*bmi.coef  
-            
-        }
-        
-        trt <-     factor(trt)
-        smoking <- factor(smoking)
-        bmi <-     factor(bmi)
+           if ( (input$Design) == "Treatment interacts with all variables" )  {
+             
+             lp = intercept + trt*trt.coef*(smoking*smoke.coef   +   age*age.coef  + bmi*bmi.coef + crp*crp.coef +
+                                              berlin*berlin.coef + vas*vas.coef + time*time.coef + joints*joints.coef +
+                                              nails*nails.coef +
+                                              evidence*evidence.coef + sex*sex.coef) 
+             
+           }   else if ( (input$Design ) == "Treatment interacts with smoking only" ) {    
+             
+             # truth  only smoking interacts  with trt
+             lp = intercept + (trt*trt.coef*smoking*smoke.coef)   +   age*age.coef   + bmi*bmi.coef + crp*crp.coef +
+               berlin*berlin.coef + vas*vas.coef + time*time.coef + joints*joints.coef + nails*nails.coef +
+               evidence*evidence.coef + sex*sex.coef
+             
+           }   else if ( (input$Design) == "Main effects model" ) {  
+             
+             # truth no interactions
+             lp = intercept + trt*trt.coef + smoking*smoke.coef + age*age.coef  + bmi*bmi.coef + crp*crp.coef +
+               berlin*berlin.coef + vas*vas.coef + time*time.coef + joints*joints.coef + nails*nails.coef +
+               evidence*evidence.coef + sex*sex.coef
+           }
+           
+           
+           trt <-     factor(trt)
+           smoking <- factor(smoking)
+           nails <-   factor(nails)
+           evidence <-factor(evidence)
+           sex <-     factor(sex)
+           bmi <-     factor(bmi)
+           
         
         y <- ifelse(randomi < plogis(lp), 1, 0)   # one liner RANDOM!!!
         
-        dat <- data.frame(cbind(y, trt, smoking, age, bmi))
+        dat <- data.frame(cbind(y,  trt ,  smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi))
         return(list(datx=dat))
         
     })
@@ -364,9 +478,9 @@ server <- shinyServer(function(input, output   ) {
         dd <<- datadist(da)
         options(datadist="dd")
 
-        A<-lrm(y~   trt * (smoking  + age  + bmi  ), da) # all interact with trt
-        B<-lrm(y~  (trt *  smoking) + age  + bmi  , da )  # smoking * trt only
-        C<-lrm(y~   trt +  smoking  + age +  bmi  , da)  # main effect
+        A<-lrm(y~   trt * (smoking  + age  + bmi + crp + berlin + vas + time + joints + nails + evidence +sex),da)  # all interact with trt
+        B<-lrm(y~  (trt *  smoking) + age  + bmi + crp + berlin + vas + time + joints + nails + evidence +sex, da)  # smoking * trt only
+        C<-lrm(y~   trt +  smoking  + age +  bmi + crp + berlin + vas + time + joints + nails + evidence +sex, da)  # main effect
         
         if (  (input$Model) == "Treatment interacts with all variables" )  {
             f <- A
