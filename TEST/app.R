@@ -107,33 +107,35 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                       
                                       selectInput("Design",
                                                   strong("Select design preference:"),
-                                                  choices=c( "Treatment interacts with all variables" , 
+                                                  
+                                                  choices=c(  "Main effects model",
                                                              "Treatment interacts with smoking only" ,
-                                                             "Main effects model" ), width='70%'),
+                                                             "Treatment interacts with all variables" 
+                                                             ), width='70%'),
+                                                  
+                                                   
                                       
                                       selectInput("Model",
                                                   strong("Select modelling preference:"),
-                                                  choices=c( "Treatment interacts with all variables" , 
-                                                             "Treatment interacts with smoking only" ,
-                                                             "Main effects model" ), width='70%'),
+                                                  choices=c(  "Main effects model",
+                                                              "Treatment interacts with smoking only" ,
+                                                              "Treatment interacts with all variables" 
+                                                  ), width='70%'),
                                       
-                             
-                                      splitLayout(
+                                       splitLayout(
                                           textInput("v1", div(h5(tags$span(style="color:blue", "treatment coef"))), value= "1"),
                                           textInput("v2", div(h5(tags$span(style="color:blue", "age coef"))), value= "1/(65-18)"),
                                           textInput("v3", div(h5(tags$span(style="color:blue", "smoking coef"))), value= "0.4")
                                           
                                       ),
-                                      
-                                      
+                                       
                                       splitLayout(
                                           textInput("v4", div(h5(tags$span(style="color:blue", "bmi coef"))), value= "0"),
                                           textInput("v5", div(h5(tags$span(style="color:blue", "crp coef"))), value= "1/3"),
                                           textInput("v6", div(h5(tags$span(style="color:blue", "berlin coef"))), value= "-.5/10")
                                           
                                       ),
-                                       
-                           
+                            
                                   )
 
                     ),
@@ -158,7 +160,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                             .navbar-default .navbar-nav > li > a[data-value='t3'] {color: green;background-color: lightgreen;}
                    ")),
                                   
-                                tabPanel("2 xxxxxxxxx", value=3, 
+                                tabPanel("1 xxxxxxxxx", value=3, 
                                 
                                            fluidRow(
                                                column(width = 6, offset = 0, style='padding:1px;',
@@ -175,7 +177,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                    ))),
                                      
                                   ),
-                                   tabPanel("11 Data", 
+                                   tabPanel("2 Data", 
                                            
                                            fluidRow(
                                            
@@ -185,12 +187,9 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                       div( verbatimTextOutput("datx") ),
                                                       
                                                )
-                                               
-                                               
-                                           )
-                                  )##end
-                              
-                                  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   END NEW   
+                                             )
+                                            )##end
+                                   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   END NEW   
                               )
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                        )
@@ -220,69 +219,64 @@ server <- shinyServer(function(input, output   ) {
         v3 <- as.numeric(    eval(parse(text= (input$v3)) ) )    
         v4 <- as.numeric(    eval(parse(text= (input$v4)) ) )   
         
-        check =c(v1 , v2 , v3   )
-        
-        return(list(
-            n=n, v1=v1, v2=v2, v3=v3  , v4=v4
+         return(list(
+            n=n, v1=v1, v2=v2, v3=v3, v4=v4
           
         ))
+     })
+      
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    design <- reactive({
+       
+        n <-            as.numeric(input$n )
         
-    })
-    
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # tab 1 simulate po model data and analyse
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    mcmc <- reactive({
-        
-        sample <- random.sample()
-        
-        n   <- sample$n
-        v1  <- sample$v1
-        v2  <- sample$v2
-        v3  <- sample$v3
-        v4  <- sample$v4
-         
         trt      <- sample(1:3,   n, replace=TRUE)      # trt 3 levels
         age      <- sample(18:65, n, replace=TRUE)      # continuous
         bmi      <- sample(1:3,   n, replace=TRUE)      # assume 3 equal groups?
         smoking  <- sample(1:3,   n, replace=TRUE)      # categorical assume 3 equal groups?
-         
-        dat <- as.data.frame(cbind(trt, age, bmi, smoking ))
         
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return(list(  dat=dat, n=n,
-                      n=n, v1=v1, v2=v2, v3=v3, v4=v4  )) 
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    })
-    
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-    output$datx <- renderPrint({
         
-        return(print(mcmc()$dat, digits=3))
-        
-    }) 
-    
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    analysis <- reactive({
-        
-        coefs <- mcmc()
-         
-        d <- mcmc()$dat
-        
-        n        <-coefs$n
-        trt      <-d$trt      
-        age      <-d$age       
-        bmi      <-d$bmi       
-        smoking  <-d$smoking  
-        
-        trt.coef       <- coefs$v1     # log odds ratio so 1 -> 2.718, so 1 is LARGE
-        age.coef       <- coefs$v2     # log odds of 1 over the age range
-        smoke.coef     <- coefs$v3     # this is odds of 1.5
-        bmi.coef       <- coefs$v4     # this is an odds of 1..50:50
+        trt.coef      <-as.numeric(    eval(parse(text= (input$v1)) ) )    
+        age.coef      <-as.numeric(    eval(parse(text= (input$v2)) ) )      
+        smoke.coef    <-as.numeric(    eval(parse(text= (input$v3)) ) )       
+        bmi.coef      <-as.numeric(    eval(parse(text= (input$v4)) ) ) 
         
         intercept <- -3
+         
+        randomi <- runif(n)
         
+        return(list(trt=trt,
+                    age=age,
+                    bmi=bmi, 
+                    smoking=smoking,   
+                    trt.coef=trt.coef,
+                    age.coef=age.coef,
+                    smoke.coef=smoke.coef,
+                    bmi.coef=bmi.coef, 
+                    randomi=randomi)
+             )
+        
+        
+    })    
+        
+    
+    lp <- reactive({
+        
+        
+          d <- design()
+          
+           trt=d$trt
+           age=d$age
+           bmi=d$bmi 
+           smoking=d$smoking
+           
+           trt.coef=d$trt.coef
+           age.coef=d$age.coef
+           smoke.coef=d$smoke.coef
+           bmi.coef=d$bmi.coef
+        
+           randomi <- d$randomi
+    
         
         if ( (input$Design) == "Treatment interacts with all variables" )  {
             
@@ -293,12 +287,10 @@ server <- shinyServer(function(input, output   ) {
             # truth  only smoking interacts  with trt
             lp = intercept + (trt*trt.coef*smoking*smoke.coef)   +   age*age.coef   + bmi*bmi.coef  
             
-            
         }   else if ( (input$Design) == "Main effects model" ) {  
             
             # truth no interactions
             lp = intercept + trt*trt.coef + smoking*smoke.coef + age*age.coef  + bmi*bmi.coef  
-            
             
         }
         
@@ -306,36 +298,48 @@ server <- shinyServer(function(input, output   ) {
         smoking <- factor(smoking)
         bmi <-     factor(bmi)
         
-        y <- ifelse(runif(n) < plogis(lp), 1, 0)   # one liner
+        y <- ifelse(randomi < plogis(lp), 1, 0)   # one liner RANDOM!!!
         
-        d <<- datadist(y,  trt ,  smoking, age,   bmi)
-        options(datadist="d")
+        dat <- data.frame(cbind(y, trt, smoking, age, bmi))
+        return(list(datx=dat))
         
-        A<-lrm(y~   trt * (smoking  + age  + bmi  )) # all interact with trt
-        B<-lrm(y~  (trt *  smoking) + age  + bmi  )  # smoking * trt only
-        C<-lrm(y~   trt +  smoking  + age +  bmi  )  # main effect
+    })
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    analysis <- reactive({
         
-        if ( isolate(input$Model) == "Treatment interacts with all variables" )  {
+        da <- lp()$datx 
+        
+        dd <<- datadist(da)
+        options(datadist="dd")
+
+        A<-lrm(y~   trt * (smoking  + age  + bmi  ), da) # all interact with trt
+        B<-lrm(y~  (trt *  smoking) + age  + bmi  , da )  # smoking * trt only
+        C<-lrm(y~   trt +  smoking  + age +  bmi  , da)  # main effect
+        
+        if (  (input$Model) == "Treatment interacts with all variables" )  {
             f <- A
             
-        }   else if ( isolate(input$Model) == "Treatment interacts with smoking only" ) {    
+        }   else if (  (input$Model) == "Treatment interacts with smoking only" ) {    
             # all interact with trt
             f <- B
             
-        }   else if ( isolate(input$Model) == "Main effects model" ) {  
+        }   else if (  (input$Model) == "Main effects model" ) {  
             
             f <- C
         }
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return(list(  lp=lp , y=y , A=A, B=B, C=C)) 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        
-
+ 
     })
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-    
+     
+    output$datx <- renderPrint({
+        return(print(mcmc()$dat, digits=3))
+    }) 
     output$Ax <- renderPrint({
         return(print(analysis()$A, digits=3))
     }) 
@@ -345,8 +349,7 @@ server <- shinyServer(function(input, output   ) {
     output$Cx <- renderPrint({
         return(print(analysis()$C, digits=3))
     }) 
- 
-    
+     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 })
 
