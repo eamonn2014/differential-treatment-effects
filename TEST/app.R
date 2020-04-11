@@ -277,14 +277,65 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                          
                                          
                                          #div(plotOutput("preds2", width=fig.width1, height=fig.height3)),
-                                         
+                                         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                         fluidRow(
+                                           column(width = 6, offset = 0, style='padding:1px;',
+                                                  #          h4(paste("Figure 4. Plot of the predicted probabilities")), 
+                                                  div(plotOutput("f.plot1", width=fig.width4, height=fig.height4)),
+                                                  
+                                                 # div( verbatimTextOutput("int.trt1" ) ),
+                                               #   div( verbatimTextOutput("int.trt2" ) )
+                                                  #div( verbatimTextOutput("int.trt1" ) )
+                                           )),
+                                         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                          
                                          
                                          fluidRow(
-                                           column(width = 7, offset = 0, style='padding:1px;',
-                                                  #          h4(paste("Figure 4. Plot of the predicted probabilities")), 
-                                                  div(plotOutput("f.plot1", width=fig.width4, height=fig.height1)),
-                                           )),
+                                           column(12,
+                                                #  div( verbatimTextOutput("int.trt1" ) ),
+                                                  fluidRow(
+                                                    column(12,
+                                                         #  div( verbatimTextOutput("int.trt2" ) ),
+                                                           fluidRow(
+                                                             column(4, 
+                                                                    div( verbatimTextOutput("int.trt1" ) )),
+                                                             column(4,
+                                                                    div( verbatimTextOutput("int.trt2" ) )),
+                                                             column(4,
+                                                                    div( verbatimTextOutput("int.trt3" ) )),
+                                                             
+                                                           )
+                                                    )#,
+                                                    #column(width = 6,
+                                                          # "Fluid 6")
+                                                  )
+                                           )
+                                         ),
+                                         
+                                         
+                                         
+                                         
+                                         
+                                         
+                                         
+                                         
+                                         
+                                         
+                                         
+                                         
+                                         
+                                         
+                                         
+                                         
+                                         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                          
+                                         # fluidRow(
+                                         #   column(width = 4, offset = 0, style='padding:1px;',
+                                         #          
+                                         #          div( verbatimTextOutput("int.trt1" ) ),
+                                         #          div( verbatimTextOutput("int.trt2" ) )
+                                         #         # div( verbatimTextOutput("int.trt2" ) )
+                                         #   )),
                                 ),
                                 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                 tabPanel("5 Forest plot", 
@@ -777,6 +828,44 @@ Sex =1 compared to sex in 0 in truth the coefficient is -0.693"
         
       })
       
+    ## prep some table
+    zummary<- reactive({
+      
+      X <- analysis() 
+      
+      A1 <- summary(X$A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "names"))
+      
+      A2 <- summary(X$A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=2, est.all=FALSE, vnames=c( "names"))
+      
+      A3 <- summary(X$A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=3, est.all=FALSE, vnames=c( "names"))
+      
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      return(list(  A1=A1, A2= A2, A3= A3)) 
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      
+    })
+    
+    output$int.trt1 <- renderPrint({
+      return(print(zummary()$A1))
+    }) 
+    output$int.trt2 <- renderPrint({
+      return(print(zummary()$A2))
+    }) 
+    output$int.trt3 <- renderPrint({
+      return(print(zummary()$A3))
+    }) 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     output$f.plot1 <- renderPlot({   
       
       X <- analysis() 
