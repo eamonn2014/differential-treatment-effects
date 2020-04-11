@@ -131,12 +131,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                     textInput("v6", div(h5(tags$span(style="color:blue", "berlin coef"))), value= "-.5/10")
                                     
                                   ),
-                                  splitLayout(
-                                    textInput("v4", div(h5(tags$span(style="color:blue", "bmi coef"))), value= "0"),
-                                    textInput("v5", div(h5(tags$span(style="color:blue", "crp coef"))), value= "1/3"),
-                                    textInput("v6", div(h5(tags$span(style="color:blue", "berlin coef"))), value= "-.5/10")
-                                    
-                                  ),
+                             
                                   
                                   splitLayout(
                                     textInput("v7", div(h5(tags$span(style="color:blue", "vas coef"))), value= "0.25/30"),
@@ -177,10 +172,10 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                             .navbar-default .navbar-nav > li > a[data-value='t3'] {color: green;background-color: lightgreen;}
                    ")),
                               tabPanel("1 Main effects", 
-                                       
+                                       h4(paste("Table 1. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
-                                                h4(paste("Table 1. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
+                                               # h4(paste("Table 1. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
                                                 div( verbatimTextOutput("Cx2") )
                                                 
                                                 
@@ -193,16 +188,37 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                            ))),
                               ),
                            
-                              
-                              tabPanel("2 LR tests", value=7, 
+                              #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                              tabPanel("2 Forest plot main effects", value=7, 
+                                       # h4("The distribution of the baseline version of the response variable is specified here.
+                                       #   By selecting a beta distribution using the shape parameters the
+                                       #  expected baseline counts in categories can be approximated. The default is Beta(22,21)."),
+                                       
+                                       h4(paste("Figure 1 & Table 2. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
+                                       fluidRow(
+                                         column(width = 6, offset = 0, style='padding:1px;',
+                                                
+                                                div(plotOutput("f.plot3", width=fig.height1, height=fig.height9)),  #width4
+                                                
+                                         ) ,
+                                         
+                                         
+                                         fluidRow(
+                                           column(width = 6, offset = 0, style='padding:1px;',
+                                                  
+                                                  div( verbatimTextOutput("int.trt1C" ) ))
+                                           
+                                         ))),
+                              #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                              tabPanel("3 LR tests", value=7, 
                                        
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
-                                                h4("Table 1 [Main effects model] vrs [Treatment x Smoking interaction model]"), 
+                                                h4("Table 2 [Main effects model] vrs [Treatment x Smoking interaction model]"), 
                                                 div( verbatimTextOutput("L1c") ),
-                                                h4("Table 2 [Main effects model] vrs [Treatment x all predcitors interaction mode]l"), 
+                                                h4("Table 3 [Main effects model] vrs [Treatment x all predcitors interaction mode]l"), 
                                                 div( verbatimTextOutput("L1b") ),
-                                                h4("Table 3 [Treatment x Smoking interaction model] vrs [Treatment x all predcitors interaction model]"), 
+                                                h4("Table 4 [Treatment x Smoking interaction model] vrs [Treatment x all predcitors interaction model]"), 
                                                 div( verbatimTextOutput("L1a") )
                                                 
                                          ) ,
@@ -237,28 +253,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               ) ,
                               
                               
-                              #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("3 Forest plot main effects", value=7, 
-                                       # h4("The distribution of the baseline version of the response variable is specified here.
-                                       #   By selecting a beta distribution using the shape parameters the
-                                       #  expected baseline counts in categories can be approximated. The default is Beta(22,21)."),
-                                       
-                                       
-                                       fluidRow(
-                                         column(width = 6, offset = 0, style='padding:1px;',
-                                                
-                                                div(plotOutput("f.plot3", width=fig.height1, height=fig.height9)),  #width4
-                                                
-                                         ) ,
-                                         
-                                         
-                                         fluidRow(
-                                           column(width = 6, offset = 0, style='padding:1px;',
-                                                  
-                                                  div( verbatimTextOutput("int.trt1C" ) ))
-                                           
-                                         ))),
-                              #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                            
                               
                               tabPanel("4 Forest plot trt x all", value=3, 
                                        
@@ -766,7 +761,7 @@ server <- shinyServer(function(input, output   ) {
     HTML(paste0( "In the case of treatment  mean treatment level 2 coefficient expectation is "
                  , tags$span(style="color:red",  p4( v1*1) ) ,
                  " and treatment level 3 coefficient expectation is "
-                 , tags$span(style="color:red",  p4(v1*2) ) ,
+                 , tags$span(style="color:red",  p4(v1*2) ) ,".",
                  
                  br(), br(),  
                  "For smoking, the true log odds is "
@@ -774,59 +769,66 @@ server <- shinyServer(function(input, output   ) {
                  " so we expect 'smoking=2' to be "
                  , tags$span(style="color:red",  p4(v3*1) ) , 
                  " and 'smoking=3' to be "
-                 , tags$span(style="color:red",  p4(v3*2) ) ,
+                 , tags$span(style="color:red",  p4(v3*2) ) ,".",
                  
                  br(), br(),  
                  " In the case of age, the true effect is a change of "
                  , tags$span(style="color:red",  p4(v2) ) ,
-                 " log odds over the age range. ",
+                 " log odds for each unit change in age. ","",
                  
                  br(), br(),  
                  
-                 " The true coefficient for BMI is "
+                 " The true coefficient for BMI a 3 level categorical factor is "
                  , tags$span(style="color:red",  p4(v4) ) ,
+                 " so we expect 'BMI=2' to be "
+                 , tags$span(style="color:red",  p4(v4*1) ) , 
+                 " and 'BMI=3' to be "
+                 , tags$span(style="color:red",  p4(v4*2) ) ,".",
+                 
+                 br(), br(),  
+                 
                  " CRP is a continuous variable and the true coefficient for CRP is "
                  , tags$span(style="color:red",  p4(v5) ) ,
-                 " so for each unit change in CRP the log odds of p(y=1|x) increases by  "
-                 , tags$span(style="color:red",  p4(v5) ) ,
+                 ". So for each unit change in CRP the log odds of p(y=1|x) increases by  "
+                 , tags$span(style="color:red",  p4(v5) ) ,".",
                  
                  br(), br(),  
                  "Berlin is also continuous and the true coefficient is "
                  , tags$span(style="color:red",  p4(v6) ) , 
                  ". So for each unit change in berlin the log odds of p(y=1|x) changes by "
-                 , tags$span(style="color:red",  p4(v6) ) , 
+                 , tags$span(style="color:red",  p4(v6) ) , ".",
                  
                  br(), br(), 
                  " Vas again is continuous and the true coeffient is "
                  , tags$span(style="color:red",  p4(v7) ) , 
                  ". So for each unit change in vas the log odds of p(y=1|x) changes by "
-                 , tags$span(style="color:red",  p4(v7) ) , 
+                 , tags$span(style="color:red",  p4(v7) ) , ".",
                  
                  br(), br(), 
                  "Time is continuous and the true coeffient is "
                  , tags$span(style="color:red",  p4(v8) ) , 
                  ". So for each unit change in time the log odds of p(y=1|x) shifts by "
-                 , tags$span(style="color:red",  p4(v8) ) , 
+                 , tags$span(style="color:red",  p4(v8) ) , ".",
                  
                  br(), br(),
                  
                  "Joint is treated as continuous and the coeffient "
                  , tags$span(style="color:red",  p4(v9) ) , 
                  ". So for each unit change in joints the log odds of p(y=1|x) shifts by "
-                 , tags$span(style="color:red",  p4(v9) ) , 
+                 , tags$span(style="color:red",  p4(v9) ) , ".",
                  br(), br(),
                  "Nails, Evidence and Sex are binary predictors. For nails the default coefficent is "
                  , tags$span(style="color:red",  p4(v10) ) , 
                  ". So  the change to the next level of Nails results in a "
                  , tags$span(style="color:red",  p4(v10) ) ,  
-                 " shift in the log odds of p(y=1|x).",
+                 " shift in the log odds of p(y=1|x).",".",
                  br(), br(),
-                 "For evidence, in truth there is an effect in truth of "
+                 "For evidence, in truth there is an effect of "
                  , tags$span(style="color:red",  p4(v11) ) , 
-                 ". So  the change to the next level results in a "
+                 ". So the change to the next level results in a "
                  , tags$span(style="color:red",  p4(v11) ) ,   
-                 ". sex =1 compared to sex=0 in truth the coefficient is "
-                 , tags$span(style="color:red",  p4(v12) ) ,""
+                 ". In the case of comapring sex =1 to sex=0 in truth the coefficient is "
+                 , tags$span(style="color:red",  p4(v12) ) ,"."
                  
     ))    
     
@@ -1016,21 +1018,21 @@ server <- shinyServer(function(input, output   ) {
     
     options(digits=1)
     
-    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "labels")), 
+    plot(summary(A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels")), 
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
          col.points='black', cex=1, main= "Odds Ratio (Treatment 1)", cex.main=1.8
     )
     
-    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=2, est.all=FALSE, vnames=c( "labels")), 
+    plot(summary(A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=2, est.all=FALSE, vnames=c( "labels")), 
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
          col.points='black', cex=1, main= "Odds Ratio (Treatment 2)", cex.main=1.8
     )
     
-    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex=0, bmi, trt=3, est.all=FALSE, vnames=c( "labels")), 
+    plot(summary(A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex=0, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels")), 
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
@@ -1056,21 +1058,21 @@ server <- shinyServer(function(input, output   ) {
     
     options(digits=1)
 
-    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "labels")),
+    plot(summary(A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels")),
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
          col.points='black', cex=1, main= "Odds Ratio (Treatment 1)", cex.main=1.8
     )
     
-    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=2, est.all=FALSE, vnames=c( "labels")),
+    plot(summary(A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=2, est.all=FALSE, vnames=c( "labels")),
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
          col.points='black', cex=1, main= "Odds Ratio (Treatment 2)", cex.main=1.8
     )
     
-    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex=0, bmi, trt=3, est.all=FALSE, vnames=c( "labels")),
+    plot(summary(A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex=0, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels")),
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
@@ -1095,11 +1097,11 @@ server <- shinyServer(function(input, output   ) {
     options(digits=1)
     
     
-    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "labels")),
+    plot(summary(A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels")),
          log=TRUE, xlim=c(log(.2),log(10)),
          q=c( 0.95 ), at=c( .1,.2,.3,.5,.75,1, 1.2,1.5, 2,3,4,6,8,10), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
-         col.points='black', cex=1, main= "Odds Ratio (No-interaction logit-additive model that assumes constancy of treatment ORs)", cex.main=1.8 
+         col.points='black', cex=1, main= "Odds Ratio", cex.main=1.8 
     )
     
   })
