@@ -1201,7 +1201,7 @@ server <- shinyServer(function(input, output   ) {
          log=TRUE, xlim=c(log(.2),log(10)),
          q=c( 0.95 ), at=c( .1,.2,.3,.5,.75,1, 1.2,1.5, 2,3,4,6,8,10), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
-         col.points='black', cex=1, main= "Odds Ratio (main effects model)", cex.main=1.8
+         col.points='black', cex=1, main= "Odds Ratio (main effects model)", cex.main=1.8 
     )
     
     
