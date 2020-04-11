@@ -225,9 +225,24 @@ server <- shinyServer(function(input, output   ) {
         ))
      })
       
+    
+    randomness <- reactive({
+    
+        n <- as.numeric(input$n )
+        randomi <- runif(n)
+        
+        return(list(
+            randomi=randomi
+        ))
+        
+    })
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     design <- reactive({
        
+        randomi <- randomness()$randomi
+        
+        sample <- random.sample()
+        
         n <-            as.numeric(input$n )
         
         trt      <- sample(1:3,   n, replace=TRUE)      # trt 3 levels
@@ -243,7 +258,7 @@ server <- shinyServer(function(input, output   ) {
         
         intercept <- -3
          
-        randomi <- runif(n)
+        #randomi <- runif(n)
         
         return(list(trt=trt,
                     age=age,
