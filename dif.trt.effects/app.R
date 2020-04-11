@@ -31,7 +31,7 @@ fig.widthx <- 593
 fig.heightx <- 268
 fig.height7 <- 600
 fig.width9 <- 1380
-fig.height9 <- 500
+fig.height9 <- 679
 
 
 ## convenience functions
@@ -192,25 +192,9 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                   h4(htmlOutput("textWithNumber",) ),
                                            ))),
                               ),
-                              tabPanel("2 All 3 models", value=3, 
-                                       
-                                       fluidRow(
-                                         column(width = 6, offset = 0, style='padding:1px;',
-                                                h4(paste("Figure 3. xxxxxxxxxxxxxxxxxx")), 
-                                                div( verbatimTextOutput("Cx") ),
-                                                div( verbatimTextOutput("Bx") )
-                                                
-                                         ),
-                                         
-                                         fluidRow(
-                                           column(width = 5, offset = 0, style='padding:1px;',
-                                                  h4(paste("Figure 3. xxxxxxxxxxxxxxxxxx")), 
-                                                  div( verbatimTextOutput("Ax") )
-                                           ))),
-                                       
-                              ),
+                           
                               
-                              tabPanel("3 LR tests", value=7, 
+                              tabPanel("2 LR tests", value=7, 
                                        
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
@@ -254,6 +238,26 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               
                               
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                              tabPanel("3 Forest plot main effects", value=7, 
+                                       # h4("The distribution of the baseline version of the response variable is specified here.
+                                       #   By selecting a beta distribution using the shape parameters the
+                                       #  expected baseline counts in categories can be approximated. The default is Beta(22,21)."),
+                                       
+                                       
+                                       fluidRow(
+                                         column(width = 6, offset = 0, style='padding:1px;',
+                                                
+                                                div(plotOutput("f.plot3", width=fig.height1, height=fig.height9)),  #width4
+                                                
+                                         ) ,
+                                         
+                                         
+                                         fluidRow(
+                                           column(width = 6, offset = 0, style='padding:1px;',
+                                                  
+                                                  div( verbatimTextOutput("int.trt1C" ) ))
+                                           
+                                         ))),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                               
                               tabPanel("4 Forest plot trt x all", value=3, 
@@ -331,45 +335,10 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               ),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                               
-                              
-                              tabPanel("6 Forest plot main effects",
-                                      
-                                                
-                                                #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                                fluidRow(
-                                                  column(width = 6, offset = 0, style='padding:1px;',
-                                                         #          h4(paste("Figure 4. Plot of the predicted probabilities")), 
-                                                         div(plotOutput("f.plot3", width=fig.width4, height=fig.height7)),
-                                                         
-                                                  )),
-                                                #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                                
-                                                fluidRow(
-                                                  column(12,
-                                                         #  div( verbatimTextOutput("int.trt1" ) ),
-                                                         fluidRow(
-                                                           column(12,
-                                                                  #  div( verbatimTextOutput("int.trt2" ) ),
-                                                                  fluidRow(
-                                                                    column(6, 
-                                                                           div( verbatimTextOutput("int.trt1C" ) )),
-                                                                    # column(4,
-                                                                    #        div( verbatimTextOutput("int.trt2B" ) )),
-                                                                    # column(4,
-                                                                    #        div( verbatimTextOutput("int.trt3B" ) )),
-                                                                    
-                                                                  )
-                                                           )#,
-                                                           #column(width = 6,
-                                                           # "Fluid 6")
-                                                         )
-                                                  )
-                                                ),
-                                           
-                                       ),
+                        
                               
                   
-                              tabPanel("7 Rel. expl. variaton", value=3, 
+                              tabPanel("6 Rel. expl. variaton", value=3, 
                                        #  h4("Tables 5 & 6 and Figure 7"),
                                        
                                        h4(htmlOutput("textWithNumber1",) ),
@@ -385,9 +354,25 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               ),
                               
    
+                              tabPanel("7 All 3 models", value=3, 
+                                       
+                                       fluidRow(
+                                         column(width = 6, offset = 0, style='padding:1px;',
+                                                h4(paste("Figure 3. xxxxxxxxxxxxxxxxxx")), 
+                                                div( verbatimTextOutput("Cx") ),
+                                                div( verbatimTextOutput("Bx") )
+                                                
+                                         ),
+                                         
+                                         fluidRow(
+                                           column(width = 5, offset = 0, style='padding:1px;',
+                                                  h4(paste("Figure 3. xxxxxxxxxxxxxxxxxx")), 
+                                                  div( verbatimTextOutput("Ax") )
+                                           ))),
+                                       
+                              ),
                               
-                              
-                              tabPanel("7 Data/References", 
+                              tabPanel("8 Data/References", 
                                        
                                        fluidRow(
                                          
@@ -645,6 +630,19 @@ server <- shinyServer(function(input, output   ) {
     da$evidence <-factor(da$evidence)
     da$sex <-     factor(da$sex)
     da$bmi <-     factor(da$bmi)
+    
+    label(da$age)                <- 'Age'                       # label is in Hmisc
+    label(da$trt)                <- 'Treatment'
+    label(da$bmi)                <- 'Body Mass Index'
+    label(da$smoking)            <- 'Smoking'
+    label(da$crp)                <- 'C-reactive protein'
+    label(da$berlin)             <- 'Berlin score'
+    label(da$vas)                <- 'Visual analogue score'
+    label(da$time)               <- 'Time since diagnosis'
+    label(da$joints)             <- 'No. of joints affected'
+    label(da$nails)              <- "not sure"
+    label(da$evidence)           <- "radio graphic evidence"
+    label(da$sex)                <- 'Sex'
     
     dd <<- datadist(da)
     options(datadist="dd")
@@ -929,11 +927,11 @@ server <- shinyServer(function(input, output   ) {
     
     X <- analysis() 
     
-    A1 <- summary(X$A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "names"))
+    A1 <- summary(X$A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "labels"))
     
-    A2 <- summary(X$A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=2, est.all=FALSE, vnames=c( "names"))
+    A2 <- summary(X$A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=2, est.all=FALSE, vnames=c( "labels"))
     
-    A3 <- summary(X$A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=3, est.all=FALSE, vnames=c( "names"))
+    A3 <- summary(X$A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=3, est.all=FALSE, vnames=c( "labels"))
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return(list(  A1=A1, A2= A2, A3= A3)) 
@@ -958,11 +956,11 @@ server <- shinyServer(function(input, output   ) {
     
     X <- analysis() 
     
-    A1 <- summary(X$B, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "names"))
+    A1 <- summary(X$B, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "labels"))
     
-    A2 <- summary(X$B, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=2, est.all=FALSE, vnames=c( "names"))
+    A2 <- summary(X$B, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=2, est.all=FALSE, vnames=c( "labels"))
     
-    A3 <- summary(X$B, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=3, est.all=FALSE, vnames=c( "names"))
+    A3 <- summary(X$B, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=3, est.all=FALSE, vnames=c( "labels"))
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return(list(  A1=A1, A2= A2, A3= A3)) 
@@ -989,7 +987,7 @@ server <- shinyServer(function(input, output   ) {
     
     X <- analysis() 
     
-    A1 <- summary(X$C, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "names"))
+    A1 <- summary(X$C, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "labels"))
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return(list(  A1=A1 )) 
@@ -1014,29 +1012,29 @@ server <- shinyServer(function(input, output   ) {
     
     par(mfrow=c(1,3)) 
     
-    par(oma=c(3,4,1,1)) 
+    par(oma=c(3,6,1,1)) 
     
     options(digits=1)
     
-    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "names")), 
+    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "labels")), 
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
-         col.points='black', cex=1, main= "Odds Ratio (main effects model)", cex.main=1.8
+         col.points='black', cex=1, main= "Odds Ratio (Treatment 1)", cex.main=1.8
     )
     
-    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=2, est.all=FALSE, vnames=c( "names")), 
+    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=2, est.all=FALSE, vnames=c( "labels")), 
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
-         col.points='black', cex=1, main= "Odds Ratio (main effects model)", cex.main=1.8
+         col.points='black', cex=1, main= "Odds Ratio (Treatment 2)", cex.main=1.8
     )
     
-    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex=0, bmi, trt=3, est.all=FALSE, vnames=c( "names")), 
+    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex=0, bmi, trt=3, est.all=FALSE, vnames=c( "labels")), 
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
-         col.points='black', cex=1, main= "Odds Ratio (main effects model)", cex.main=1.8
+         col.points='black', cex=1, main= "Odds Ratio (Treatment 3)", cex.main=1.8
     )
     
     par(mfrow=c(1,1))
@@ -1054,30 +1052,29 @@ server <- shinyServer(function(input, output   ) {
     
     par(mfrow=c(1,3))
     
-    par(oma=c(3,4,1,1))
+    par(oma=c(3,6,1,1))
     
     options(digits=1)
-    
-    
-    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "names")),
+
+    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "labels")),
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
-         col.points='black', cex=1, main= "Odds Ratio (main effects model)", cex.main=1.8
+         col.points='black', cex=1, main= "Odds Ratio (Treatment 1)", cex.main=1.8
     )
     
-    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=2, est.all=FALSE, vnames=c( "names")),
+    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=2, est.all=FALSE, vnames=c( "labels")),
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
-         col.points='black', cex=1, main= "Odds Ratio (main effects model)", cex.main=1.8
+         col.points='black', cex=1, main= "Odds Ratio (Treatment 2)", cex.main=1.8
     )
     
-    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex=0, bmi, trt=3, est.all=FALSE, vnames=c( "names")),
+    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex=0, bmi, trt=3, est.all=FALSE, vnames=c( "labels")),
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
-         col.points='black', cex=1, main= "Odds Ratio (main effects model)", cex.main=1.8
+         col.points='black', cex=1, main= "Odds Ratio (Treatment 3)", cex.main=1.8
     )
     
     
@@ -1086,26 +1083,23 @@ server <- shinyServer(function(input, output   ) {
     
   })
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  
-  
+
   output$f.plot3 <- renderPlot({
     
     X <- analysis()
     
     A <- X$C
-    
-    # par(mfrow=c(1,3))
-    
+
     par(oma=c(3,4,1,1))
     
     options(digits=1)
     
     
-    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "names")),
+    plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "labels")),
          log=TRUE, xlim=c(log(.2),log(10)),
          q=c( 0.95 ), at=c( .1,.2,.3,.5,.75,1, 1.2,1.5, 2,3,4,6,8,10), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
-         col.points='black', cex=1, main= "Odds Ratio (main effects model)", cex.main=1.8 
+         col.points='black', cex=1, main= "Odds Ratio (No-interaction logit-additive model that assumes constancy of treatment ORs)", cex.main=1.8 
     )
     
   })
