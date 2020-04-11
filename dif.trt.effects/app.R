@@ -636,7 +636,7 @@ server <- shinyServer(function(input, output   ) {
     label(da$vas)                <- 'Visual analogue score'
     label(da$time)               <- 'Time since diagnosis'
     label(da$joints)             <- 'No. of joints affected'
-    label(da$nails)              <- "not sure"
+    label(da$nails)              <- "History"
     label(da$evidence)           <- "radio graphic evidence"
     label(da$sex)                <- 'Sex'
     
@@ -930,11 +930,11 @@ server <- shinyServer(function(input, output   ) {
     
     X <- analysis() 
     
-    A1 <- summary(X$A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "labels"))
+    A1 <- summary(X$A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels"))
     
-    A2 <- summary(X$A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=2, est.all=FALSE, vnames=c( "labels"))
+    A2 <- summary(X$A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=2, est.all=FALSE, vnames=c( "labels"))
     
-    A3 <- summary(X$A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=3, est.all=FALSE, vnames=c( "labels"))
+    A3 <- summary(X$A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels"))
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return(list(  A1=A1, A2= A2, A3= A3)) 
@@ -959,11 +959,11 @@ server <- shinyServer(function(input, output   ) {
     
     X <- analysis() 
     
-    A1 <- summary(X$B, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "labels"))
+    A1 <- summary(X$B, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels"))
     
-    A2 <- summary(X$B, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=2, est.all=FALSE, vnames=c( "labels"))
+    A2 <- summary(X$B, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=2, est.all=FALSE, vnames=c( "labels"))
     
-    A3 <- summary(X$B, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=3, est.all=FALSE, vnames=c( "labels"))
+    A3 <- summary(X$B, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels"))
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return(list(  A1=A1, A2= A2, A3= A3)) 
@@ -990,7 +990,7 @@ server <- shinyServer(function(input, output   ) {
     
     X <- analysis() 
     
-    A1 <- summary(X$C, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "labels"))
+    A1 <- summary(X$C, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels"))
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return(list(  A1=A1 )) 
