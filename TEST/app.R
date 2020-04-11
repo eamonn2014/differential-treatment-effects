@@ -3,19 +3,23 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 rm(list=ls()) 
 set.seed(333) # reproducible
-library(directlabels)
+#library(directlabels)
 library(shiny) 
 library(shinyWidgets)
 library(shinythemes)  # more funky looking apps
-library(DT)
+#library(DT)
 library(shinyalert)
-library(Hmisc)
+#library(Hmisc)
 library(reshape)
 library(rms)
-library(ormPlot)
-library(ordinal)
-library(ggplot2)
-library(tidyverse)
+
+#pkg <- "package:ormPlot"
+
+#detach(pkg, character.only = TRUE)
+#library(ormPlot)
+#library(ordinal)
+#library(ggplot2)
+#library(tidyverse)
 #options(mc.cores = parallel::detectCores())
 #rstan_options(auto_write = TRUE)
 options(max.print=1000000)    
@@ -218,8 +222,13 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                          
                                          fluidRow(
                                            column(width = 6, offset = 0, style='padding:1px;',
-                                                  h4("Table 1 xxxxxxxxxxxxxx"), 
-                                                  #          div( verbatimTextOutput("reg.summary1") )
+                                                  h4("Table 1 [Main effects model] vrs [Treatment x Smoking interaction model]"), 
+                                                  div( verbatimTextOutput("L1c") ),
+                                                  h4("Table 2 [Main effects model] vrs [Treatment x all predcitors interaction mode]l"), 
+                                                  div( verbatimTextOutput("L1b") ),
+                                                  h4("Table 3 [Treatment x Smoking interaction model] vrs [Treatment x all predcitors interaction model]"), 
+                                                  div( verbatimTextOutput("L1a") )
+                                                  
                                            ) ,
                                            
                                            
@@ -227,6 +236,20 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                            h4("Table 2 xxxxxxxxxxxxxxxxx"),
                                            fluidRow(
                                              column(width = 6, offset = 0, style='padding:1px;',
+                                                     h4("A small P-Value in the top most table provides evidence against
+                                                        the simpler model fitting the data better. The simpler model 
+                                                        being the main effects model."),
+                                                    div(  "") ,
+                                                    h4("A small P-Value in the middle table provides evidence against
+                                                        the simpler model fitting the data better. The simpler model 
+                                                        being the main effects model."),
+                                                    div(  "") ,
+                                                    h4("A small P-Value in the bottom table provides evidence against
+                                                        the simpler model fitting the data better. The simpler model 
+                                                        being the Treatment x Smoking interaction model."),
+                                                    
+                                                    
+                                                    
                                                     
                                                     splitLayout(
                                                       #textInput("bas1", div(h5("Enter a baseline low effect")), value="1", width=100),
@@ -245,7 +268,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                 
-                                tabPanel("4 xxxxxxxxxx", value=3, 
+                                tabPanel("4 Forest plot", value=3, 
                                          
                                          # h5(paste("Enter 999 in the box below to see all the levels or enter level(s) of interest separated by a comma")), 
                                          #textInput('rcat2', 
@@ -260,11 +283,11 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                          fluidRow(
                                            column(width = 7, offset = 0, style='padding:1px;',
                                                   #          h4(paste("Figure 4. Plot of the predicted probabilities")), 
-                                                  
+                                                  div(plotOutput("f.plot1", width=fig.width4, height=fig.height1)),
                                            )),
                                 ),
                                 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                tabPanel("5 xxxxxxxxxxxxx", 
+                                tabPanel("5 Forest plot", 
                                          h4(paste("Figure 5 & 6. xxxxxxxxxxxxxx")),
                                          
                                          h4("xxxxxxxxxxxxxxxx
@@ -272,7 +295,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                          fluidRow(
                                            column(width = 6, offset = 0, style='padding:1px;',
                                                   
-                                                  # div(plotOutput("preds", width=fig.width7, height=fig.height3)),
+                                                  div(plotOutput("f.plot2", width=fig.width4, height=fig.height1)),
                                                   
                                                   fluidRow(
                                                     
@@ -288,7 +311,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                              
                                              
                                              column(width = 5, offset = 0, style='padding:1px;',
-                                                    
+                                                    #div(plotOutput("f.plot3", width=fig.width4, height=fig.height1)),
                                                     #    div(plotOutput("predicts", width=fig.width7, height=fig.height3)),
                                                     
                                                     fluidRow(
@@ -308,11 +331,11 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                          
                                          width = 30 )     ,
                                 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                tabPanel("6 xxxxxxxx",
+                                tabPanel("6 Forest plot",
                                          # h4(paste("Table 3 Predicted probabilities, the estimated mean Y (meanY) is calculated by summing values of Y multiplied by the estimated Prob(Y=j)")),
                                          fluidRow(
                                            column(width = 12, offset = 0, style='padding:1px;',
-                                                  
+                                                  div(plotOutput("f.plot3", width=fig.width4, height=fig.height1)),
                                                   #           div( verbatimTextOutput("reg.summaryp") ),
                                                   #          h4(paste("Table 4 Predicted cummulative probabilities ")),
                                                   #         div( verbatimTextOutput("reg.summaryc") ),
@@ -556,24 +579,7 @@ server <- shinyServer(function(input, output   ) {
         evidence <- sample(0:1,  n, replace=TRUE)
         sex      <- sample(0:1,  n, replace=TRUE)
         
-        
-       
-         
-        #randomi <- runif(n)
-        
-        # return(list(trt=trt,
-        #             age=age,
-        #             bmi=bmi, 
-        #             smoking=smoking,   
-        #             trt.coef=trt.coef,
-        #             age.coef=age.coef,
-        #             smoke.coef=smoke.coef,
-        #             bmi.coef=bmi.coef, 
-        #             randomi=randomi)
-        #      )
-        # 
-        # 
-        
+
         return(list(    
           
           trt.coef       =trt.coef ,
@@ -605,40 +611,14 @@ server <- shinyServer(function(input, output   ) {
           randomi=randomi))
         
         
-        
-        
-        
-        
-        
     })    
         
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+ 
     
     lp1 <- reactive({
         
-        
           d <- design()
-        
-          
+
           trt      <-d$trt      
           age      <-d$age       
           bmi      <-d$bmi       
@@ -691,8 +671,7 @@ server <- shinyServer(function(input, output   ) {
                evidence*evidence.coef + sex*sex.coef
            }
            
- 
-           
+
            y <- ifelse(randomi < plogis(lp), 1, 0)   # one liner RANDOM!!!
         
         dat <- data.frame(cbind(y,  trt ,  smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi))
@@ -725,7 +704,7 @@ server <- shinyServer(function(input, output   ) {
             f <- A
             
         }   else if (  (input$Model) == "Treatment interacts with smoking only" ) {    
-            # all interact with trt
+           
             f <- B
             
         }   else if (  (input$Model) == "Main effects model" ) {  
@@ -739,7 +718,31 @@ server <- shinyServer(function(input, output   ) {
     })
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
+    lrtestx<- reactive({
+      
+      X <- analysis() 
+      
+      L1 <- lrtest(X$A, X$B)
+      
+      L2 <- lrtest(X$A, X$C)
+      
+      L3 <- lrtest(X$B, X$C)
+       
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      return(list(  L1=L1, L2= L2, L3= L3)) 
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      
+    })
     
+    output$L1a <- renderPrint({
+      return(print(lrtestx()$L1, digits=3))
+    }) 
+    output$L1b <- renderPrint({
+      return(print(lrtestx()$L2, digits=3))
+    }) 
+    output$L1c <- renderPrint({
+      return(print(lrtestx()$L3, digits=3))
+    }) 
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     output$textWithNumber <- renderText({ 
@@ -774,7 +777,107 @@ Sex =1 compared to sex in 0 in truth the coefficient is -0.693"
         
       })
       
-         
+    output$f.plot1 <- renderPlot({   
+      
+      X <- analysis() 
+      
+      A <- X$A
+ 
+      par(mfrow=c(1,3)) 
+      
+      par(oma=c(3,4,1,1)) 
+      
+      options(digits=1)
+      
+      plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "names")), 
+           log=TRUE, xlim=c(log(.01),log(40)),
+           q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20))
+      
+      plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=2, est.all=FALSE, vnames=c( "names")), 
+           log=TRUE, xlim=c(log(.01),log(40)),
+           q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20))
+      
+      plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex=0, bmi, trt=3, est.all=FALSE, vnames=c( "names")), 
+           log=TRUE, xlim=c(log(.01),log(40)),
+           q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20))
+      
+      par(mfrow=c(1,1))
+      
+      
+    }) 
+    
+
+
+
+    output$f.plot2 <- renderPlot({
+
+      X <- analysis()
+
+      A <- X$B
+
+      par(mfrow=c(1,3))
+
+      par(oma=c(3,4,1,1))
+
+      options(digits=1)
+
+
+      plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "names")),
+           log=TRUE, xlim=c(log(.01),log(40)),
+           q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20))
+
+      plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=2, est.all=FALSE, vnames=c( "names")),
+           log=TRUE, xlim=c(log(.01),log(40)),
+           q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20))
+
+      plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex=0, bmi, trt=3, est.all=FALSE, vnames=c( "names")),
+           log=TRUE, xlim=c(log(.01),log(40)),
+           q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20))
+
+      par(mfrow=c(1,1))
+
+
+    })
+
+    
+    
+    
+    output$f.plot3 <- renderPlot({
+      
+      X <- analysis()
+      
+      A <- X$C
+      
+     # par(mfrow=c(1,3))
+      
+      par(oma=c(3,4,1,1))
+      
+      options(digits=1)
+      
+      
+      plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "names")),
+           log=TRUE, xlim=c(log(.01),log(40)),
+           q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20))
+      
+      # plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=2, est.all=FALSE, vnames=c( "names")),
+      #      log=TRUE, xlim=c(log(.01),log(40)),
+      #      q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20))
+      # 
+      # plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex=0, bmi, trt=3, est.all=FALSE, vnames=c( "names")),
+      #      log=TRUE, xlim=c(log(.01),log(40)),
+      #      q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20))
+      
+      #par(mfrow=c(1,1))
+      
+      
+    })
+    
+    
+    
+    
+    
+    
+    
    
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      
