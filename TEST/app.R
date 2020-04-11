@@ -198,18 +198,255 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                    ))),
                                      
                                   ),
-                                   tabPanel("2 Data", 
+                                   tabPanel("2 xxxxxx", 
+                                           
+                                            fluidRow(
+                                              column(width = 6, offset = 0, style='padding:1px;',
+                                                     h4(paste("Figure 3. xxxxxxxxxxxxxxxxxx")), 
+                                                     div( verbatimTextOutput("Cx2") )
+                                                    
+                                                     
+                                              ),
+                                              
+                                              fluidRow(
+                                                column(width = 5, offset = 0, style='padding:1px;',
+                                                       h4(paste("Figure 3. xxxxxxxxxxxxxxxxxx")), 
+                                                       h4(htmlOutput("textWithNumber",) ),
+                                                ))),
+                                   ),
+                                tabPanel("3 xxxxxxx", value=7, 
+                                         
+                                         fluidRow(
+                                           column(width = 6, offset = 0, style='padding:1px;',
+                                                  h4("Table 1 xxxxxxxxxxxxxx"), 
+                                                  #          div( verbatimTextOutput("reg.summary1") )
+                                           ) ,
+                                           
+                                           
+                                           
+                                           h4("Table 2 xxxxxxxxxxxxxxxxx"),
+                                           fluidRow(
+                                             column(width = 6, offset = 0, style='padding:1px;',
+                                                    
+                                                    splitLayout(
+                                                      #textInput("bas1", div(h5("Enter a baseline low effect")), value="1", width=100),
+                                                      # textInput("bas2", div(h5("Enter a baseline high effect")),value="2", width=100)
+                                                    ),
+                                                    
+                                                    
+                                                    #div( verbatimTextOutput("reg.summary3")),
+                                                    
+                                                    #h4(htmlOutput("textWithNumber",) ),
+                                             ))),
+                                         
+                                ) ,
+                                
+                                
+                                #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                
+                                tabPanel("4 xxxxxxxxxx", value=3, 
+                                         
+                                         # h5(paste("Enter 999 in the box below to see all the levels or enter level(s) of interest separated by a comma")), 
+                                         #textInput('rcat2', 
+                                         #         div(h5(tags$span(style="color:blue",
+                                         #        ))), "999"),
+                                         
+                                         
+                                         #div(plotOutput("preds2", width=fig.width1, height=fig.height3)),
+                                         
+                                         
+                                         
+                                         fluidRow(
+                                           column(width = 7, offset = 0, style='padding:1px;',
+                                                  #          h4(paste("Figure 4. Plot of the predicted probabilities")), 
+                                                  
+                                           )),
+                                ),
+                                #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                tabPanel("5 xxxxxxxxxxxxx", 
+                                         h4(paste("Figure 5 & 6. xxxxxxxxxxxxxx")),
+                                         
+                                         h4("xxxxxxxxxxxxxxxx
+"),
+                                         fluidRow(
+                                           column(width = 6, offset = 0, style='padding:1px;',
+                                                  
+                                                  # div(plotOutput("preds", width=fig.width7, height=fig.height3)),
+                                                  
+                                                  fluidRow(
+                                                    
+                                                    #     textInput('base', 
+                                                    #              div(h5(tags$span(style="color:blue", 
+                                                    #                              "xxxxxxxxxxxxxxxx"))), "1")
+                                                    
+                                                    
+                                                  ),
+                                           ) ,
                                            
                                            fluidRow(
-                                           
-                                               column(width = 9, offset = 0, style='padding:1px;',
-                                                      # h4("Notes"),
-                                                      h4("Table 9 xxxxxxxxxxxxx"),
-                                                      div( verbatimTextOutput("datx") ),
+                                             
+                                             
+                                             column(width = 5, offset = 0, style='padding:1px;',
+                                                    
+                                                    #    div(plotOutput("predicts", width=fig.width7, height=fig.height3)),
+                                                    
+                                                    fluidRow(
                                                       
-                                               )
-                                             )
-                                            )##end
+                                                      # textInput('group', 
+                                                      #           div(h5(tags$span(style="color:blue", 
+                                                      #                            "select treatment group: 0 for placebo, 1 for treatment, 2 for both"))), "1"),
+                                                      # 
+                                                      # textInput('rcat', 
+                                                      #           div(h5(tags$span(style="color:blue", 
+                                                      #                            "Response category, enter 999 to see all levels or enter level(s) of interest"))), "999"),
+                                                      
+                                                    ),
+                                                    
+                                             ))),
+                                         
+                                         
+                                         width = 30 )     ,
+                                #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                tabPanel("6 xxxxxxxx",
+                                         # h4(paste("Table 3 Predicted probabilities, the estimated mean Y (meanY) is calculated by summing values of Y multiplied by the estimated Prob(Y=j)")),
+                                         fluidRow(
+                                           column(width = 12, offset = 0, style='padding:1px;',
+                                                  
+                                                  #           div( verbatimTextOutput("reg.summaryp") ),
+                                                  #          h4(paste("Table 4 Predicted cummulative probabilities ")),
+                                                  #         div( verbatimTextOutput("reg.summaryc") ),
+                                           ) ,
+                                           
+                                         ),
+                                         
+                                ),
+                                
+                                tabPanel("7 xxxxxxxxxxxx", value=3, 
+                                         h4("Tables 5 & 6 and Figure 7"),
+                                         
+                                         
+                                         fluidRow(
+                                           column(width = 6, offset = 0, style='padding:1px;',
+                                                  
+                                                  #  div( verbatimTextOutput("reg.summary4") )
+                                           ) ,
+                                           
+                                           fluidRow(
+                                             column(width = 5, offset = 0, style='padding:1px;',
+                                                    
+                                                    #     div( verbatimTextOutput("reg.summary5")),
+                                                    #    div(plotOutput("predictl", width=fig.widthx, height=fig.heightx)),
+                                                    
+                                             ))),
+                                         #           h4("Perhaps fit the model with restricted cubic splines for the baseline predictor to test or describe non linear relationships."),
+                                ),
+                                
+                                tabPanel("8 xxxxxxx", value=3, 
+                                         
+                                         fluidRow(
+                                           column(width = 6, offset = 0, style='padding:1px;',
+                                                  #h4("Sometimes it is helpful to present the mean Y as a function of one or more model predictors. 
+                                                  #    \n Enter an intercept for the ordinal model in the box below.."),
+                                                  #textInput('kints',
+                                                  #         div(h5(tags$span(style="color:blue",
+                                                  #                         ""))), ""), 
+                                                  
+                                                  #div(plotOutput("PP.plot", width=fig.width7, height=fig.height6)),
+                                                  h4("Figure 8 xxxxxxxxxxxxxx"),
+                                                  br() , 
+                                                  
+                                                  h4(""),
+                                                  
+                                                  h4("Table 7 xxxxxxxxxxxx"),
+                                                  #div( verbatimTextOutput("predz"), width = 2), # 
+                                           ),
+                                           
+                                           fluidRow(
+                                             
+                                             
+                                             #  h4(" This assumes a spacing for the Y levels."),
+                                             #  h4("Try different odds ratios to see when the linear model 
+                                             #         and PO model are no longer similar."),
+                                             br(), br(), br() ,  
+                                             
+                                             
+                                             column(width = 5, offset = 0, style='padding:0px;',
+                                                    
+                                                    #      div(plotOutput("PP.plot2", width=fig.width7, height=fig.height6)),
+                                                    #       h4("Figure 9 Predictions for each model arm by trial arm to assess similarity in the two model predictions"),
+                                                    
+                                             )))
+                                         
+                                ) ,
+                                
+                                
+                                tabPanel("9 xxxxxxxxxx", value=3, 
+                                         
+                                         #h5(paste("Checking assumptions")), 
+                                         # div(plotOutput("assumption", width=fig.width1, height=fig.height3)),
+                                         h4("Figure 10 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
+                                         #       h4( "Checking assumptions, for each predictor separately We stratify each predictor and calculate the logit of all proportions pf the form 
+                                         #Y>=j, j=1,2,...,k.
+                                         #   When proportional odds hold, the differences in logits between different values of j should be the same for all values of X. (This may
+                                         #  get crowded with many levels of Y)" ),
+                                         h4("xxxxxxxxxxxxxxxx"),
+                                         #      div( verbatimTextOutput("assump")),  
+                                         
+                                ),
+                                
+                                
+                                tabPanel("10 xxxxxxxx", value=3, 
+                                         
+                                         #div(plotOutput("ecdfs", width=fig.width1, height=fig.height3)),
+                                         h4(" ."), 
+                                         h4(" "), 
+                                         # div(plotOutput("logitseries", width=fig.width1, height=fig.height3)),
+                                         
+                                         
+                                         h4("Figure 12 xxxxxxxxxxxxxxxxxxxxxxxxxxx"),  
+                                         
+                                         h4("xxxxxxxxxxxxxxxxx")
+                                         
+                                ),
+                                
+                                
+                                tabPanel("11 Data", 
+                                         
+                                         fluidRow(
+                                           
+                                           
+                                           column(width = 3, offset = 0, style='padding:1px;',
+                                                  tags$hr(),
+                                                  div(h4("References:")),  
+                                                  tags$a(href = "https://stats.stackexchange.com/search?q=proportional+odds+model", tags$span(style="color:blue", "[1] Proportional odds model"),),   
+                                                  div(p(" ")),
+                                                  tags$a(href = "hhttps://en.wikipedia.org/wiki/Ordered_logit",  tags$span(style="color:blue", "[2] Proportional odds wiki"),),   
+                                                  div(p(" ")),
+                                                  #  tags$a(href = "https://projecteuclid.org/download/pdf_1/euclid.aos/1176344552", tags$span(style="color:blue", "[3] Krushke"),),
+                                                  #  div(p(" ")),
+                                                  tags$a(href = "http://hbiostat.org/doc/rms.pdf", tags$span(style="color:blue", "[3] Regression modelling strategies"),),  
+                                                  div(p(" ")),
+                                                  tags$a(href = "https://rdrr.io/cran/rms/man/predict.lrm.html", tags$span(style="color:blue", "[4] Prediction of model mean"),),  
+                                                  div(p(" ")),
+                                                  tags$hr()
+                                           ),
+                                           
+                                           
+                                           
+                                           column(width = 9, offset = 0, style='padding:1px;',
+                                                  # h4("Notes"),
+                                                  h4("Table 9 xxxxxxxxxxxxx"),
+                                                  div( verbatimTextOutput("datx") ),
+                                                  
+                                                  
+                                                  
+                                           )
+                                           
+                                           
+                                         )
+                                )##end
+                            
                                    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   END NEW   
                               )
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -454,13 +691,7 @@ server <- shinyServer(function(input, output   ) {
                evidence*evidence.coef + sex*sex.coef
            }
            
-           # trt <-     factor(trt)
-           # smoking <- factor(smoking)
-           # nails <-   factor(nails)
-           # evidence <-factor(evidence)
-           # sex <-     factor(sex)
-           # bmi <-     factor(bmi)
-           # 
+ 
            
            y <- ifelse(randomi < plogis(lp), 1, 0)   # one liner RANDOM!!!
         
@@ -506,7 +737,45 @@ server <- shinyServer(function(input, output   ) {
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
     })
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
+    
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    output$textWithNumber <- renderText({ 
+      
+    HTML(paste0( "Enter a value on the log odds scale. 
+
+For example in the case of treatment the default mean treatment level 2 coefficient expectation is 1 and treatment level 3 coefficient expectation is 2.
+
+In the case of age, the default true effect is a change of 1 log odds over the age range.
+
+For smoking, the default is a log odds ratio of 0.4, so we expect 'smoking=2' to be 0.4 and 'smoking=3' to be 0.8.
+
+The true coefficient for BMI is 0. We expect a log odds ratios for BMI levels to be zero.
+
+Crp is a continuous variable and the true coefficient for crp is 1/3 so for each unit change in crp the log odds of p(y=1|x) increases by 1/3.
+
+Berlin is also a continuous coefficient and the true coefficient is -0.05, so for each unit change in berlin the log odds of p(y=1|x) decrease by -0.05.
+
+Vas again is continuous and the true coeffient is 0.008. So for each unit change in berlin the log odds of p(y=1|x) increase by 0.008.
+
+Time is continuous and the true coeffient is -0.001. So for each unit change in time the log odds of p(y=1|x) decrease by -0.001.
+
+joint is treated as continuous and the coeffient 0.02. So for each unit change in joints the log odds of p(y=1|x) increase by -0.02.
+
+Nails, Evidence and Sex are binary predictors. For nails the default coefficent is 0.693, So for the change to the next level of Nails results in a 0.693 increase in the log odds of p(y=1|x).
+
+For evidence in truth there is no effect and we expect the log odds to be 0.
+
+Sex =1 compared to sex in 0 in truth the coefficient is -0.693"
+                     
+        ))    
+        
+      })
+      
+         
+   
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      
     output$datx <- renderPrint({
@@ -521,7 +790,9 @@ server <- shinyServer(function(input, output   ) {
     output$Cx <- renderPrint({
         return(print(analysis()$C, digits=3))
     }) 
-     
+    output$Cx2 <- renderPrint({
+      return(print(analysis()$C, digits=3))
+    }) 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 })
 
