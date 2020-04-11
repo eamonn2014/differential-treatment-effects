@@ -244,14 +244,10 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                   
                                                   
                                                   splitLayout(
-                                                    #textInput("bas1", div(h5("Enter a baseline low effect")), value="1", width=100),
-                                                    # textInput("bas2", div(h5("Enter a baseline high effect")),value="2", width=100)
+                                               
                                                   ),
                                                   
-                                                  
-                                                  #div( verbatimTextOutput("reg.summary3")),
-                                                  
-                                                  #h4(htmlOutput("textWithNumber",) ),
+                                                   
                                            ))),
                                        
                               ) ,
@@ -265,7 +261,6 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
-                                                #          h4(paste("Figure 4. Plot of the predicted probabilities")), 
                                                 div(plotOutput("f.plot1", width=fig.width4, height=fig.height7)),
                                                 
                                          )),
@@ -296,13 +291,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                        
                                        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                        
-                                       # fluidRow(
-                                       #   column(width = 4, offset = 0, style='padding:1px;',
-                                       #          
-                                       #          div( verbatimTextOutput("int.trt1" ) ),
-                                       #          div( verbatimTextOutput("int.trt2" ) )
-                                       #         # div( verbatimTextOutput("int.trt2" ) )
-                                       #   )),
+                      
                               ),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                               tabPanel("5 Forest plot trt x smoking", value=3, 
@@ -310,7 +299,6 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
-                                                #          h4(paste("Figure 4. Plot of the predicted probabilities")), 
                                                 div(plotOutput("f.plot2", width=fig.width4, height=fig.height7)),
                                                 
                                          )),
@@ -339,31 +327,9 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                        ),
                                        
                                        
-                                       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                       
-                                       # fluidRow(
-                                       #   column(width = 4, offset = 0, style='padding:1px;',
-                                       #          
-                                       #          div( verbatimTextOutput("int.trt1" ) ),
-                                       #          div( verbatimTextOutput("int.trt2" ) )
-                                       #         # div( verbatimTextOutput("int.trt2" ) )
-                                       #   )),
+                                    
                               ),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              # tabPanel("6 Forest plot main effects",
-                              #          # h4(paste("Table 3 Predicted probabilities, the estimated mean Y (meanY) is calculated by summing values of Y multiplied by the estimated Prob(Y=j)")),
-                              #          fluidRow(
-                              #            column(width = 12, offset = 0, style='padding:1px;',
-                              #                   div(plotOutput("f.plot3", width=fig.width4, height=fig.height7)),
-                              #                   #           div( verbatimTextOutput("reg.summaryp") ),
-                              #                   #          h4(paste("Table 4 Predicted cummulative probabilities ")),
-                              #                   #         div( verbatimTextOutput("reg.summaryc") ),
-                              #                   div( verbatimTextOutput("int.trt1C" ) ),
-                              #            ) ,
-                              #            
-                              #          ),
-                              #          
-                              # ),
                               
                               
                               tabPanel("6 Forest plot main effects",
@@ -399,129 +365,26 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                          )
                                                   )
                                                 ),
-                                                
-                                                
-                                                #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                                
-                                                # fluidRow(
-                                                #   column(width = 4, offset = 0, style='padding:1px;',
-                                                #          
-                                                #          div( verbatimTextOutput("int.trt1" ) ),
-                                                #          div( verbatimTextOutput("int.trt2" ) )
-                                                #         # div( verbatimTextOutput("int.trt2" ) )
-                                                #   )),
+                                           
                                        ),
                               
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
+                  
                               tabPanel("7 Rel. expl. variaton", value=3, 
                                        #  h4("Tables 5 & 6 and Figure 7"),
                                        
                                        h4(htmlOutput("textWithNumber1",) ),
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
-                                                # div( verbatimTextOutput("rev1" ) ),
-                                                # div( verbatimTextOutput("rev2" ) ),
-                                                # div( verbatimTextOutput("rev3" ) ),
-                                                #  div( verbatimTextOutput("reg.summary4") )
+                                           
                                          ) ,
                                          
                                          fluidRow(
                                            column(width = 5, offset = 0, style='padding:1px;',
-                                                  #   div( verbatimTextOutput("AIC1" ) ),
-                                                  #  div( verbatimTextOutput("AIC2" ) ),
-                                                  # div( verbatimTextOutput("AIC3" ) ),
-                                                  #     div( verbatimTextOutput("reg.summary5")),
-                                                  #    div(plotOutput("predictl", width=fig.widthx, height=fig.heightx)),
-                                                  
+                                                
                                            ))),
-                                       #           h4("Perhaps fit the model with restricted cubic splines for the baseline predictor to test or describe non linear relationships."),
                               ),
                               
-                              
-                              # tabPanel("8 xxxxxxx", value=3, 
-                              #          
-                              #          fluidRow(
-                              #            column(width = 6, offset = 0, style='padding:1px;',
-                              #                   #h4("Sometimes it is helpful to present the mean Y as a function of one or more model predictors. 
-                              #                   #    \n Enter an intercept for the ordinal model in the box below.."),
-                              #                   #textInput('kints',
-                              #                   #         div(h5(tags$span(style="color:blue",
-                              #                   #                         ""))), ""), 
-                              #                   
-                              #                   #div(plotOutput("PP.plot", width=fig.width7, height=fig.height6)),
-                              #                   h4("Figure 8 xxxxxxxxxxxxxx"),
-                              #                   br() , 
-                              #                   
-                              #                   h4(""),
-                              #                   
-                              #                   h4("Table 7 xxxxxxxxxxxx"),
-                              #                   #div( verbatimTextOutput("predz"), width = 2), # 
-                              #            ),
-                              #            
-                              #            fluidRow(
-                              #              
-                              #              
-                              #              #  h4(" This assumes a spacing for the Y levels."),
-                              #              #  h4("Try different odds ratios to see when the linear model 
-                              #              #         and PO model are no longer similar."),
-                              #              br(), br(), br() ,  
-                              #              
-                              #              
-                              #              column(width = 5, offset = 0, style='padding:0px;',
-                              #                     
-                              #                     #      div(plotOutput("PP.plot2", width=fig.width7, height=fig.height6)),
-                              #                     #       h4("Figure 9 Predictions for each model arm by trial arm to assess similarity in the two model predictions"),
-                              #                     
-                              #              )))
-                              #          
-                              # ) ,
-                              # 
-                              # 
-                              # tabPanel("9 xxxxxxxxxx", value=3, 
-                              #          
-                              #          #h5(paste("Checking assumptions")), 
-                              #          # div(plotOutput("assumption", width=fig.width1, height=fig.height3)),
-                              #          h4("Figure 10 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
-                              #          #       h4( "Checking assumptions, for each predictor separately We stratify each predictor and calculate the logit of all proportions pf the form 
-                              #          #Y>=j, j=1,2,...,k.
-                              #          #   When proportional odds hold, the differences in logits between different values of j should be the same for all values of X. (This may
-                              #          #  get crowded with many levels of Y)" ),
-                              #          h4("xxxxxxxxxxxxxxxx"),
-                              #          #      div( verbatimTextOutput("assump")),  
-                              #          
-                              # ),
-                              # 
-                              # 
-                              # tabPanel("10 xxxxxxxx", value=3, 
-                              #          
-                              #          #div(plotOutput("ecdfs", width=fig.width1, height=fig.height3)),
-                              #          h4(" ."), 
-                              #          h4(" "), 
-                              #          # div(plotOutput("logitseries", width=fig.width1, height=fig.height3)),
-                              #          
-                              #          
-                              #          h4("Figure 12 xxxxxxxxxxxxxxxxxxxxxxxxxxx"),  
-                              #          
-                              #          h4("xxxxxxxxxxxxxxxxx")
-                              #          
-                              # ),
+   
                               
                               
                               tabPanel("7 Data/References", 
@@ -855,9 +718,6 @@ server <- shinyServer(function(input, output   ) {
   #   return(print(rexv()$AICC, digits=3))
   # }) 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  
-  
-  
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
   lrtestx<- reactive({
@@ -1060,8 +920,6 @@ server <- shinyServer(function(input, output   ) {
     
   })  
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  
-  
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # FULL INTERACTION MODEL
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1093,13 +951,9 @@ server <- shinyServer(function(input, output   ) {
   }) 
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  
-  
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # SMOKING TRT INTERACTION MODEL
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  
-  
+
   zummaryB<- reactive({
     
     X <- analysis() 
@@ -1190,10 +1044,8 @@ server <- shinyServer(function(input, output   ) {
     
   }) 
   
-  
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  
-  
+
   output$f.plot2 <- renderPlot({
     
     X <- analysis()
@@ -1233,8 +1085,6 @@ server <- shinyServer(function(input, output   ) {
     
     
   })
-  
-  
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
   
@@ -1258,18 +1108,7 @@ server <- shinyServer(function(input, output   ) {
          col.points='black', cex=1, main= "Odds Ratio (main effects model)", cex.main=1.8 
     )
     
-    
-    
-    
   })
-  
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  
-  
-  
-  
-  
-  
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
