@@ -135,7 +135,28 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                           textInput("v6", div(h5(tags$span(style="color:blue", "berlin coef"))), value= "-.5/10")
                                           
                                       ),
-                            
+                                      splitLayout(
+                                          textInput("v4", div(h5(tags$span(style="color:blue", "bmi coef"))), value= "0"),
+                                          textInput("v5", div(h5(tags$span(style="color:blue", "crp coef"))), value= "1/3"),
+                                          textInput("v6", div(h5(tags$span(style="color:blue", "berlin coef"))), value= "-.5/10")
+                                          
+                                      ),
+                                      
+                                      splitLayout(
+                                          textInput("v7", div(h5(tags$span(style="color:blue", "vas coef"))), value= "0.25/30"),
+                                          textInput("v8", div(h5(tags$span(style="color:blue", "time coef"))), value= "-.1/10"),
+                                          textInput("v9", div(h5(tags$span(style="color:blue", "joints coef"))), value= "1/50")
+                                          
+                                      ),
+                                      
+                                      
+                                      splitLayout(
+                                          textInput("v10", div(h5(tags$span(style="color:blue", "nails coef"))), value= "log(2)"),
+                                          textInput("v11", div(h5(tags$span(style="color:blue", "evidence coef"))), value= "log(1)"),
+                                          textInput("v12", div(h5(tags$span(style="color:blue", "sex coef"))), value= "log(0.5)")
+                                          
+                                      ),
+                                      
                                   )
 
                     ),
@@ -218,10 +239,24 @@ server <- shinyServer(function(input, output   ) {
         v2 <- as.numeric(    eval(parse(text= (input$v2)) ) )
         v3 <- as.numeric(    eval(parse(text= (input$v3)) ) )    
         v4 <- as.numeric(    eval(parse(text= (input$v4)) ) )   
+        v5 <- as.numeric(    eval(parse(text= (input$v5)) ) )  
+        v6 <- as.numeric(    eval(parse(text= (input$v6)) ) ) 
         
-         return(list(
-            n=n, v1=v1, v2=v2, v3=v3, v4=v4
-          
+        v7 <- as.numeric(    eval(parse(text= (input$v7)) ) )
+        v8 <- as.numeric(    eval(parse(text= (input$v8)) ) )
+        v9 <- as.numeric(    eval(parse(text= (input$v9)) ) )
+        
+        v10 <- as.numeric(    eval(parse(text= (input$v10)) ) )
+        v11 <- as.numeric(    eval(parse(text= (input$v11)) ) )
+        v12 <- as.numeric(    eval(parse(text= (input$v12)) ) )
+        
+        
+        check =c(v1 , v2 , v3 , v4 , v5,  v6, v7,  v8 , v9 , v10 , v11 , v12  )
+        
+        return(list(
+            v1=v1, v2=v2, v3=v3, v4=v4, v5=v5, v6=v6, v7=v7, v8=v8, v9=v9, v10=v10, v11=v11, v12=v12 ,
+            check=check, n=n
+            
         ))
      })
       
@@ -256,7 +291,7 @@ server <- shinyServer(function(input, output   ) {
         smoke.coef    <-as.numeric(    eval(parse(text= (input$v3)) ) )       
         bmi.coef      <-as.numeric(    eval(parse(text= (input$v4)) ) ) 
         
-        intercept <- -3
+       
          
         #randomi <- runif(n)
         
@@ -275,7 +310,7 @@ server <- shinyServer(function(input, output   ) {
     })    
         
     
-    lp <- reactive({
+    lp1 <- reactive({
         
         
           d <- design()
@@ -291,7 +326,7 @@ server <- shinyServer(function(input, output   ) {
            bmi.coef=d$bmi.coef
         
            randomi <- d$randomi
-    
+           intercept <- -3
         
         if ( (input$Design) == "Treatment interacts with all variables" )  {
             
@@ -324,7 +359,7 @@ server <- shinyServer(function(input, output   ) {
     
     analysis <- reactive({
         
-        da <- lp()$datx 
+        da <- lp1()$datx 
         
         dd <<- datadist(da)
         options(datadist="dd")
@@ -345,7 +380,7 @@ server <- shinyServer(function(input, output   ) {
             f <- C
         }
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return(list(  lp=lp , y=y , A=A, B=B, C=C)) 
+        return(list(  A=A, B=B, C=C)) 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
     })
@@ -353,7 +388,7 @@ server <- shinyServer(function(input, output   ) {
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      
     output$datx <- renderPrint({
-        return(print(mcmc()$dat, digits=3))
+        return(print(lp()$datx, digits=3))
     }) 
     output$Ax <- renderPrint({
         return(print(analysis()$A, digits=3))
