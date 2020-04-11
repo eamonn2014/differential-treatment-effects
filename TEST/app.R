@@ -430,6 +430,7 @@ server <- shinyServer(function(input, output   ) {
         
            randomi <- d$randomi
            intercept <- -3
+           
         
            if ( (input$Design) == "Treatment interacts with all variables" )  {
              
@@ -453,18 +454,18 @@ server <- shinyServer(function(input, output   ) {
                evidence*evidence.coef + sex*sex.coef
            }
            
+           # trt <-     factor(trt)
+           # smoking <- factor(smoking)
+           # nails <-   factor(nails)
+           # evidence <-factor(evidence)
+           # sex <-     factor(sex)
+           # bmi <-     factor(bmi)
+           # 
            
-           trt <-     factor(trt)
-           smoking <- factor(smoking)
-           nails <-   factor(nails)
-           evidence <-factor(evidence)
-           sex <-     factor(sex)
-           bmi <-     factor(bmi)
-           
-        
-        y <- ifelse(randomi < plogis(lp), 1, 0)   # one liner RANDOM!!!
+           y <- ifelse(randomi < plogis(lp), 1, 0)   # one liner RANDOM!!!
         
         dat <- data.frame(cbind(y,  trt ,  smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi))
+        
         return(list(datx=dat))
         
     })
@@ -474,6 +475,13 @@ server <- shinyServer(function(input, output   ) {
     analysis <- reactive({
         
         da <- lp1()$datx 
+        
+        da$trt <-     factor(da$trt)
+        da$smoking <- factor(da$smoking)
+        da$nails <-   factor(da$nails)
+        da$evidence <-factor(da$evidence)
+        da$sex <-     factor(da$sex)
+        da$bmi <-     factor(da$bmi)
         
         dd <<- datadist(da)
         options(datadist="dd")
@@ -502,7 +510,7 @@ server <- shinyServer(function(input, output   ) {
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      
     output$datx <- renderPrint({
-        return(print(lp()$datx, digits=3))
+        return(print(lp1()$datx, digits=3))
     }) 
     output$Ax <- renderPrint({
         return(print(analysis()$A, digits=3))
