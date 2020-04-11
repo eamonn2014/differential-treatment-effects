@@ -185,7 +185,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                             .navbar-default .navbar-nav > li > a[data-value='t3'] {color: green;background-color: lightgreen;}
                    ")),
                                   
-                                tabPanel("1 xxxxxxxxx", value=3, 
+                                tabPanel("1 All 3 models", value=3, 
                                 
                                            fluidRow(
                                                column(width = 6, offset = 0, style='padding:1px;',
@@ -202,7 +202,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                    ))),
                                      
                                   ),
-                                   tabPanel("2 xxxxxx", 
+                                   tabPanel("2 Main effects", 
                                            
                                             fluidRow(
                                               column(width = 6, offset = 0, style='padding:1px;',
@@ -218,7 +218,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                        h4(htmlOutput("textWithNumber",) ),
                                                 ))),
                                    ),
-                                tabPanel("3 xxxxxxx", value=7, 
+                                tabPanel("3 LR tests", value=7, 
                                          
                                          fluidRow(
                                            column(width = 6, offset = 0, style='padding:1px;',
@@ -268,27 +268,16 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                 
-                                tabPanel("4 Forest plot", value=3, 
-                                         
-                                         # h5(paste("Enter 999 in the box below to see all the levels or enter level(s) of interest separated by a comma")), 
-                                         #textInput('rcat2', 
-                                         #         div(h5(tags$span(style="color:blue",
-                                         #        ))), "999"),
-                                         
-                                         
-                                         #div(plotOutput("preds2", width=fig.width1, height=fig.height3)),
+                                tabPanel("4 Forest plot trt x all", value=3, 
+
                                          #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                          fluidRow(
                                            column(width = 6, offset = 0, style='padding:1px;',
                                                   #          h4(paste("Figure 4. Plot of the predicted probabilities")), 
-                                                  div(plotOutput("f.plot1", width=fig.width4, height=fig.height4)),
-                                                  
-                                                 # div( verbatimTextOutput("int.trt1" ) ),
-                                               #   div( verbatimTextOutput("int.trt2" ) )
-                                                  #div( verbatimTextOutput("int.trt1" ) )
+                                                  div(plotOutput("f.plot1", width=fig.width4, height=fig.height7)),
+                                   
                                            )),
                                          #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                         
                                          
                                          fluidRow(
                                            column(12,
@@ -312,21 +301,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                            )
                                          ),
                                          
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
+              
                                          #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                           
                                          # fluidRow(
@@ -338,58 +313,60 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                          #   )),
                                 ),
                                 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                tabPanel("5 Forest plot", 
-                                         h4(paste("Figure 5 & 6. xxxxxxxxxxxxxx")),
+                                tabPanel("5 Forest plot trt x smoking", value=3, 
                                          
-                                         h4("xxxxxxxxxxxxxxxx
-"),
+                                         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                          fluidRow(
                                            column(width = 6, offset = 0, style='padding:1px;',
+                                                  #          h4(paste("Figure 4. Plot of the predicted probabilities")), 
+                                                  div(plotOutput("f.plot2", width=fig.width4, height=fig.height7)),
                                                   
-                                                  div(plotOutput("f.plot2", width=fig.width4, height=fig.height1)),
-                                                  
+                                           )),
+                                         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                         
+                                         fluidRow(
+                                           column(12,
+                                                  #  div( verbatimTextOutput("int.trt1" ) ),
                                                   fluidRow(
-                                                    
-                                                    #     textInput('base', 
-                                                    #              div(h5(tags$span(style="color:blue", 
-                                                    #                              "xxxxxxxxxxxxxxxx"))), "1")
-                                                    
-                                                    
-                                                  ),
-                                           ) ,
-                                           
-                                           fluidRow(
-                                             
-                                             
-                                             column(width = 5, offset = 0, style='padding:1px;',
-                                                    #div(plotOutput("f.plot3", width=fig.width4, height=fig.height1)),
-                                                    #    div(plotOutput("predicts", width=fig.width7, height=fig.height3)),
-                                                    
-                                                    fluidRow(
-                                                      
-                                                      # textInput('group', 
-                                                      #           div(h5(tags$span(style="color:blue", 
-                                                      #                            "select treatment group: 0 for placebo, 1 for treatment, 2 for both"))), "1"),
-                                                      # 
-                                                      # textInput('rcat', 
-                                                      #           div(h5(tags$span(style="color:blue", 
-                                                      #                            "Response category, enter 999 to see all levels or enter level(s) of interest"))), "999"),
-                                                      
-                                                    ),
-                                                    
-                                             ))),
+                                                    column(12,
+                                                           #  div( verbatimTextOutput("int.trt2" ) ),
+                                                           fluidRow(
+                                                             column(4, 
+                                                                    div( verbatimTextOutput("int.trt1B" ) )),
+                                                             column(4,
+                                                                    div( verbatimTextOutput("int.trt2B" ) )),
+                                                             column(4,
+                                                                    div( verbatimTextOutput("int.trt3B" ) )),
+                                                             
+                                                           )
+                                                    )#,
+                                                    #column(width = 6,
+                                                    # "Fluid 6")
+                                                  )
+                                           )
+                                         ),
                                          
                                          
-                                         width = 30 )     ,
+                                         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                         
+                                         # fluidRow(
+                                         #   column(width = 4, offset = 0, style='padding:1px;',
+                                         #          
+                                         #          div( verbatimTextOutput("int.trt1" ) ),
+                                         #          div( verbatimTextOutput("int.trt2" ) )
+                                         #         # div( verbatimTextOutput("int.trt2" ) )
+                                         #   )),
+                                ),
                                 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                tabPanel("6 Forest plot",
+                                tabPanel("6 Forest plot main effects",
                                          # h4(paste("Table 3 Predicted probabilities, the estimated mean Y (meanY) is calculated by summing values of Y multiplied by the estimated Prob(Y=j)")),
                                          fluidRow(
                                            column(width = 12, offset = 0, style='padding:1px;',
-                                                  div(plotOutput("f.plot3", width=fig.width4, height=fig.height1)),
+                                                  div(plotOutput("f.plot3", width=fig.width4, height=fig.height7)),
                                                   #           div( verbatimTextOutput("reg.summaryp") ),
                                                   #          h4(paste("Table 4 Predicted cummulative probabilities ")),
                                                   #         div( verbatimTextOutput("reg.summaryc") ),
+                                                  div( verbatimTextOutput("int.trt1C" ) ),
                                            ) ,
                                            
                                          ),
@@ -827,7 +804,10 @@ Sex =1 compared to sex in 0 in truth the coefficient is -0.693"
         ))    
         
       })
-      
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # FULL INTERACTION MODEL
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     ## prep some table
     zummary<- reactive({
       
@@ -844,7 +824,6 @@ Sex =1 compared to sex in 0 in truth the coefficient is -0.693"
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       
     })
-    
     output$int.trt1 <- renderPrint({
       return(print(zummary()$A1))
     }) 
@@ -855,16 +834,65 @@ Sex =1 compared to sex in 0 in truth the coefficient is -0.693"
       return(print(zummary()$A3))
     }) 
     
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # SMOKING TRT INTERACTION MODEL
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     
+    zummaryB<- reactive({
+      
+      X <- analysis() 
+      
+      A1 <- summary(X$B, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "names"))
+      
+      A2 <- summary(X$B, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=2, est.all=FALSE, vnames=c( "names"))
+      
+      A3 <- summary(X$B, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=3, est.all=FALSE, vnames=c( "names"))
+      
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      return(list(  A1=A1, A2= A2, A3= A3)) 
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      
+    })
+    
+    output$int.trt1B <- renderPrint({
+      return(print(zummaryB()$A1))
+    }) 
+    output$int.trt2B <- renderPrint({
+      return(print(zummaryB()$A2))
+    }) 
+    output$int.trt3B <- renderPrint({
+      return(print(zummaryB()$A3))
+    }) 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # MAIN EFFECTS MODELL
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     
+    zummaryC<- reactive({
+      
+      X <- analysis() 
+      
+      A1 <- summary(X$C, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "names"))
+      
+           #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      return(list(  A1=A1 )) 
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      
+    })
     
+    output$int.trt1C <- renderPrint({
+      return(print(zummaryC()$A1))
+    }) 
+   
     
-    
-    
-    
-    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     output$f.plot1 <- renderPlot({   
       
@@ -880,15 +908,24 @@ Sex =1 compared to sex in 0 in truth the coefficient is -0.693"
       
       plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "names")), 
            log=TRUE, xlim=c(log(.01),log(40)),
-           q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20))
+           q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
+           col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
+           col.points='black', cex=1, main= "Odds Ratio (main effects model)", cex.main=1.8
+      )
       
       plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=2, est.all=FALSE, vnames=c( "names")), 
            log=TRUE, xlim=c(log(.01),log(40)),
-           q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20))
+           q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
+           col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
+           col.points='black', cex=1, main= "Odds Ratio (main effects model)", cex.main=1.8
+      )
       
       plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex=0, bmi, trt=3, est.all=FALSE, vnames=c( "names")), 
            log=TRUE, xlim=c(log(.01),log(40)),
-           q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20))
+           q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
+           col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
+           col.points='black', cex=1, main= "Odds Ratio (main effects model)", cex.main=1.8
+      )
       
       par(mfrow=c(1,1))
       
@@ -896,7 +933,8 @@ Sex =1 compared to sex in 0 in truth the coefficient is -0.693"
     }) 
     
 
-
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
 
     output$f.plot2 <- renderPlot({
 
@@ -913,15 +951,25 @@ Sex =1 compared to sex in 0 in truth the coefficient is -0.693"
 
       plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "names")),
            log=TRUE, xlim=c(log(.01),log(40)),
-           q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20))
+           q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
+           col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
+           col.points='black', cex=1, main= "Odds Ratio (main effects model)", cex.main=1.8
+      )
 
       plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=2, est.all=FALSE, vnames=c( "names")),
            log=TRUE, xlim=c(log(.01),log(40)),
-           q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20))
+           q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
+           col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
+           col.points='black', cex=1, main= "Odds Ratio (main effects model)", cex.main=1.8
+      )
 
       plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex=0, bmi, trt=3, est.all=FALSE, vnames=c( "names")),
            log=TRUE, xlim=c(log(.01),log(40)),
-           q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20))
+           q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
+           col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
+           col.points='black', cex=1, main= "Odds Ratio (main effects model)", cex.main=1.8
+      )
+      
 
       par(mfrow=c(1,1))
 
@@ -929,6 +977,7 @@ Sex =1 compared to sex in 0 in truth the coefficient is -0.693"
     })
 
     
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     
     output$f.plot3 <- renderPlot({
@@ -945,22 +994,18 @@ Sex =1 compared to sex in 0 in truth the coefficient is -0.693"
       
       
       plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=1, est.all=FALSE, vnames=c( "names")),
-           log=TRUE, xlim=c(log(.01),log(40)),
-           q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20))
+           log=TRUE, xlim=c(log(.2),log(10)),
+           q=c( 0.95 ), at=c( .1,.2,.3,.5,.75,1, 1.2,1.5, 2,3,4,6,8,10), lwd=3, pch=17,
+           col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
+           col.points='black', cex=1, main= "Odds Ratio (main effects model)", cex.main=1.8
+           )
       
-      # plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi, trt=2, est.all=FALSE, vnames=c( "names")),
-      #      log=TRUE, xlim=c(log(.01),log(40)),
-      #      q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20))
-      # 
-      # plot(summary(A, smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex=0, bmi, trt=3, est.all=FALSE, vnames=c( "names")),
-      #      log=TRUE, xlim=c(log(.01),log(40)),
-      #      q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20))
-      
-      #par(mfrow=c(1,1))
+    
       
       
     })
     
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     
     
