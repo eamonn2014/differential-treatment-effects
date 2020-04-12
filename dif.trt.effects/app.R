@@ -48,8 +48,8 @@ is.even <- function(x){ x %% 2 == 0 } # function to id. odd maybe useful
 options(width=200)
 
 
-varz <-  c(  "smoking", "age", "bmi", "crp", "berlin", "vas", "time", 
-           "joints", "nails", "evidence")
+# varz <-  c(  "smoking", "age", "bmi", "crp", "berlin", "vas", "time", 
+#            "joints", "nails", "evidence")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/packages/shinythemes/versions/1.1.2
@@ -442,7 +442,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                          column(width = 3, offset = 0, style='padding:1px;',
                                                # tags$hr(),
                                                 div(h4("References:")),  
-                                                tags$a(href = "https://www.fharrell.com/post/varyor/", tags$span(style="color:blue", "[1] Frank Harrell"),),   
+                                                tags$a(href = "https://www.fharrell.com/post/varyor/", tags$span(style="color:blue", "[1] Frank Harrell...much more here"),),   
                                                 div(p(" ")),
                                                tags$a(href = "https://eamonn.shinyapps.io/responder-non-responder-fallacy-in-RCTs/", tags$span(style="color:blue", "[2] Responder non responder fallacy"),),
                                                div(p(" ")),
