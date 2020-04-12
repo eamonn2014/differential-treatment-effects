@@ -48,8 +48,8 @@ is.even <- function(x){ x %% 2 == 0 } # function to id. odd maybe useful
 options(width=200)
 
 
-# varz <-  c(  "smoking", "age", "bmi", "crp", "berlin", "vas", "time", 
-#            "joints", "nails", "evidence")
+# varz <-  c(  "smoking", "age", "bmi", "covar3", "covar1", "vas", "time", 
+#            "covar2", "fact1", "binary2")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/packages/shinythemes/versions/1.1.2
@@ -62,7 +62,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                 ),
                 
                 h2("Differential Treatment Effects"), 
-                h4("It is often desired to investigate if there is evidence of different treatment effects depending on the levels of baseline factor variables or the level 
+                h4("It is often desired to investigate if there is binary2 of different treatment effects depending on the levels of baseline factor variables or the level 
                 of continuous variables following an RCT. One or more interactions between baseline covariates and treatment are then explored.
                 Here we simulate an RCT with a binary response, 3 treatment arms and 11 baseline covariates. Note in reality this objective will be extremely underpowered, typically one wants to detect a
                 differential effect that is smaller than the overall detectable treatment effect. 'It is important to note that assessing treatment effect 
@@ -133,9 +133,9 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                   ),
                                   
                                   splitLayout(
-                                    textInput("v4", div(h5(tags$span(style="color:blue", "BMI(continuous)"))), value= "0"),
-                                    textInput("v5", div(h5(tags$span(style="color:blue", "CRP (continuous)"))), value= "1/3"),
-                                    textInput("v6", div(h5(tags$span(style="color:blue", "Berlin (continuous)"))), value= "-.5/10")
+                                    textInput("v4", div(h5(tags$span(style="color:blue", "BMI (factor)"))), value= "0"),
+                                    textInput("v5", div(h5(tags$span(style="color:blue", "covar3 (continuous)"))), value= "1/3"),
+                                    textInput("v6", div(h5(tags$span(style="color:blue", "covar1 (continuous)"))), value= "-.5/10")
                                     
                                   ),
                              
@@ -143,14 +143,14 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                   splitLayout(
                                     textInput("v7", div(h5(tags$span(style="color:blue", "Vas (continuous)"))), value= "0.25/30"),
                                     textInput("v8", div(h5(tags$span(style="color:blue", "Time (continuous)"))), value= "-.1/10"),
-                                    textInput("v9", div(h5(tags$span(style="color:blue", "Joints (continuous)"))), value= "-1/50")
+                                    textInput("v9", div(h5(tags$span(style="color:blue", "covar2 (continuous)"))), value= "-1/50")
                                     
                                   ),
                                   
                                   
                                   splitLayout(
-                                    textInput("v10", div(h5(tags$span(style="color:blue", "Nails (binary)"))), value= "log(2)"),
-                                    textInput("v11", div(h5(tags$span(style="color:blue", "Evidence (binary)"))), value= "-log(1)"),
+                                    textInput("v10", div(h5(tags$span(style="color:blue", "fact1 (binary)"))), value= "log(2)"),
+                                    textInput("v11", div(h5(tags$span(style="color:blue", "binary2 (binary)"))), value= "-log(1)"),
                                     textInput("v12", div(h5(tags$span(style="color:blue", "Sex (binary)"))), value= "log(0.5)")
                                     
                                   ),
@@ -203,9 +203,9 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                               baseline covariates on the log odds scale.
                                                        Note a typical change in an input variable would be unlikely to correspond to a change as large 
                                                        as 5 on the logistic scale (which would move the probability from 0.01 to 0.50 or from 0.50 to 0.99) [3].
-                                                      Age in years is uniformly distributed between 18 and 65. CRP is uniformly distributed
-                                                       between 0 to 3, berlin uniformly distributed between 0 to 10, vas between 1 to 30 and time in years uniformly
-                                                       distributed between 0 to 10. Smoking and BMI are 3 level factors and nails, evidence and sex are binary factors.
+                                                      Age in years is uniformly distributed between 18 and 65. covar3 is uniformly distributed
+                                                       between 0 to 3, covar1 uniformly distributed between 0 to 10, vas between 1 to 30 and time in years uniformly
+                                                       distributed between 0 to 10. Smoking and BMI are 3 level factors and fact1, binary2 and sex are binary factors.
                                                        For the factors the coefficient entered describes the true relationship between all adjacent levels."  )), 
                                               h4(paste("Click the simulate button to generate another data set from the same population.")),
                                               h4(paste("Tab 1 presents the regression table of the 3 models, the particular model can be selected. ")),
@@ -291,15 +291,15 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                          fluidRow(
                                            column(width = 6, offset = 0, style='padding:1px;',
                                                   br(),br(),
-                                                  h4("A small P-Value in the top most table provides evidence against
+                                                  h4("A small P-Value in the top most table provides binary2 against
                                                         the simpler model fitting the data better. The simpler model 
                                                         being the no-interaction logit-additive model that assumes constancy of treatment ORs."),
                                                 br(),br(),br(),br(),br(),br(),br(),br() ,
-                                                  h4("A small P-Value in the middle table provides evidence against
+                                                  h4("A small P-Value in the middle table provides binary2 against
                                                         the simpler model fitting the data better. The simpler model 
                                                         being the no-interaction logit-additive model that assumes constancy of treatment ORs."),
                                                 br(),br(),br(),br(),br(),br(),br(),br() ,
-                                                  h4("A small P-Value in the bottom table provides evidence against
+                                                  h4("A small P-Value in the bottom table provides binary2 against
                                                         the simpler model fitting the data better. The simpler model 
                                                         being the Treatment x Smoking interaction model."),
                                                   
@@ -563,13 +563,13 @@ server <- shinyServer(function(input, output   ) {
     age.coef       <-  v2     # log odds of 1 over the age range
     smoke.coef     <-  v3     # this is odds of 1.5
     bmi.coef       <-  v4     # this is an odds of 1..50:50
-    crp.coef       <-  v5     # log odds 1 over range of 3
-    berlin.coef    <-  v6     # log odds -.05 per unit change
+    covar3.coef       <-  v5     # log odds 1 over range of 3
+    covar1.coef    <-  v6     # log odds -.05 per unit change
     vas.coef       <-  v7     # log odds .008 per unit change. log odds .25 over 30 units odds 1.27
     time.coef      <-  v8     # log odds -.01 per year, log odds -.1 over 10 years or odds .90
-    joints.coef    <-  v9     # log odds 0.02 per joint, log odds 1 over 50 units or odds 2.7
-    nails.coef     <-  v10    # log odds 0.693 per change in binary, or odds of 2   
-    evidence.coef  <-  v11    # log odds 0 per change in binary, or odds of 1  
+    covar2.coef    <-  v9     # log odds 0.02 per joint, log odds 1 over 50 units or odds 2.7
+    fact1.coef     <-  v10    # log odds 0.693 per change in binary, or odds of 2   
+    binary2.coef  <-  v11    # log odds 0 per change in binary, or odds of 1  
     sex.coef       <-  v12    # log odds -0.693 per change in binary, or odds of .5  
     
     intercept <- -5
@@ -578,13 +578,13 @@ server <- shinyServer(function(input, output   ) {
     age      <- sample(18:65, n, replace=TRUE)      # continuous
     bmi      <- sample(1:3,   n, replace=TRUE)      # assume 3 equal groups?
     smoking  <- sample(1:3,   n, replace=TRUE)      # categorical assume 3 equal groups?
-    crp      <- round(runif(n,0,3),2)
-    berlin   <- round(runif(n,0,10),2)
+    covar3      <- round(runif(n,0,3),2)
+    covar1   <- round(runif(n,0,10),2)
     vas      <- sample(1:30, n, replace=TRUE)
     time     <- round(runif(n,0,10),2)              # years
-    joints   <- sample(1:50, n, replace=TRUE)
-    nails    <- sample(0:1,  n, replace=TRUE)
-    evidence <- sample(0:1,  n, replace=TRUE)
+    covar2   <- sample(1:50, n, replace=TRUE)
+    fact1    <- sample(0:1,  n, replace=TRUE)
+    binary2 <- sample(0:1,  n, replace=TRUE)
     sex      <- sample(0:1,  n, replace=TRUE)
     
     
@@ -594,26 +594,26 @@ server <- shinyServer(function(input, output   ) {
       age.coef       =age.coef,
       smoke.coef     =smoke.coef,
       bmi.coef       =bmi.coef,
-      crp.coef       =crp.coef,
-      berlin.coef    =berlin.coef,
+      covar3.coef       =covar3.coef,
+      covar1.coef    =covar1.coef,
       vas.coef       =vas.coef,
       time.coef      =time.coef,
-      joints.coef    =joints.coef,
-      nails.coef     =nails.coef,
-      evidence.coef  =evidence.coef,
+      covar2.coef    =covar2.coef,
+      fact1.coef     =fact1.coef,
+      binary2.coef  =binary2.coef,
       sex.coef       =sex.coef,
       
       trt= trt, 
       age=age, 
       bmi=bmi, 
       smoking=smoking,
-      crp=crp,
-      berlin=berlin, 
+      covar3=covar3,
+      covar1=covar1, 
       vas=vas, 
       time=time, 
-      joints=joints, 
-      nails=nails , 
-      evidence=evidence, 
+      covar2=covar2, 
+      fact1=fact1 , 
+      binary2=binary2, 
       sex=sex,
       
       randomi=randomi))
@@ -630,26 +630,26 @@ server <- shinyServer(function(input, output   ) {
     age      <-d$age       
     bmi      <-d$bmi       
     smoking  <-d$smoking  
-    crp      <-d$crp      
-    berlin   <-d$berlin   
+    covar3      <-d$covar3      
+    covar1   <-d$covar1   
     vas      <-d$vas       
     time     <-d$time      
-    joints   <-d$joints    
-    nails    <-d$nails     
-    evidence <-d$evidence  
+    covar2   <-d$covar2    
+    fact1    <-d$fact1     
+    binary2 <-d$binary2  
     sex      <-d$sex  
     
     trt.coef      =d$trt.coef 
     age.coef      =d$age.coef
     smoke.coef    =d$smoke.coef
     bmi.coef      =d$bmi.coef
-    crp.coef      =d$crp.coef
-    berlin.coef   =d$berlin.coef
+    covar3.coef      =d$covar3.coef
+    covar1.coef   =d$covar1.coef
     vas.coef      =d$vas.coef
     time.coef     =d$time.coef
-    joints.coef   =d$joints.coef
-    nails.coef    =d$nails.coef
-    evidence.coef =d$evidence.coef
+    covar2.coef   =d$covar2.coef
+    fact1.coef    =d$fact1.coef
+    binary2.coef =d$binary2.coef
     sex.coef      =d$sex.coef
     
     randomi <- d$randomi
@@ -658,30 +658,30 @@ server <- shinyServer(function(input, output   ) {
     
     if ( (input$Design) == "Treatment interacts with all variables" )  {
       
-      lp = intercept + trt*trt.coef*(smoking*smoke.coef   +   age*age.coef  + bmi*bmi.coef + crp*crp.coef +
-                                       berlin*berlin.coef + vas*vas.coef + time*time.coef + joints*joints.coef +
-                                       nails*nails.coef +
-                                       evidence*evidence.coef + sex*sex.coef) 
+      lp = intercept + trt*trt.coef*(smoking*smoke.coef   +   age*age.coef  + bmi*bmi.coef + covar3*covar3.coef +
+                                       covar1*covar1.coef + vas*vas.coef + time*time.coef + covar2*covar2.coef +
+                                       fact1*fact1.coef +
+                                       binary2*binary2.coef + sex*sex.coef) 
       
     }   else if ( (input$Design ) == "Treatment interacts with smoking only" ) {    
       
       # truth  only smoking interacts  with trt
-      lp = intercept + (trt*trt.coef*smoking*smoke.coef)   +   age*age.coef   + bmi*bmi.coef + crp*crp.coef +
-        berlin*berlin.coef + vas*vas.coef + time*time.coef + joints*joints.coef + nails*nails.coef +
-        evidence*evidence.coef + sex*sex.coef
+      lp = intercept + (trt*trt.coef*smoking*smoke.coef)   +   age*age.coef   + bmi*bmi.coef + covar3*covar3.coef +
+        covar1*covar1.coef + vas*vas.coef + time*time.coef + covar2*covar2.coef + fact1*fact1.coef +
+        binary2*binary2.coef + sex*sex.coef
       
     }   else if ( (input$Design) == "No-interaction logit-additive model" ) {  
       
       # truth no interactions
-      lp = intercept + trt*trt.coef + smoking*smoke.coef + age*age.coef  + bmi*bmi.coef + crp*crp.coef +
-        berlin*berlin.coef + vas*vas.coef + time*time.coef + joints*joints.coef + nails*nails.coef +
-        evidence*evidence.coef + sex*sex.coef
+      lp = intercept + trt*trt.coef + smoking*smoke.coef + age*age.coef  + bmi*bmi.coef + covar3*covar3.coef +
+        covar1*covar1.coef + vas*vas.coef + time*time.coef + covar2*covar2.coef + fact1*fact1.coef +
+        binary2*binary2.coef + sex*sex.coef
     }
     
     
     y <- ifelse(randomi < plogis(lp), 1, 0)   # one liner RANDOM!!!
     
-    dat <- data.frame(cbind(y,  trt ,  smoking, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi))
+    dat <- data.frame(cbind(y,  trt ,  smoking, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi))
     
     return(list(datx=dat))
     
@@ -694,8 +694,8 @@ server <- shinyServer(function(input, output   ) {
     
     da$trt <-     factor(da$trt)
     da$smoking <- factor(da$smoking)
-    da$nails <-   factor(da$nails)
-    da$evidence <-factor(da$evidence)
+    da$fact1 <-   factor(da$fact1)
+    da$binary2 <-factor(da$binary2)
     da$sex <-     factor(da$sex)
     da$bmi <-     factor(da$bmi)
     
@@ -703,21 +703,21 @@ server <- shinyServer(function(input, output   ) {
     label(da$trt)                <- 'Treatment'
     label(da$bmi)                <- 'Body Mass Index'
     label(da$smoking)            <- 'Smoking'
-    label(da$crp)                <- 'C-reactive protein'
-    label(da$berlin)             <- 'Berlin score'
+    label(da$covar3)                <- 'Biomarker'
+    label(da$covar1)             <- 'Blood score'
     label(da$vas)                <- 'Visual analogue score'
     label(da$time)               <- 'Time since diagnosis'
-    label(da$joints)             <- 'No. of joints affected'
-    label(da$nails)              <- "History"
-    label(da$evidence)           <- "radio graphic evidence"
+    label(da$covar2)             <- 'Fitness score'
+    label(da$fact1)              <- "History"
+    label(da$binary2)           <- "Employed"
     label(da$sex)                <- 'Sex'
     
     dd <<- datadist(da)
     options(datadist="dd")
     
-    A<-lrm(y~   trt * (smoking  + age  + bmi + crp + berlin + vas + time + joints + nails + evidence +sex),da)  # all interact with trt
-    B<-lrm(y~  (trt *  smoking) + age  + bmi + crp + berlin + vas + time + joints + nails + evidence +sex, da)  # smoking * trt only
-    C<-lrm(y~   trt +  smoking  + age +  bmi + crp + berlin + vas + time + joints + nails + evidence +sex, da)  # main effect
+    A<-lrm(y~   trt * (smoking  + age  + bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex),da)  # all interact with trt
+    B<-lrm(y~  (trt *  smoking) + age  + bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex, da)  # smoking * trt only
+    C<-lrm(y~   trt +  smoking  + age +  bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex, da)  # main effect
     
     outputx <- input$Model 
     
@@ -903,43 +903,43 @@ server <- shinyServer(function(input, output   ) {
                  
                  br(), br(),  
                  
-                 " CRP is a continuous variable and the true coefficient for CRP is "
+                 " covar3 is a continuous variable and the true coefficent for covar3 is "
                  , tags$span(style="color:red",  p4(v5) ) ,
-                 ". So for each unit change in CRP the log odds of p(y=1|x) increases by  "
+                 ". So for each unit change in covar3 the log odds of p(y=1|x) increases by  "
                  , tags$span(style="color:red",  p4(v5) ) ,".",
                  
                  br(), br(),  
-                 "Berlin is also continuous and the true coefficient is "
+                 "covar1 is also continuous and the true coefficent is "
                  , tags$span(style="color:red",  p4(v6) ) , 
-                 ". So for each unit change in berlin the log odds of p(y=1|x) changes by "
+                 ". So for each unit change in covar1 the log odds of p(y=1|x) changes by "
                  , tags$span(style="color:red",  p4(v6) ) , ".",
                  
                  br(), br(), 
-                 " Vas again is continuous and the true coeffient is "
+                 " Vas again is continuous and the true coefficent is "
                  , tags$span(style="color:red",  p4(v7) ) , 
                  ". So for each unit change in vas the log odds of p(y=1|x) changes by "
                  , tags$span(style="color:red",  p4(v7) ) , ".",
                  
                  br(), br(), 
-                 "Time is continuous and the true coeffient is "
+                 "Time is continuous and the true coefficent is "
                  , tags$span(style="color:red",  p4(v8) ) , 
                  ". So for each unit change in time the log odds of p(y=1|x) shifts by "
                  , tags$span(style="color:red",  p4(v8) ) , ".",
                  
                  br(), br(),
                  
-                 "Joint is treated as continuous and the coeffient "
+                 "Covar2 is treated as continuous and the coefficent "
                  , tags$span(style="color:red",  p4(v9) ) , 
-                 ". So for each unit change in joints the log odds of p(y=1|x) shifts by "
+                 ". So for each unit change in covar2 the log odds of p(y=1|x) shifts by "
                  , tags$span(style="color:red",  p4(v9) ) , ".",
                  br(), br(),
-                 "Nails, Evidence and Sex are binary predictors. For nails the default coefficent is "
+                 "fact1, binary2 and Sex are binary predictors. For fact1 the default coefficent is "
                  , tags$span(style="color:red",  p4(v10) ) , 
-                 ". So  the change to the next level of Nails results in a "
+                 ". So  the change to the next level of fact1 results in a "
                  , tags$span(style="color:red",  p4(v10) ) ,  
                  " shift in the log odds of p(y=1|x).",".",
                  br(), br(),
-                 "For evidence, in truth there is an effect of "
+                 "For binary2, in truth there is an effect of "
                  , tags$span(style="color:red",  p4(v11) ) , 
                  ". So the change to the next level results in a "
                  , tags$span(style="color:red",  p4(v11) ) ,   
@@ -1051,11 +1051,11 @@ server <- shinyServer(function(input, output   ) {
     
     X <- analysis() 
     
-    A1 <- summary(X$A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels"))
+    A1 <- summary(X$A, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels"))
     
-    A2 <- summary(X$A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=2, est.all=FALSE, vnames=c( "labels"))
+    A2 <- summary(X$A, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=2, est.all=FALSE, vnames=c( "labels"))
     
-    A3 <- summary(X$A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels"))
+    A3 <- summary(X$A, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels"))
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return(list(  A1=A1, A2= A2, A3= A3)) 
@@ -1080,7 +1080,7 @@ server <- shinyServer(function(input, output   ) {
     
     X <- analysis() 
     
-    A1 <- summary(X$B, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels"))
+    A1 <- summary(X$B, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels"))
     
     A2 <- summary(X$B, smoking=1,   trt=2, est.all=FALSE, vnames=c( "labels"))
     
@@ -1109,7 +1109,7 @@ server <- shinyServer(function(input, output   ) {
     
     X <- analysis() 
     
-    A1 <- summary(X$C, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels"))
+    A1 <- summary(X$C, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels"))
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return(list(  A1=A1 )) 
@@ -1137,21 +1137,21 @@ server <- shinyServer(function(input, output   ) {
     
     options(digits=1)
     
-    plot(summary(A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels")), 
+    plot(summary(A, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels")), 
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
          col.points='black', cex=1, main= "Odds Ratio (Treatment 1)", cex.main=1.8
     )
     
-    plot(summary(A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=2, est.all=FALSE, vnames=c( "labels")), 
+    plot(summary(A, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=2, est.all=FALSE, vnames=c( "labels")), 
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
          col.points='black', cex=1, main= "Odds Ratio (Treatment 2)", cex.main=1.8
     )
     
-    plot(summary(A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels")), 
+    plot(summary(A, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels")), 
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
@@ -1177,7 +1177,7 @@ server <- shinyServer(function(input, output   ) {
     
     options(digits=1)
 
-    plot(summary(A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels")),
+    plot(summary(A, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels")),
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
@@ -1215,7 +1215,7 @@ server <- shinyServer(function(input, output   ) {
     options(digits=1)
     
     
-    plot(summary(A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels")),
+    plot(summary(A, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels")),
          log=TRUE, xlim=c(log(.2),log(10)),
          q=c( 0.95 ), at=c( .1,.2,.3,.5,.75,1, 1.2,1.5, 2,3,4,6,8,10), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
