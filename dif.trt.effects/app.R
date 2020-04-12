@@ -490,7 +490,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
 
 server <- shinyServer(function(input, output   ) {
   
-  shinyalert("Welcome! \nModelling Differential Treatment effects!",
+  shinyalert("Welcome! \nModelling Differential Treatment Effects!",
              "Treatment covariate interactions", 
              type = "info")
   
@@ -874,7 +874,7 @@ server <- shinyServer(function(input, output   ) {
     v11 <- as.numeric(    eval(parse(text= (input$v11)) ) )
     v12 <- as.numeric(    eval(parse(text= (input$v12)) ) )
     
-    HTML(paste0( "In the case of treatment  mean treatment level 2 coefficient expectation is "
+    HTML(paste0( "In the case of treatment the mean treatment level 2 coefficient expectation is "
                  , tags$span(style="color:red",  p4( v1*1) ) ,
                  " and treatment level 3 coefficient expectation is "
                  , tags$span(style="color:red",  p4(v1*2) ) ,".",
@@ -943,7 +943,7 @@ server <- shinyServer(function(input, output   ) {
                  , tags$span(style="color:red",  p4(v11) ) , 
                  ". So the change to the next level results in a "
                  , tags$span(style="color:red",  p4(v11) ) ,   
-                 ". In the case of comapring sex =1 to sex=0 in truth the coefficient is "
+                 ". In the case of comparing sex =1 to sex=0 in truth the coefficient is "
                  , tags$span(style="color:red",  p4(v12) ) ,"."
                  
     ))    
