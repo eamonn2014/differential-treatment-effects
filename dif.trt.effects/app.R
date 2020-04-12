@@ -199,10 +199,10 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                               baseline covariates on the log odds scale.
                                                        Note a typical change in an input variable would be unlikely to correspond to a change as large 
                                                        as 5 on the logistic scale (which would move the probability from 0.01 to 0.50 or from 0.50 to 0.99) [3].
-                                                      Age in years is uniformly distributed between 16 and 65. CRP is uniformly distriuted
-                                                       from 0 to 3, berlin uniformly distributed from 0 to 10, vas from 1 to 30 and time in years uniformly
-                                                       distributed from 0 to 10. Smoking and BMI are 3 level factors and nails, evidence and sex are binary factors.
-                                                       For the factors the coefficient entered describes the relationship between all adjacent levels."  )), 
+                                                      Age in years is uniformly distributed between 18 and 65. CRP is uniformly distributed
+                                                       between 0 to 3, berlin uniformly distributed between 0 to 10, vas between 1 to 30 and time in years uniformly
+                                                       distributed between 0 to 10. Smoking and BMI are 3 level factors and nails, evidence and sex are binary factors.
+                                                       For the factors the coefficient entered describes the true relationship between all adjacent levels."  )), 
                                               h4(paste("Click the simulate button to generate another data set from the same population.")),
                                               h4(paste("Tab 1 presents the regression table of the 3 models, the particular model can be selected. ")),
                                               h4(paste("Tab 2 presents the regression table of the 
@@ -254,7 +254,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               ),
                            
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("3 Forest plot no-interact.", value=7, 
+                              tabPanel("3 Forest plot (FP) no-interact.", value=7, 
                                        h4(paste("Figure 1 & Table 3. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
@@ -306,7 +306,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               ) ,
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                               
-                              tabPanel("5 Forest plot trtXall", value=3, 
+                              tabPanel("5 FP trtXall", value=3, 
                                        h4(paste("Figure 2 Forest plots by treatment for the model in which treatment is interacted with all baseline covariates")),
                                        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                        fluidRow(
@@ -314,7 +314,10 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                 div(plotOutput("f.plot1", width=fig.width4, height=fig.height7)),
                                                 
                                          )),
+                                       h4(paste("Examples describing the regression coefficients. For continuous variables we estimate the effect based on the 25th and 75th percentile of the variables distribution.")),
                                        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                       #h4(paste("We can interpret the forest plot effect estimates thus...")),
+                                       h4(htmlOutput("textWithNumber3",) ),
                                        
                                        fluidRow(
                                          column(12,
@@ -344,7 +347,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                               ),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("6 Forest plot trtXsmoking", value=3, 
+                              tabPanel("6 FP trtXsmoking", value=3, 
                                        h4(paste("Figure 3 Forest plots by treatment for the model in which treatment is interacted with smoking covariate only")), 
                                        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                        fluidRow(
@@ -352,6 +355,9 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                 div(plotOutput("f.plot2", width=fig.width4, height=fig.height7)),
                                                 
                                          )),
+                                       
+                                     
+                                       
                                        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                        fluidRow(
                                          column(12,
@@ -415,7 +421,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                        
                               ),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("9 Data/References", 
+                              tabPanel("9 Data/Ref.", 
                                        
                                        fluidRow(
                                          
@@ -445,8 +451,25 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                 # tags$hr()
                                          ),
                                     )
-                              )##end
+                              )##end,
+                              ,
+                              #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                              tabPanel("10 xxxxx", value=3, 
+                                     
+                                       
+                                       fluidRow(
+                                         column(width = 6, offset = 0, style='padding:1px;',
+                                                
+                                         ) ,
+                                         
+                                         fluidRow(
+                                           column(width = 5, offset = 0, style='padding:1px;',
+                                                  
+                                           ))),
+                              )
                               
+                              #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                            
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   END NEW   
                             )
                             #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -890,6 +913,83 @@ server <- shinyServer(function(input, output   ) {
                  
     ))    
     
+  })
+  
+  ####
+  
+  output$textWithNumber3 <- renderText({ 
+    
+    x <- zummary()$A1
+    x2 <- zummary()$A2
+    x3 <- zummary()$A3
+    i=2
+    # HTML(paste0("For covariate ",rownames(x)[1]  , " the average change in odds comparing patients aged ",x[2,1]," with patients aged ",x[2,2],
+    # " on treatment 1  while being identical in all other predictors is ",p2(x[2,4])," with 
+    # 95%CI (",p2(x[2,6]),", ",p2(x[2,7]),") For covariate ",rownames(x2)[1]  , " the average change in odds comparing patients aged ",x2[2,1]," with patients aged ",x2[2,2],
+    #             " on treatment 1  while being identical in all other predictors is ",p2(x2[2,4])," with 
+    # 95%CI (",p2(x2[2,6]),", ",p2(x2[2,7]),") For covariate ",rownames(x3)[1]  , " the average change in odds comparing patients aged ",x3[2,1]," with patients aged ",x3[2,2],
+    #                         " on treatment 1  while being identical in all other predictors is ",p2(x3[2,4])," with 
+    # 95%CI (",p2(x3[2,6]),", ",p2(x3[2,7]),")"  ))
+    
+    
+    # HTML(paste0("For ",rownames(x)[1]  , " the average change in odds of the outcome comparing patients aged ",x[2,1]," with patients aged ",x[2,2],
+    #             " on treatment 1  while being identical in all other predictors is ",p2(x[2,4])," with 
+    # 95%CI (",p2(x[2,6]),", ",p2(x[2,7]),") "
+    #             , br(),
+    #  "For ",rownames(x2)[1]  , " the average change in odds of the outcome comparing patients aged ",x2[2,1]," with patients aged ",x2[2,2],
+    #             " on treatment 2  while being identical in all other predictors is ",p2(x2[2,4])," with 
+    # 95%CI (",p2(x2[2,6]),", ",p2(x2[2,7]),") "
+    #  , br(),
+    # "For ",rownames(x3)[1]  , " the average change in odds of the outcome comparing patients aged ",x3[2,1]," with patients aged ",x3[2,2],
+    #             " on treatment 3  while being identical in all other predictors is ",p2(x3[2,4])," with 
+    # 95%CI (",p2(x3[2,6]),", ",p2(x3[2,7]),")" 
+    # 
+    # 
+    # , br(),br(),
+    # "For ",rownames(x)[3]  , " the average change in odds of the outcome comparing patients with level ",x[4,1]," to patients with level ",x[4,2],
+    # " on treatment 1  while being identical in all other predictors is ",p2(x[4,4])," with 
+    # 95%CI (",p2(x[4,6]),", ",p2(x[4,7]),") "
+    # , br(),
+    # "For ",rownames(x2)[3]  , " the average change in odds of the outcome comparing patients with level ",x2[4,1]," to patients with level ",x2[4,2],
+    # " on treatment 2  while being identical in all other predictors is ",p2(x2[4,4])," with 
+    # 95%CI (",p2(x2[4,6]),", ",p2(x2[4,7]),") "
+    # , br(),
+    # "For ",rownames(x3)[3]  , " the average change in odds of the outcome comparing patients with level ",x3[4,1]," to patients with level ",x3[4,2],
+    # " on treatment 3  while being identical in all other predictors is ",p2(x3[4,4])," with 
+    # 95%CI (",p2(x3[4,6]),", ",p2(x3[4,7]),")" 
+    
+    
+    
+    HTML(paste0("For ",rownames(x)[1]  , " the average change in odds of the outcome comparing patients aged ",x[2,1]," with patients aged ",x[2,2]
+                
+      , br(),br(),
+     
+     " on treatment 1  while being identical in all other predictors is ",p2(x[2,4])," with  95%CI (",p2(x[2,6]),", ",p2(x[2,7]),") "
+     , br(),br(),
+      " on treatment 2  while being identical in all other predictors is ",p2(x2[2,4])," with 95%CI (",p2(x2[2,6]),", ",p2(x2[2,7]),")" 
+      , br(),br(), 
+        " on treatment 3  while being identical in all other predictors is ",p2(x3[2,4])," with 95%CI (",p2(x3[2,6]),", ",p2(x3[2,7]),")" 
+                
+                
+                , br(),br(),
+                "For ",rownames(x)[3]  , " the average change in odds of the outcome comparing patients with level ",x[4,1]," to patients with level ",x[4,2],
+                " on treatment 1  while being identical in all other predictors is ",p2(x[4,4])," with 
+    95%CI (",p2(x[4,6]),", ",p2(x[4,7]),") "
+                , br(),
+                "For ",rownames(x2)[3]  , " the average change in odds of the outcome comparing patients with level ",x2[4,1]," to patients with level ",x2[4,2],
+                " on treatment 2  while being identical in all other predictors is ",p2(x2[4,4])," with 
+    95%CI (",p2(x2[4,6]),", ",p2(x2[4,7]),") "
+                , br(),
+                "For ",rownames(x3)[3]  , " the average change in odds of the outcome comparing patients with level ",x3[4,1]," to patients with level ",x3[4,2],
+                " on treatment 3  while being identical in all other predictors is ",p2(x3[4,4])," with 
+    95%CI (",p2(x3[4,6]),", ",p2(x3[4,7]),")" 
+    
+    
+    
+    
+    ))
+                            
+ 
   })
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
