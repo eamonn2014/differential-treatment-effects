@@ -903,37 +903,37 @@ server <- shinyServer(function(input, output   ) {
                  
                  br(), br(),  
                  
-                 " covar3 is a continuous variable and the true coefficent for covar3 is "
+                 " covar3 is a continuous variable and the true coefficient for covar3 is "
                  , tags$span(style="color:red",  p4(v5) ) ,
                  ". So for each unit change in covar3 the log odds of p(y=1|x) increases by  "
                  , tags$span(style="color:red",  p4(v5) ) ,".",
                  
                  br(), br(),  
-                 "covar1 is also continuous and the true coefficent is "
+                 "covar1 is also continuous and the true coefficient is "
                  , tags$span(style="color:red",  p4(v6) ) , 
                  ". So for each unit change in covar1 the log odds of p(y=1|x) changes by "
                  , tags$span(style="color:red",  p4(v6) ) , ".",
                  
                  br(), br(), 
-                 " Vas again is continuous and the true coefficent is "
+                 " Vas again is continuous and the true coefficient is "
                  , tags$span(style="color:red",  p4(v7) ) , 
                  ". So for each unit change in vas the log odds of p(y=1|x) changes by "
                  , tags$span(style="color:red",  p4(v7) ) , ".",
                  
                  br(), br(), 
-                 "Time is continuous and the true coefficent is "
+                 "Time is continuous and the true coefficient is "
                  , tags$span(style="color:red",  p4(v8) ) , 
                  ". So for each unit change in time the log odds of p(y=1|x) shifts by "
                  , tags$span(style="color:red",  p4(v8) ) , ".",
                  
                  br(), br(),
                  
-                 "Covar2 is treated as continuous and the coefficent "
+                 "Covar2 is treated as continuous and the coefficient "
                  , tags$span(style="color:red",  p4(v9) ) , 
                  ". So for each unit change in covar2 the log odds of p(y=1|x) shifts by "
                  , tags$span(style="color:red",  p4(v9) ) , ".",
                  br(), br(),
-                 "fact1, binary2 and Sex are binary predictors. For fact1 the default coefficent is "
+                 "fact1, binary2 and Sex are binary predictors. For fact1 the default coefficient is "
                  , tags$span(style="color:red",  p4(v10) ) , 
                  ". So  the change to the next level of fact1 results in a "
                  , tags$span(style="color:red",  p4(v10) ) ,  
