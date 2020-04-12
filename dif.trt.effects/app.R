@@ -392,8 +392,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               ),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                               tabPanel("7 Rel. expl. variation", value=3, 
-                                       #  h4("Tables 5 & 6 and Figure 7"),
-                                       
+
                                        h4(htmlOutput("textWithNumber1",) ),
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
@@ -440,20 +439,14 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                 
                                          ),
                                          column(width = 3, offset = 0, style='padding:1px;',
-                                               # tags$hr(),
                                                 div(h4("References:")),  
                                                 tags$a(href = "https://www.fharrell.com/post/varyor/", tags$span(style="color:blue", "[1] Frank Harrell...much more here"),),   
                                                 div(p(" ")),
-                                               tags$a(href = "https://eamonn.shinyapps.io/responder-non-responder-fallacy-in-RCTs/", tags$span(style="color:blue", "[2] Responder non responder fallacy"),),
-                                               div(p(" ")),
-                                                 tags$a(href = "https://projecteuclid.org/download/pdfview_1/euclid.aoas/1231424214",  tags$span(style="color:blue", "[3] Andrew Gelman"),),   
-                                                 div(p(" ")),
+                                                tags$a(href = "https://eamonn.shinyapps.io/responder-non-responder-fallacy-in-RCTs/", tags$span(style="color:blue", "[2] Responder non responder fallacy"),),
+                                                div(p(" ")),
+                                                tags$a(href = "https://projecteuclid.org/download/pdfview_1/euclid.aoas/1231424214",  tags$span(style="color:blue", "[3] Andrew Gelman"),),   
+                                                div(p(" ")),
                                                 
-                                                # tags$a(href = "http://hbiostat.org/doc/rms.pdf", tags$span(style="color:blue", "[3] Regression modelling strategies"),),  
-                                                # div(p(" ")),
-                                                # tags$a(href = "https://rdrr.io/cran/rms/man/predict.lrm.html", tags$span(style="color:blue", "[4] Prediction of model mean"),),  
-                                                # div(p(" ")),
-                                                # tags$hr()
                                          ),
                                     )
                               )##end,
@@ -473,11 +466,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                      
                                      div( verbatimTextOutput(print("z99.")   ) ),
                                     
-                                     
-                                     
-                                     
-                                     
-                                       fluidRow(
+                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
                                             #    div( verbatimTextOutput(print("z1.")   ) ),
                                          ) ,
@@ -789,6 +778,7 @@ server <- shinyServer(function(input, output   ) {
     
   })
   
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
   
   
@@ -809,57 +799,8 @@ server <- shinyServer(function(input, output   ) {
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
   })
-  contrastz2<- reactive({
-    
-    X <- analysis() 
-    
-    A <- X$A  # trt x all
-    B<-  X$B  # trt x smoke
-    C <- X$C  # main
-      
-    
-    k2 <- contrast(A, list(smoking=c(3), trt=c(1:3)), list(smoking=c(1), trt=c(1:3)) , fun=exp) 
-    z2 <- print(k2, X=TRUE)  
-    
-    #############################################################
-    
-    # z<- as.vector(rep(NA,11))
-    # 
-    # for ( i in 3:13) {
-    #   z[i] <- as.character(attr(x = A$terms, which = "predvars")[[i]])
-    # }
-    # 
-    # 
-    # z <- z[3:13]
-    
-    #############################################################
-    
-    
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return(list(   k2=k2,   z2=z2 )) 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-  })
-  
-  
-  
-  
-  output$k1. <- renderPrint({
-    return(contrastz()$k1)
-  })
-  output$k2. <- renderPrint({
-    return(contrastz2()$k2)
-  })
-  output$z1. <- renderPrint({
-    return(contrastz()$z1)
-  })
-  output$z2. <- renderPrint({
-    return(contrastz2()$z2)
-  })
-  
-  
  
-  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
   cont2 <- reactive({
     
@@ -885,78 +826,7 @@ server <- shinyServer(function(input, output   ) {
   output$z99. <- renderPrint({
     return(cont2()$z99)
   })
-  # output$k99. <- renderPrint({
-  #   return(cont2()$k99)
-  # })
-  # 
-  
-  # 
-  # mydata <- reactive({ 
-  #   
-  #   X <- analysis()
-  #   
-  #   A <- X$A  # trt x all
-  #   
-  #   z<- as.vector(rep(NA,11))
-  #   
-  #   for ( i in 3:13) {
-  #     z[i] <- as.character(attr(x = A$terms, which = "predvars")[[i]])
-  #   }
-  #   
-  #   z <- z[3:13]
-  #   
-  #   return = list(z)
-  # 
-  # }) 
-  # 
-  # output$V <- renderPrint({
-  #   return(print(mydata()$z)) 
-  # })
-  # 
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  
-  # output$rev1 <- renderPrint({
-  #   return(print(rexv()$L1, digits=3))
-  # }) 
-  # output$rev2 <- renderPrint({
-  #   return(print(rexv()$L2, digits=3))
-  # }) 
-  # output$rev3<- renderPrint({
-  #   return(print(rexv()$L3, digits=3))
-  # }) 
-  # 
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # output$AIC1 <- renderPrint({
-  #   return(print(rexv()$AICA, digits=3))
-  # }) 
-  # output$AIC2 <- renderPrint({
-  #   return(print(rexv()$AICB, digits=3))
-  # }) 
-  # output$AIC3<- renderPrint({
-  #   return(print(rexv()$AICC, digits=3))
-  # }) 
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
   lrtestx<- reactive({
@@ -1109,32 +979,7 @@ server <- shinyServer(function(input, output   ) {
                             
  
   })
-  
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  
-  # rexv <- reactive({
-  #   
-  #   X <- analysis() 
-  #   
-  #   L1 <-   var(predict(X$B, type='fitted')) / 
-  #     var(predict(X$A, type='fitted')) 
-  #   
-  #   L2 <-   var(predict(X$C, type='fitted')) / 
-  #     var(predict(X$A, type='fitted')) 
-  #   
-  #   L3 <-   var(predict(X$C, type='fitted')) / 
-  #     var(predict(X$B, type='fitted')) 
-  #   
-  #   AICA <-   AIC(X$A)  
-  #   AICB <-   AIC(X$B)  
-  #   AICC <-   AIC(X$C) 
-  #   
-  #   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  #   return(list(  L1=L1, L2= L2, L3= L3, AICA = AICA, AICB = AICB, AICC = AICC)) 
-  #   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  #   
-  # })
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
   
   output$textWithNumber1 <- renderText({ 
     
@@ -1237,12 +1082,6 @@ server <- shinyServer(function(input, output   ) {
     
     A1 <- summary(X$B, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels"))
     
-    #A2 <- summary(X$B, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=2, est.all=FALSE, vnames=c( "labels"))
-    
-    #A3 <- summary(X$B, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels"))
-    
-    # as smoking interacts with treatment only, all other coefficents do not change across treatment so just need to show one in entirety and the following : 
-    
     A2 <- summary(X$B, smoking=1,   trt=2, est.all=FALSE, vnames=c( "labels"))
     
     A3 <- summary(X$B, smoking=1,   trt=3, est.all=FALSE, vnames=c( "labels"))
@@ -1344,21 +1183,7 @@ server <- shinyServer(function(input, output   ) {
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
          col.points='black', cex=1, main= "Odds Ratio (Treatment 1)", cex.main=1.8
     )
-    
-    # plot(summary(A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=2, est.all=FALSE, vnames=c( "labels")),
-    #      log=TRUE, xlim=c(log(.01),log(40)),
-    #      q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
-    #      col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
-    #      col.points='black', cex=1, main= "Odds Ratio (Treatment 2)", cex.main=1.8
-    # )
-    # 
-    # plot(summary(A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels")),
-    #      log=TRUE, xlim=c(log(.01),log(40)),
-    #      q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
-    #      col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
-    #      col.points='black', cex=1, main= "Odds Ratio (Treatment 3)", cex.main=1.8
-    # )
-    
+
     plot(summary(A, smoking=1,   trt=2, est.all=FALSE, vnames=c( "labels")),
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
@@ -1372,13 +1197,6 @@ server <- shinyServer(function(input, output   ) {
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
          col.points='black', cex=1, main= "Odds Ratio (Treatment 3)", cex.main=1.8
     )
-    
-    
-    
-    
-    
-    
-    
     
     par(mfrow=c(1,1))
     
