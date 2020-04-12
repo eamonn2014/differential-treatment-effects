@@ -1023,7 +1023,7 @@ server <- shinyServer(function(input, output   ) {
     
     #A3 <- summary(X$B, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels"))
     
-    # as smoking ineracts with treatment only all othe coefficents do not change across treatment so ]ust show one 
+    # as smoking interacts with treatment only, all other coefficents do not change across treatment so just need to show one in entirety and the following : 
     
     A2 <- summary(X$B, smoking=1,   trt=2, est.all=FALSE, vnames=c( "labels"))
     
