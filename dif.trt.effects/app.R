@@ -396,7 +396,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               ),
                               
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("8 All models", value=3, 
+                              tabPanel("8 All models", value=3,    
                                        
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
