@@ -62,12 +62,12 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                 ),
                 
                 h2("Differential Treatment Effects"), 
-                h4("It is often desired to investigate if there is binary2 of different treatment effects depending on the levels of baseline factor variables or the level 
+                h4("It is often desired to investigate if there is evidence of different treatment effects depending on the levels of baseline factor variables or the level 
                 of continuous variables following an RCT. One or more interactions between baseline covariates and treatment are then explored.
                 Here we simulate an RCT with a binary response, 3 treatment arms and 11 baseline covariates. Note in reality this objective will be extremely underpowered, typically one wants to detect a
                 differential effect that is smaller than the overall detectable treatment effect. 'It is important to note that assessing treatment effect 
                 in an isolated subgroup defined by a categorical covariate does not establish differential treatment effects and results in unreliable estimates. 
-                Differential treatment effect must be demonstrated.'[1]. However, before embarking on this endevour it is advisable to assess the variation in the response in the treatment arms first [2].
+                Differential treatment effect must be demonstrated.'[1]. However, before embarking on this endeavour it is advisable to assess the variation in the response in the treatment arms first [2].
          "), 
                 
                 h3("  "), 
@@ -281,9 +281,9 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                          column(width = 6, offset = 0, style='padding:1px;',
                                                 h4("Table 4 [No-interaction logit-additive model that assumes constancy of treatment ORs] vrs [Treatment x Smoking interaction model]"), 
                                                 div( verbatimTextOutput("L1c") ),
-                                                h4("Table 5 [No-interaction logit-additive model that assumes constancy of treatment ORs] vrs [Treatment x all predcitors interaction model]"), 
+                                                h4("Table 5 [No-interaction logit-additive model that assumes constancy of treatment ORs] vrs [Treatment x all predictors interaction model]"), 
                                                 div( verbatimTextOutput("L1b") ),
-                                                h4("Table 6 [Treatment x Smoking interaction model] vrs [Treatment x all predcitors interaction model]"), 
+                                                h4("Table 6 [Treatment x Smoking interaction model] vrs [Treatment x all predictors interaction model]"), 
                                                 div( verbatimTextOutput("L1a") )
                                                 
                                          ) ,
