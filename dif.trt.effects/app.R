@@ -47,6 +47,10 @@ inv_logit <- function(logit) exp(logit) / (1 + exp(logit))
 is.even <- function(x){ x %% 2 == 0 } # function to id. odd maybe useful
 options(width=200)
 
+
+varz <-  c(  "smoking", "age", "bmi", "crp", "berlin", "vas", "time", 
+           "joints", "nails", "evidence")
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/packages/shinythemes/versions/1.1.2
                 # paper
@@ -213,12 +217,13 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                               h4(paste("Tab 4 presents the likelihood ratio test assessing each model with each other.")),
                                              
                                               h4(paste("Tab 5 presents the forest plots by treatment for the treatment interacting with all baseline covariates model plus 
-                                                       tables of the ORs and log odds ratios.")),
+                                                       tables of the ORs and log odds ratios. For good measure we also describe a couple of the estimated regression coefficients.")),
                                               h4(paste("Tab 6 presents the forest plots by treatment for the treatment x smoking interaction model and 
                                                        tables of the ORs and log odds ratios.")),
                                               h4(paste("Tab 7 presents relative measures of explained variation and the AIC of each model is reported.")),
                                               h4(paste("Tab 8 No new information is presented on this tab, but only the 3 model outputs presented together.")),
-                                              h4(paste("The final tab presents a listing of the simulated data and references."))
+                                              h4(paste("The 9th tab presents a listing of the simulated data and references.")),
+                                              h4(paste("The final tab presents another way to estimate treatment effects with interactions using contrast statements.")),
                                          ),
                                          
                                          fluidRow(
@@ -454,17 +459,32 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               )##end,
                               ,
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("10 xxxxx", value=3, 
+                              tabPanel("10 Contrast", value=3, 
                                      
-                                       
+                                        
+                                     # selectInput("predictors",
+                                     #               strong("predictors"),
+                                     #               choices=varz),
+                                     h4(paste("Table 16. Contrast output (showing design matrix) to see the effect of smoking in each treatment on the log odds scale, compare 
+                                              to tab 5")), 
+                                     
+                                     textInput('levz', 
+                                               strong(div(h5(tags$span(style="color:blue", "Contrast to compare smoking levels")))), "2,1"),
+                                     
+                                     div( verbatimTextOutput(print("z99.")   ) ),
+                                    
+                                     
+                                     
+                                     
+                                     
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
-                                                
+                                            #    div( verbatimTextOutput(print("z1.")   ) ),
                                          ) ,
                                          
                                          fluidRow(
                                            column(width = 5, offset = 0, style='padding:1px;',
-                                                  
+                                             #     div( verbatimTextOutput(print("z2.") )),
                                            ))),
                               )
                               
@@ -769,6 +789,151 @@ server <- shinyServer(function(input, output   ) {
     
   })
   
+  
+  
+  
+  contrastz<- reactive({
+    
+    X <- analysis() 
+    
+    A <- X$A  # trt x all
+    B<-  X$B  # trt x smoke
+    C <- X$C  # main
+    
+    k1 <- contrast(A, list(smoking=c(2), trt=c(1:3)), list(smoking=c(1), trt=c(1:3)) , fun=exp) 
+    z1 <- print(k1, X=TRUE)   
+    
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    return(list(  k1=k1,  z1=z1 )) 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+  })
+  contrastz2<- reactive({
+    
+    X <- analysis() 
+    
+    A <- X$A  # trt x all
+    B<-  X$B  # trt x smoke
+    C <- X$C  # main
+      
+    
+    k2 <- contrast(A, list(smoking=c(3), trt=c(1:3)), list(smoking=c(1), trt=c(1:3)) , fun=exp) 
+    z2 <- print(k2, X=TRUE)  
+    
+    #############################################################
+    
+    # z<- as.vector(rep(NA,11))
+    # 
+    # for ( i in 3:13) {
+    #   z[i] <- as.character(attr(x = A$terms, which = "predvars")[[i]])
+    # }
+    # 
+    # 
+    # z <- z[3:13]
+    
+    #############################################################
+    
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    return(list(   k2=k2,   z2=z2 )) 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+  })
+  
+  
+  
+  
+  output$k1. <- renderPrint({
+    return(contrastz()$k1)
+  })
+  output$k2. <- renderPrint({
+    return(contrastz2()$k2)
+  })
+  output$z1. <- renderPrint({
+    return(contrastz()$z1)
+  })
+  output$z2. <- renderPrint({
+    return(contrastz2()$z2)
+  })
+  
+  
+ 
+  
+  
+  cont2 <- reactive({
+    
+    i <- as.numeric(unlist(strsplit(input$levz,",")))
+    #V <-  input$predictors 
+    #v <- as.character(v)
+    M <- i[1] 
+    N <- i[2]
+    
+    X <- analysis() 
+    
+    A <- X$A  # trt x all
+
+    k99 <- contrast(A, list(smoking=M, trt=c(1:3)), list(smoking=N, trt=c(1:3)) , fun=exp) 
+    z99 <- print(k99, X=TRUE)  
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    return(list(    z99=z99 )) 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+  })
+  
+  output$z99. <- renderPrint({
+    return(cont2()$z99)
+  })
+  # output$k99. <- renderPrint({
+  #   return(cont2()$k99)
+  # })
+  # 
+  
+  # 
+  # mydata <- reactive({ 
+  #   
+  #   X <- analysis()
+  #   
+  #   A <- X$A  # trt x all
+  #   
+  #   z<- as.vector(rep(NA,11))
+  #   
+  #   for ( i in 3:13) {
+  #     z[i] <- as.character(attr(x = A$terms, which = "predvars")[[i]])
+  #   }
+  #   
+  #   z <- z[3:13]
+  #   
+  #   return = list(z)
+  # 
+  # }) 
+  # 
+  # output$V <- renderPrint({
+  #   return(print(mydata()$z)) 
+  # })
+  # 
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
   # output$rev1 <- renderPrint({
@@ -915,75 +1080,30 @@ server <- shinyServer(function(input, output   ) {
     
   })
   
-  ####
+  #### pull some estimates to describe what we find
   
   output$textWithNumber3 <- renderText({ 
     
-    x <- zummary()$A1
+    x <-  zummary()$A1
     x2 <- zummary()$A2
     x3 <- zummary()$A3
-    i=2
-    # HTML(paste0("For covariate ",rownames(x)[1]  , " the average change in odds comparing patients aged ",x[2,1]," with patients aged ",x[2,2],
-    # " on treatment 1  while being identical in all other predictors is ",p2(x[2,4])," with 
-    # 95%CI (",p2(x[2,6]),", ",p2(x[2,7]),") For covariate ",rownames(x2)[1]  , " the average change in odds comparing patients aged ",x2[2,1]," with patients aged ",x2[2,2],
-    #             " on treatment 1  while being identical in all other predictors is ",p2(x2[2,4])," with 
-    # 95%CI (",p2(x2[2,6]),", ",p2(x2[2,7]),") For covariate ",rownames(x3)[1]  , " the average change in odds comparing patients aged ",x3[2,1]," with patients aged ",x3[2,2],
-    #                         " on treatment 1  while being identical in all other predictors is ",p2(x3[2,4])," with 
-    # 95%CI (",p2(x3[2,6]),", ",p2(x3[2,7]),")"  ))
-    
-    
-    # HTML(paste0("For ",rownames(x)[1]  , " the average change in odds of the outcome comparing patients aged ",x[2,1]," with patients aged ",x[2,2],
-    #             " on treatment 1  while being identical in all other predictors is ",p2(x[2,4])," with 
-    # 95%CI (",p2(x[2,6]),", ",p2(x[2,7]),") "
-    #             , br(),
-    #  "For ",rownames(x2)[1]  , " the average change in odds of the outcome comparing patients aged ",x2[2,1]," with patients aged ",x2[2,2],
-    #             " on treatment 2  while being identical in all other predictors is ",p2(x2[2,4])," with 
-    # 95%CI (",p2(x2[2,6]),", ",p2(x2[2,7]),") "
-    #  , br(),
-    # "For ",rownames(x3)[1]  , " the average change in odds of the outcome comparing patients aged ",x3[2,1]," with patients aged ",x3[2,2],
-    #             " on treatment 3  while being identical in all other predictors is ",p2(x3[2,4])," with 
-    # 95%CI (",p2(x3[2,6]),", ",p2(x3[2,7]),")" 
-    # 
-    # 
-    # , br(),br(),
-    # "For ",rownames(x)[3]  , " the average change in odds of the outcome comparing patients with level ",x[4,1]," to patients with level ",x[4,2],
-    # " on treatment 1  while being identical in all other predictors is ",p2(x[4,4])," with 
-    # 95%CI (",p2(x[4,6]),", ",p2(x[4,7]),") "
-    # , br(),
-    # "For ",rownames(x2)[3]  , " the average change in odds of the outcome comparing patients with level ",x2[4,1]," to patients with level ",x2[4,2],
-    # " on treatment 2  while being identical in all other predictors is ",p2(x2[4,4])," with 
-    # 95%CI (",p2(x2[4,6]),", ",p2(x2[4,7]),") "
-    # , br(),
-    # "For ",rownames(x3)[3]  , " the average change in odds of the outcome comparing patients with level ",x3[4,1]," to patients with level ",x3[4,2],
-    # " on treatment 3  while being identical in all other predictors is ",p2(x3[4,4])," with 
-    # 95%CI (",p2(x3[4,6]),", ",p2(x3[4,7]),")" 
-    
-    
     
     HTML(paste0("For ",rownames(x)[1]  , " the average change in odds of the outcome comparing patients aged ",x[2,1]," with patients aged ",x[2,2]
-                
       , br(), 
-     
-     " on treatment 1  while being identical in all other predictors is ",p2(x[2,4])," with  95%CI (",p2(x[2,6]),", ",p2(x[2,7]),") "
+      " on treatment 1  while being identical in all other predictors is ",p2(x[2,4])," with  95%CI (",p2(x[2,6]),", ",p2(x[2,7]),") "
       ,br(),
       " on treatment 2  while being identical in all other predictors is ",p2(x2[2,4])," with 95%CI (",p2(x2[2,6]),", ",p2(x2[2,7]),")" 
       ,br(), 
-        " on treatment 3  while being identical in all other predictors is ",p2(x3[2,4])," with 95%CI (",p2(x3[2,6]),", ",p2(x3[2,7]),")" 
+      " on treatment 3  while being identical in all other predictors is ",p2(x3[2,4])," with 95%CI (",p2(x3[2,6]),", ",p2(x3[2,7]),")" 
                 
-                
-                , br(),br(),
-                "For ",rownames(x)[3]  , " the average change in odds of the outcome comparing patients with level ",x[4,1]," to patients with level ",x[4,2]
-     , br(), 
-                " on treatment 1  while being identical in all other predictors is ",p2(x[4,4])," with 95%CI (",p2(x[4,6]),", ",p2(x[4,7]),") "
-     , br(), 
-                 
-                " on treatment 2  while being identical in all other predictors is ",p2(x2[4,4])," with 95%CI (",p2(x2[4,6]),", ",p2(x2[4,7]),") "
+      , br(),br(),
+      "For ",rownames(x)[3]  , " the average change in odds of the outcome comparing patients with level ",x[4,1]," to patients with level ",x[4,2]
+      , br(), 
+      " on treatment 1  while being identical in all other predictors is ",p2(x[4,4])," with 95%CI (",p2(x[4,6]),", ",p2(x[4,7]),") "
+      , br(), 
+      " on treatment 2  while being identical in all other predictors is ",p2(x2[4,4])," with 95%CI (",p2(x2[4,6]),", ",p2(x2[4,7]),") "
      ,br(), 
-                
-                " on treatment 3  while being identical in all other predictors is ",p2(x3[4,4])," with 95%CI (",p2(x3[4,6]),", ",p2(x3[4,7]),")" 
-    
-    
-    
+      " on treatment 3  while being identical in all other predictors is ",p2(x3[4,4])," with 95%CI (",p2(x3[4,6]),", ",p2(x3[4,7]),")" 
     
     ))
                             
