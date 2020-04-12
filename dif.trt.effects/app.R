@@ -222,8 +222,9 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                        tables of the ORs and log odds ratios.")),
                                               h4(paste("Tab 7 presents relative measures of explained variation and the AIC of each model is reported.")),
                                               h4(paste("Tab 8 No new information is presented on this tab, but only the 3 model outputs presented together.")),
-                                              h4(paste("The 9th tab presents a listing of the simulated data and references.")),
-                                              h4(paste("The final tab presents another way to estimate treatment effects with interactions using contrast statements.")),
+                                             
+                                              h4(paste("The 9th  tab presents another way to estimate treatment effects with interactions using contrast statements.")),
+                                              h4(paste("The final tab presents a listing of the simulated data and references."))
                                          ),
                                          
                                          fluidRow(
@@ -425,34 +426,9 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                        
                               ),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("9 Data/Ref.", 
-                                       
-                                       fluidRow(
-                                         
-                                         
-                                         column(width = 6, offset = 0, style='padding:1px;',
-                                                # h4("Notes"),
-                                                h4("Table 16 Simulated data listing"),
-                                                div( verbatimTextOutput("datx") ),
-                                                
-                                                
-                                                
-                                         ),
-                                         column(width = 3, offset = 0, style='padding:1px;',
-                                                div(h4("References:")),  
-                                                tags$a(href = "https://www.fharrell.com/post/varyor/", tags$span(style="color:blue", "[1] Frank Harrell...much more here"),),   
-                                                div(p(" ")),
-                                                tags$a(href = "https://eamonn.shinyapps.io/responder-non-responder-fallacy-in-RCTs/", tags$span(style="color:blue", "[2] Responder non responder fallacy"),),
-                                                div(p(" ")),
-                                                tags$a(href = "https://projecteuclid.org/download/pdfview_1/euclid.aoas/1231424214",  tags$span(style="color:blue", "[3] Andrew Gelman"),),   
-                                                div(p(" ")),
-                                                
-                                         ),
-                                    )
-                              )##end,
-                              ,
+               
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("10 Contrast", value=3, 
+                              tabPanel("9 Contrast", value=3, 
                                      
                                         
                                      # selectInput("predictors",
@@ -475,7 +451,52 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                            column(width = 5, offset = 0, style='padding:1px;',
                                              #     div( verbatimTextOutput(print("z2.") )),
                                            ))),
-                              )
+                              ),
+                              
+                              
+                              tabPanel("10 Data/Ref.", 
+                                       
+                                       fluidRow(
+                                         
+                                         
+                                         column(width = 6, offset = 0, style='padding:1px;',
+                                                # h4("Notes"),
+                                                h4("Table 17 Simulated data listing"),
+                                                div( verbatimTextOutput("datx") ),
+                                                
+                                                
+                                                
+                                         ),
+                                         column(width = 3, offset = 0, style='padding:1px;',
+                                                div(h4("References:")),  
+                                                tags$a(href = "https://www.fharrell.com/post/varyor/", tags$span(style="color:blue", "[1] Frank Harrell...much more here"),),   
+                                                div(p(" ")),
+                                                tags$a(href = "https://eamonn.shinyapps.io/responder-non-responder-fallacy-in-RCTs/", tags$span(style="color:blue", "[2] Responder non responder fallacy"),),
+                                                div(p(" ")),
+                                                tags$a(href = "https://projecteuclid.org/download/pdfview_1/euclid.aoas/1231424214",  tags$span(style="color:blue", "[3] Andrew Gelman"),),   
+                                                div(p(" ")),
+                                                
+                                         ),
+                                       )
+                              )##end,
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
                               
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                             
