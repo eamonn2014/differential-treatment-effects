@@ -76,7 +76,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                 
                                 
                                 actionButton(inputId='ab1', label="R Shiny ",   icon = icon("th"),   
-                                             onclick ="window.open('https://raw.githubusercontent.com/eamonn2014/proportional-odds-model2/master/app.R', '_blank')"), 
+                                             onclick ="window.open('https://raw.githubusercontent.com/eamonn2014/differential-treatment-effects/master/dif.trt.effects/app.R', '_blank')"), 
                                 actionButton(inputId='ab1', label="R code",   icon = icon("th"),   
                                              onclick ="window.open('https://raw.githubusercontent.com/eamonn2014/proportional-odds-model2/master/app%20stripped%20code.R', '_blank')"),  
                                 actionButton("resample", "Simulate a new sample"),
@@ -105,19 +105,19 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                               #strong("Select design preference:"),
                                               div(h5(tags$span(style="color:blue", "Select design preference:"))),
                                               
-                                              choices=c(  "Main effects model",
+                                              choices=c(  "No-interaction logit-additive model", #No-interaction logit-additive model that assumes constancy of treatment ORs
                                                           "Treatment interacts with smoking only" ,
                                                           "Treatment interacts with all variables" 
                                               ), width='80%'),
                                   
                                   
                                   
-                                  # selectInput("Model",
-                                  #             strong("Select modelling preference:"),
-                                  #             choices=c(  "Main effects model",
-                                  #                         "Treatment interacts with smoking only" ,
-                                  #                         "Treatment interacts with all variables" 
-                                  #             ), width='70%'),
+                                  selectInput("Model",
+                                              div(h5(tags$span(style="color:blue", "Select modelling preference:"))),
+                                              choices=c(  "No-interaction logit-additive model",
+                                                          "Treatment interacts with smoking only" ,
+                                                          "Treatment interacts with all variables"
+                                              ), width='80%'),
                                   
                                   splitLayout(
                                     textInput("v1", div(h5(tags$span(style="color:blue", "treatment coefficient"))), value= "1"),
@@ -172,7 +172,31 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                             .navbar-default .navbar-nav > li > a[data-value='t2'] {color: blue;background-color: lightblue;}
                             .navbar-default .navbar-nav > li > a[data-value='t3'] {color: green;background-color: lightgreen;}
                    ")),
-                              tabPanel("1 Main effects", 
+                              
+                              tabPanel("0 Select", #No-interaction logit-additive model that assumes constancy of treatment ORs
+                                      # h4(paste("Table 1. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
+                                       fluidRow(
+                                         column(width = 6, offset = 0, style='padding:1px;',
+                                                
+                                               #  h4(paste("Table 1.",," ")), 
+                                              #  div(verbatimTextOutput("userx")),
+                                               h4(htmlOutput("textWithNumber2",) ),
+                                                div( verbatimTextOutput("user") )
+                                                
+                                                
+                                         )
+                                         
+                                         # fluidRow(
+                                         #   column(width = 5, offset = 0, style='padding:1px;',
+                                         #          h4(paste("An explanation of the inputs:")), 
+                                         #          h4(htmlOutput("textWithNumber",) ),
+                                         #   ))),
+                                       )
+                              ),
+                              
+                              
+                              
+                              tabPanel("1 No-interact.", #No-interaction logit-additive model that assumes constancy of treatment ORs
                                        h4(paste("Table 1. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
@@ -190,7 +214,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               ),
                            
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("2 Forest plot main effects", value=7, 
+                              tabPanel("2 Forest plot no-interact.", value=7, 
                                        # h4("The distribution of the baseline version of the response variable is specified here.
                                        #   By selecting a beta distribution using the shape parameters the
                                        #  expected baseline counts in categories can be approximated. The default is Beta(22,21)."),
@@ -211,13 +235,13 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                            
                                          ))),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("3 LR tests", value=7, 
+                              tabPanel("3 LR test", value=7, 
                                        
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
-                                                h4("Table 3 [Main effects model] vrs [Treatment x Smoking interaction model]"), 
+                                                h4("Table 3 [No-interaction logit-additive model that assumes constancy of treatment ORs] vrs [Treatment x Smoking interaction model]"), 
                                                 div( verbatimTextOutput("L1c") ),
-                                                h4("Table 4 [Main effects model] vrs [Treatment x all predcitors interaction mode]l"), 
+                                                h4("Table 4 [No-interaction logit-additive model that assumes constancy of treatment ORs] vrs [Treatment x all predcitors interaction mode]l"), 
                                                 div( verbatimTextOutput("L1b") ),
                                                 h4("Table 5 [Treatment x Smoking interaction model] vrs [Treatment x all predcitors interaction model]"), 
                                                 div( verbatimTextOutput("L1a") )
@@ -229,14 +253,15 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                         # h4("Table 2 xxxxxxxxxxxxxxxxx"),
                                          fluidRow(
                                            column(width = 6, offset = 0, style='padding:1px;',
+                                                  br(),br(),
                                                   h4("A small P-Value in the top most table provides evidence against
                                                         the simpler model fitting the data better. The simpler model 
-                                                        being the main effects model."),
-                                                  div(  "") ,
+                                                        being the no-interaction logit-additive model that assumes constancy of treatment ORs."),
+                                                br(),br(),br(),br(),br(),br(),br(),br() ,
                                                   h4("A small P-Value in the middle table provides evidence against
                                                         the simpler model fitting the data better. The simpler model 
-                                                        being the main effects model."),
-                                                  div(  "") ,
+                                                        being the no-interaction logit-additive model that assumes constancy of treatment ORs."),
+                                                br(),br(),br(),br(),br(),br(),br(),br() ,
                                                   h4("A small P-Value in the bottom table provides evidence against
                                                         the simpler model fitting the data better. The simpler model 
                                                         being the Treatment x Smoking interaction model."),
@@ -350,7 +375,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               ),
                               
    
-                              tabPanel("7 All 3 models", value=3, 
+                              tabPanel("7 All models", value=3, 
                                        
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
@@ -373,8 +398,16 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                        fluidRow(
                                          
                                          
+                                         column(width = 6, offset = 0, style='padding:1px;',
+                                                # h4("Notes"),
+                                                h4("Table 9 xxxxxxxxxxxxx"),
+                                                div( verbatimTextOutput("datx") ),
+                                                
+                                                
+                                                
+                                         ),
                                          column(width = 3, offset = 0, style='padding:1px;',
-                                                tags$hr(),
+                                               # tags$hr(),
                                                 div(h4("References:")),  
                                                 tags$a(href = "https://www.fharrell.com/post/varyor/", tags$span(style="color:blue", "[1] Frank Harrell"),),   
                                                 div(p(" ")),
@@ -390,15 +423,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                          ),
                                          
                                          
-                                         
-                                         column(width = 9, offset = 0, style='padding:1px;',
-                                                # h4("Notes"),
-                                                h4("Table 9 xxxxxxxxxxxxx"),
-                                                div( verbatimTextOutput("datx") ),
-                                                
-                                                
-                                                
-                                         )
+                                       
                                          
                                          
                                        )
@@ -597,7 +622,7 @@ server <- shinyServer(function(input, output   ) {
         berlin*berlin.coef + vas*vas.coef + time*time.coef + joints*joints.coef + nails*nails.coef +
         evidence*evidence.coef + sex*sex.coef
       
-    }   else if ( (input$Design) == "Main effects model" ) {  
+    }   else if ( (input$Design) == "No-interaction logit-additive model" ) {  
       
       # truth no interactions
       lp = intercept + trt*trt.coef + smoking*smoke.coef + age*age.coef  + bmi*bmi.coef + crp*crp.coef +
@@ -647,23 +672,39 @@ server <- shinyServer(function(input, output   ) {
     B<-lrm(y~  (trt *  smoking) + age  + bmi + crp + berlin + vas + time + joints + nails + evidence +sex, da)  # smoking * trt only
     C<-lrm(y~   trt +  smoking  + age +  bmi + crp + berlin + vas + time + joints + nails + evidence +sex, da)  # main effect
     
-    # if (  (input$Model) == "Treatment interacts with all variables" )  {
-    #   f <- A
-    #   
-    # }   else if (  (input$Model) == "Treatment interacts with smoking only" ) {    
-    #   
-    #   f <- B
-    #   
-    # }   else if (  (input$Model) == "Main effects model" ) {  
-    #   
-    #   f <- C
-    # }
+    outputx <- input$Model 
+    
+    if (  (outputx) == "Treatment interacts with all variables" )  {
+      f <- A
+
+    }   else if (  (outputx) == "Treatment interacts with smoking only" ) {
+
+      f <- B
+
+    }   else if (  (outputx) == "No-interaction logit-additive model" ) {
+
+      f <- C
+    }
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return(list(  A=A, B=B, C=C)) 
+    return(list(  A=A, B=B, C=C, f=f, outputx=outputx)) 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
   })
   
+  output$textWithNumber2 <- renderText({ 
+    
+    txt <- analysis()
+    HTML(paste0("Table 1. ", tags$span(style="color:black", txt$outputx  )
+    ))    
+    
+  })  
+  
+  
+  
+   output$user <- renderPrint({
+     return(print(analysis()$f, digits=3))
+   }) 
+ 
   # relative explained variation on the risk scale, see frank harrell
   
   rexv <- reactive({
@@ -877,7 +918,7 @@ server <- shinyServer(function(input, output   ) {
                   , tags$span(style="color:red",  p4( est$L1)  ),
                   " adequate on a scale from 0 to 1.", 
                   br(), br(),
-                  "Comparing the main effects model to 
+                  "Comparing the main effects, no-interaction logit-additive model that assumes constancy of treatment ORs to 
                    the one with all covarites interacting with treatment the relative explained variation on the risk scale is "    
                   , tags$span(style="color:red",  p4( est$L2)  ),
                   " From this we see that even without penalizing for overfitting, 
@@ -889,7 +930,7 @@ server <- shinyServer(function(input, output   ) {
                   , tags$span(style="color:red",  p4( est$L2)  ),
                   " adequate on a scale from 0 to 1. ",
                   br(), br(),
-                  "Comparing the main effects model to 
+                  "Comparing the main effects, no-interaction logit-additive model that assumes constancy of treatment ORs to 
                    the one with only smoking interacting with treatment the relative explained variation on the risk scale is "    
                   , tags$span(style="color:red",  p4( est$L3)  ),
                   " From this we see that even without penalizing for overfitting, 
