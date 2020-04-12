@@ -188,14 +188,14 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                               h4(paste("An explanation of the inputs and tabs")), 
                                               h4(paste("The first input left is the sample size for patients randomly 
                                               assigned to treatment arms in a 1:1:1 fashion.
-                                                       The second selection allows the choice of 3 designs i) a main effects model, 
-                                                       No-interaction logit-additive model that assumes constancy of treatment ORs ii) 
+                                                       The second selection allows the choice of 3 designs i) a main effects model, that is a  
+                                                       no-interaction logit-additive model that assumes constancy of treatment ORs ii) 
                                                        a model with a treatment X smoking interaction and iii) a model in which all baseline covariates interact 
                                                        with treatment. ")),
                                               #br(),
                                               h4(paste("The next selection is a choice of analysis performed and presented in Table 1. 
-                                                       There are three choices once again i) a main effects model, 
-                                                       No-interaction logit-additive model that assumes constancy of treatment ORs ii) 
+                                                       There are three choices once again i) a main effects model, that is a 
+                                                       no-interaction logit-additive model that assumes constancy of treatment ORs ii) 
                                                        a model with a treatment X smoking interaction and iii) a model in which all baseline covariates interact 
                                                        with treatment. This only impacts what is presented in Table 1.")), 
                                               #br(),
