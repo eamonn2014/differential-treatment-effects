@@ -11,10 +11,7 @@ library(reshape)
 library(rms)
   
 # design matrix
-# big odds ratios in medicine
 # interprtation next to forest plots 
-
- 
 options(max.print=1000000)    
 fig.width <- 400
 fig.height <- 300
@@ -36,7 +33,6 @@ fig.heightx <- 268
 fig.height7 <- 600
 fig.width9 <- 1380
 fig.height9 <- 679
-
 
 ## convenience functions
 p0 <- function(x) {formatC(x, format="f", digits=1)}
@@ -61,15 +57,13 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                   direction = "bottom"
                 ),
                 
-                h2("Differential treatment effects"), 
-                
-                h4("It is often desired to investigate if there is evidence of different treatment effects depending levels of baseline factor variables or the level 
-                of continuous variables following a RCT. One or more interactions between baseline covariates and treatment are then explored.
-                Here we have a binary response. Note this objective will be extremely underpowered, typically one wants to detect a
+                h2("Differential Treatment Effects"), 
+                h4("It is often desired to investigate if there is evidence of different treatment effects depending on the levels of baseline factor variables or the level 
+                of continuous variables following an RCT. One or more interactions between baseline covariates and treatment are then explored.
+                Here we simulate an RCT with a binary response, 3 treatment arms and 11 baseline covariates. Note in reality this objective will be extremely underpowered, typically one wants to detect a
                 differential effect that is smaller than the overall detectable treatment effect. 'It is important to note that assessing treatment effect 
                 in an isolated subgroup defined by a categorical covariate does not establish differential treatment effects and results in unreliable estimates. 
-                Differential treatment effect must be demonstrated.' [1]
-                
+                Differential treatment effect must be demonstrated.'[1]. However, before embarking on this endevour it is advisable to assess the variation in the response in the treatment arms first [2].
          "), 
                 
                 h3("  "), 
@@ -89,7 +83,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                 br(),  
                                 tags$style(".well {background-color:#b6aebd ;}"), 
                                 
-                                h4("Instructions: The first input below the sample size for patients randomly assigned to treatment arms 1:1:1. 
+                                h4(" 
                                    "),
                                 div(
                                   
@@ -109,10 +103,9 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                   
                                   
                                   selectInput("Design",
-                                              #strong("Select design preference:"),
                                               div(h5(tags$span(style="color:blue", "Select design preference:"))),
                                               
-                                              choices=c(  "No-interaction logit-additive model", #No-interaction logit-additive model that assumes constancy of treatment ORs
+                                              choices=c(  "No-interaction logit-additive model", 
                                                           "Treatment interacts with smoking only" ,
                                                           "Treatment interacts with all variables" 
                                               ), width='80%'),
@@ -120,7 +113,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                   
                                   
                                   selectInput("Model",
-                                              div(h5(tags$span(style="color:blue", "Select modelling preference:"))),
+                                              div(h5(tags$span(style="color:blue", "Select modelling preference (impacts only Table 1):"))),
                                               choices=c(  "No-interaction logit-additive model",
                                                           "Treatment interacts with smoking only" ,
                                                           "Treatment interacts with all variables"
@@ -182,62 +175,94 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                             .navbar-default .navbar-nav > li > a[data-value='t3'] {color: green;background-color: lightgreen;}
                    ")),
                               
-                              tabPanel("1 Select", #No-interaction logit-additive model that assumes constancy of treatment ORs
-                                      # h4(paste("Table 1. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
-                                       fluidRow(
-                                         column(width = 6, offset = 0, style='padding:1px;',
-                                                
-                                               #  h4(paste("Table 1.",," ")), 
-                                              #  div(verbatimTextOutput("userx")),
-                                              # h4(htmlOutput("textWithNumber2",) ),
-                                               # div( verbatimTextOutput("user") )
-                                                
-                                                
+                              #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                              
+                              tabPanel("1 Select",  
+                                        fluidRow(
+                                         column(width = 4, offset = 0, style='padding:1px;',
+                                      
+                                              h4(paste("An explanation of the inputs and tabs")), 
+                                              h4(paste("The first input left is the sample size for patients randomly 
+                                              assigned to treatment arms in a 1:1:1 fashion.
+                                                       The second selection allows the choice of 3 designs i) a main effects model, 
+                                                       No-interaction logit-additive model that assumes constancy of treatment ORs ii) 
+                                                       a model with a treatment X smoking interaction and iii) a model in which all baseline covariates interact 
+                                                       with treatment. ")),
+                                              #br(),
+                                              h4(paste("The next selection is a choice of analysis performed and presented in Table 1. 
+                                                       There are three choices once again i) a main effects model, 
+                                                       No-interaction logit-additive model that assumes constancy of treatment ORs ii) 
+                                                       a model with a treatment X smoking interaction and iii) a model in which all baseline covariates interact 
+                                                       with treatment. This only impacts what is presented in Table 1.")), 
+                                              #br(),
+                                              h4(paste("Twelve input boxes follow and allow the user to specify the coefficients for treatment and 11
+                                              baseline covariates on the log odds scale.
+                                                       Note a typical change in an input variable would be unlikely to correspond to a change as large 
+                                                       as 5 on the logistic scale (which would move the probability from 0.01 to 0.50 or from 0.50 to 0.99) [3].
+                                                      Age in years is uniformly distributed between 16 and 65. CRP is uniformly distriuted
+                                                       from 0 to 3, berlin uniformly distributed from 0 to 10, vas from 1 to 30 and time in years uniformly
+                                                       distributed from 0 to 10. Smoking and BMI are 3 level factors and nails, evidence and sex are binary factors.
+                                                       For the factors the coefficient entered describes the relationship between all adjacent levels."  )), 
+                                              h4(paste("Click the simulate button to generate another data set from the same population.")),
+                                              h4(paste("Tab 1 presents the regression table of the 3 models, the particular model can be selected. ")),
+                                              h4(paste("Tab 2 presents the regression table of the 
+                                                        no-interaction logit-additive model that assumes constancy of treatment ORs and provides an explanation.
+                                                        ")),
+                                              h4(paste("Tab 3 presents the a forest plot of the no-interaction logit-additive model that assumes constancy of treatment ORs plus 
+                                                       a table of the ORs and log odds ratios.")),
+                                              h4(paste("Tab 4 presents the likelihood ratio test assessing each model with each other.")),
+                                             
+                                              h4(paste("Tab 5 presents the forest plots by treatment for the treatment interacting with all baseline covariates model plus 
+                                                       tables of the ORs and log odds ratios.")),
+                                              h4(paste("Tab 6 presents the forest plots by treatment for the treatment x smoking interaction model and 
+                                                       tables of the ORs and log odds ratios.")),
+                                              h4(paste("Tab 7 presents relative measures of explained variation and the AIC of each model is reported.")),
+                                              h4(paste("Tab 8 No new information is presented on this tab, but only the 3 model outputs presented together.")),
+                                              h4(paste("The final tab presents a listing of the simulated data and references."))
                                          ),
                                          
                                          fluidRow(
+                                           column(width = 1, offset = 0, style='padding:1px;',
+ 
+                                           ),
+                                      
+                                         fluidRow(
                                            column(width = 5, offset = 0, style='padding:1px;',
-                                                  #h4(paste("An explanation of the inputs:")), 
                                                   h4(htmlOutput("textWithNumber2",) ),
                                                   div( verbatimTextOutput("user") )
                                            ))),
-                                       #)
+                                       )
                               ),
-                              
-                              
-                              
-                              tabPanel("2 No-interact.", #No-interaction logit-additive model that assumes constancy of treatment ORs
-                                       h4(paste("Table 1. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
+                              #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                              tabPanel("2 No-interact.",  
+                                       h4(paste("Table 2. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
+                                        
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
-                                               # h4(paste("Table 1. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
+                                                 
                                                 div( verbatimTextOutput("Cx2") )
                                                 
                                                 
                                          ),
-                                         
+                                         h4(paste("An explanation of the inputs..Do we recover the true population values?")), 
                                          fluidRow(
+                                          
                                            column(width = 5, offset = 0, style='padding:1px;',
-                                                  h4(paste("An explanation of the inputs:")), 
+                                                
                                                   h4(htmlOutput("textWithNumber",) ),
                                            ))),
                               ),
                            
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                               tabPanel("3 Forest plot no-interact.", value=7, 
-                                       # h4("The distribution of the baseline version of the response variable is specified here.
-                                       #   By selecting a beta distribution using the shape parameters the
-                                       #  expected baseline counts in categories can be approximated. The default is Beta(22,21)."),
-                                       
-                                       h4(paste("Figure 1 & Table 2. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
+                                       h4(paste("Figure 1 & Table 3. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
                                                 
-                                                div(plotOutput("f.plot3", width=fig.height1, height=fig.height9)),  #width4
+                                                div(plotOutput("f.plot3", width=fig.height1, height=fig.height9)),   
                                                 
                                          ) ,
-                                         
-                                         
+
                                          fluidRow(
                                            column(width = 6, offset = 0, style='padding:1px;',
                                                   
@@ -249,17 +274,14 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                        
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
-                                                h4("Table 3 [No-interaction logit-additive model that assumes constancy of treatment ORs] vrs [Treatment x Smoking interaction model]"), 
+                                                h4("Table 4 [No-interaction logit-additive model that assumes constancy of treatment ORs] vrs [Treatment x Smoking interaction model]"), 
                                                 div( verbatimTextOutput("L1c") ),
-                                                h4("Table 4 [No-interaction logit-additive model that assumes constancy of treatment ORs] vrs [Treatment x all predcitors interaction mode]l"), 
+                                                h4("Table 5 [No-interaction logit-additive model that assumes constancy of treatment ORs] vrs [Treatment x all predcitors interaction model]"), 
                                                 div( verbatimTextOutput("L1b") ),
-                                                h4("Table 5 [Treatment x Smoking interaction model] vrs [Treatment x all predcitors interaction model]"), 
+                                                h4("Table 6 [Treatment x Smoking interaction model] vrs [Treatment x all predcitors interaction model]"), 
                                                 div( verbatimTextOutput("L1a") )
                                                 
                                          ) ,
-                                         
-                                         
-                                         
                                         # h4("Table 2 xxxxxxxxxxxxxxxxx"),
                                          fluidRow(
                                            column(width = 6, offset = 0, style='padding:1px;',
@@ -276,23 +298,16 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                         the simpler model fitting the data better. The simpler model 
                                                         being the Treatment x Smoking interaction model."),
                                                   
-                                                  
-                                                  
-                                                  
-                                                  splitLayout(
+                                                   splitLayout(
                                                
                                                   ),
-                                                  
-                                                   
                                            ))),
                                        
                               ) ,
+                              #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                               
-                              
-                            
-                              
-                              tabPanel("5 Forest plot trt x all", value=3, 
-                                       
+                              tabPanel("5 Forest plot trtXall", value=3, 
+                                       h4(paste("Figure 2 Forest plots by treatment for the model in which treatment is interacted with all baseline covariates")),
                                        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
@@ -308,10 +323,13 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                   column(12,
                                                          #  div( verbatimTextOutput("int.trt2" ) ),
                                                          fluidRow(
+                                                           h4(paste("Tables 7, 8 and 9 odds ratios for treatment 1, 2 and 3")), 
                                                            column(4, 
                                                                   div( verbatimTextOutput("int.trt1" ) )),
+                                                            
                                                            column(4,
                                                                   div( verbatimTextOutput("int.trt2" ) )),
+                                                            
                                                            column(4,
                                                                   div( verbatimTextOutput("int.trt3" ) )),
                                                            
@@ -323,14 +341,11 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                          )
                                        ),
                                        
-                                       
                                        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                       
-                      
                               ),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("6 Forest plot trt x smoking", value=3, 
-                                       
+                              tabPanel("6 Forest plot trtXsmoking", value=3, 
+                                       h4(paste("Figure 3 Forest plots by treatment for the model in which treatment is interacted with smoking covariate only")), 
                                        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
@@ -338,7 +353,6 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                 
                                          )),
                                        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                       
                                        fluidRow(
                                          column(12,
                                                 #  div( verbatimTextOutput("int.trt1" ) ),
@@ -346,10 +360,13 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                   column(12,
                                                          #  div( verbatimTextOutput("int.trt2" ) ),
                                                          fluidRow(
+                                                           h4(paste("Table 10, 11 and 12 odds ratios treatment 1, 2 and 3")), 
                                                            column(4, 
                                                                   div( verbatimTextOutput("int.trt1B" ) )),
+                                                           
                                                            column(4,
                                                                   div( verbatimTextOutput("int.trt2B" ) )),
+                                                           
                                                            column(4,
                                                                   div( verbatimTextOutput("int.trt3B" ) )),
                                                            
@@ -360,16 +377,10 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                 )
                                          )
                                        ),
-                                       
-                                       
-                                    
+                                     
                               ),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              
-                        
-                              
-                  
-                              tabPanel("7 Rel. expl. variaton", value=3, 
+                              tabPanel("7 Rel. expl. variation", value=3, 
                                        #  h4("Tables 5 & 6 and Figure 7"),
                                        
                                        h4(htmlOutput("textWithNumber1",) ),
@@ -384,25 +395,26 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                            ))),
                               ),
                               
-   
+                              #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                               tabPanel("8 All models", value=3, 
                                        
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
-                                                h4(paste("Figure 3. xxxxxxxxxxxxxxxxxx")), 
+                                                h4(paste("Table 13. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
                                                 div( verbatimTextOutput("Cx") ),
+                                                h4(paste("Table 14. Model treatment x smoking interaction only")), 
                                                 div( verbatimTextOutput("Bx") )
                                                 
                                          ),
                                          
                                          fluidRow(
                                            column(width = 5, offset = 0, style='padding:1px;',
-                                                  h4(paste("Figure 3. xxxxxxxxxxxxxxxxxx")), 
+                                                  h4(paste("Table 15. Model treatment interacting with all baseline covariates")), 
                                                   div( verbatimTextOutput("Ax") )
                                            ))),
                                        
                               ),
-                              
+                              #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                               tabPanel("9 Data/References", 
                                        
                                        fluidRow(
@@ -410,7 +422,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                          
                                          column(width = 6, offset = 0, style='padding:1px;',
                                                 # h4("Notes"),
-                                                h4("Table 9 xxxxxxxxxxxxx"),
+                                                h4("Table 16 Simulated data listing"),
                                                 div( verbatimTextOutput("datx") ),
                                                 
                                                 
@@ -421,22 +433,18 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                 div(h4("References:")),  
                                                 tags$a(href = "https://www.fharrell.com/post/varyor/", tags$span(style="color:blue", "[1] Frank Harrell"),),   
                                                 div(p(" ")),
-                                                # tags$a(href = "hhttps://en.wikipedia.org/wiki/Ordered_logit",  tags$span(style="color:blue", "[2] Proportional odds wiki"),),   
-                                                # div(p(" ")),
-                                                #  tags$a(href = "https://projecteuclid.org/download/pdf_1/euclid.aos/1176344552", tags$span(style="color:blue", "[3] Krushke"),),
-                                                #  div(p(" ")),
+                                               tags$a(href = "https://eamonn.shinyapps.io/responder-non-responder-fallacy-in-RCTs/", tags$span(style="color:blue", "[2] Responder non responder fallacy"),),
+                                               div(p(" ")),
+                                                 tags$a(href = "https://projecteuclid.org/download/pdfview_1/euclid.aoas/1231424214",  tags$span(style="color:blue", "[3] Andrew Gelman"),),   
+                                                 div(p(" ")),
+                                                
                                                 # tags$a(href = "http://hbiostat.org/doc/rms.pdf", tags$span(style="color:blue", "[3] Regression modelling strategies"),),  
                                                 # div(p(" ")),
                                                 # tags$a(href = "https://rdrr.io/cran/rms/man/predict.lrm.html", tags$span(style="color:blue", "[4] Prediction of model mean"),),  
                                                 # div(p(" ")),
                                                 # tags$hr()
                                          ),
-                                         
-                                         
-                                       
-                                         
-                                         
-                                       )
+                                    )
                               )##end
                               
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   END NEW   
@@ -470,16 +478,13 @@ server <- shinyServer(function(input, output   ) {
     v4 <- as.numeric(    eval(parse(text= (input$v4)) ) )   
     v5 <- as.numeric(    eval(parse(text= (input$v5)) ) )  
     v6 <- as.numeric(    eval(parse(text= (input$v6)) ) ) 
-    
     v7 <- as.numeric(    eval(parse(text= (input$v7)) ) )
     v8 <- as.numeric(    eval(parse(text= (input$v8)) ) )
     v9 <- as.numeric(    eval(parse(text= (input$v9)) ) )
-    
     v10 <- as.numeric(    eval(parse(text= (input$v10)) ) )
     v11 <- as.numeric(    eval(parse(text= (input$v11)) ) )
     v12 <- as.numeric(    eval(parse(text= (input$v12)) ) )
-    
-    
+
     check =c(v1 , v2 , v3 , v4 , v5,  v6, v7,  v8 , v9 , v10 , v11 , v12  )
     
     return(list(
@@ -489,6 +494,7 @@ server <- shinyServer(function(input, output   ) {
     ))
   })
   
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
   randomness <- reactive({
     
@@ -582,8 +588,7 @@ server <- shinyServer(function(input, output   ) {
     
     
   })    
-  
-  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
   lp1 <- reactive({
     
@@ -651,7 +656,6 @@ server <- shinyServer(function(input, output   ) {
   })
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  
   analysis <- reactive({
     
     da <- lp1()$datx 
@@ -701,6 +705,7 @@ server <- shinyServer(function(input, output   ) {
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
   })
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
   output$textWithNumber2 <- renderText({ 
     
@@ -710,14 +715,14 @@ server <- shinyServer(function(input, output   ) {
     
   })  
   
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
   
    output$user <- renderPrint({
      return(print(analysis()$f, digits=3))
    }) 
  
-  # relative explained variation on the risk scale, see frank harrell
-  
+  # relative explained variation on the risk scale, see frank harrell reference
   rexv <- reactive({
     
     X <- analysis() 
@@ -792,8 +797,8 @@ server <- shinyServer(function(input, output   ) {
     return(print(lrtestx()$L3, digits=3))
   })
   
-  
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  
   output$textWithNumber <- renderText({ 
     
     v1 <- as.numeric(    eval(parse(text= (input$v1)) ) )
@@ -827,7 +832,7 @@ server <- shinyServer(function(input, output   ) {
                  br(), br(),  
                  " In the case of age, the true effect is a change of "
                  , tags$span(style="color:red",  p4(v2) ) ,
-                 " log odds for each unit change in age. ","",
+                 " log odds for each unit change in age. Age is uniformly distributed and the minimum and maximum age are quoted in the box.","",
                  
                  br(), br(),  
                  
@@ -911,6 +916,7 @@ server <- shinyServer(function(input, output   ) {
   #   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   #   
   # })
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
   output$textWithNumber1 <- renderText({ 
     
@@ -965,19 +971,19 @@ server <- shinyServer(function(input, output   ) {
                   br(), br(),
                   "The AIC of the  treatment X all predictor interaction model is "  
                   , tags$span(style="color:red",  p4( est$AICA)  ),
-                  br(), br()
-                  
+                  br(), br(),
+                  tags$hr()
                   
                   
     ))    
     
   })  
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # FULL INTERACTION MODEL
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
   
-  ## prep some table
   zummary<- reactive({
     
     X <- analysis() 
@@ -1013,9 +1019,15 @@ server <- shinyServer(function(input, output   ) {
     
     A1 <- summary(X$B, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels"))
     
-    A2 <- summary(X$B, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=2, est.all=FALSE, vnames=c( "labels"))
+    #A2 <- summary(X$B, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=2, est.all=FALSE, vnames=c( "labels"))
     
-    A3 <- summary(X$B, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels"))
+    #A3 <- summary(X$B, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels"))
+    
+    # as smoking ineracts with treatment only all othe coefficents do not change across treatment so ]ust show one 
+    
+    A2 <- summary(X$B, smoking=1,   trt=2, est.all=FALSE, vnames=c( "labels"))
+    
+    A3 <- summary(X$B, smoking=1,   trt=3, est.all=FALSE, vnames=c( "labels"))
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return(list(  A1=A1, A2= A2, A3= A3)) 
@@ -1033,11 +1045,9 @@ server <- shinyServer(function(input, output   ) {
     return(print(zummaryB()$A3))
   }) 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # MAIN EFFECTS MODELL
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  
-  
+
   zummaryC<- reactive({
     
     X <- analysis() 
@@ -1053,7 +1063,6 @@ server <- shinyServer(function(input, output   ) {
   output$int.trt1C <- renderPrint({
     return(print(zummaryC()$A1))
   }) 
-  
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # 
@@ -1085,7 +1094,7 @@ server <- shinyServer(function(input, output   ) {
          col.points='black', cex=1, main= "Odds Ratio (Treatment 2)", cex.main=1.8
     )
     
-    plot(summary(A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex=0, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels")), 
+    plot(summary(A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels")), 
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
@@ -1118,19 +1127,39 @@ server <- shinyServer(function(input, output   ) {
          col.points='black', cex=1, main= "Odds Ratio (Treatment 1)", cex.main=1.8
     )
     
-    plot(summary(A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=2, est.all=FALSE, vnames=c( "labels")),
+    # plot(summary(A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=2, est.all=FALSE, vnames=c( "labels")),
+    #      log=TRUE, xlim=c(log(.01),log(40)),
+    #      q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
+    #      col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
+    #      col.points='black', cex=1, main= "Odds Ratio (Treatment 2)", cex.main=1.8
+    # )
+    # 
+    # plot(summary(A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels")),
+    #      log=TRUE, xlim=c(log(.01),log(40)),
+    #      q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
+    #      col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
+    #      col.points='black', cex=1, main= "Odds Ratio (Treatment 3)", cex.main=1.8
+    # )
+    
+    plot(summary(A, smoking=1,   trt=2, est.all=FALSE, vnames=c( "labels")),
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
          col.points='black', cex=1, main= "Odds Ratio (Treatment 2)", cex.main=1.8
     )
     
-    plot(summary(A, smoking=1, age, crp, berlin, vas, time, joints, nails, evidence, sex=0, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels")),
+    plot(summary(A, smoking=1,   trt=3, est.all=FALSE, vnames=c( "labels")),
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
          col.points='black', cex=1, main= "Odds Ratio (Treatment 3)", cex.main=1.8
     )
+    
+    
+    
+    
+    
+    
     
     
     par(mfrow=c(1,1))
