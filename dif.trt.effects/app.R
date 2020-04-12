@@ -9,7 +9,7 @@ library(shinythemes)  # more funky looking apps
 library(shinyalert)
 library(reshape)
 library(rms)
-
+  
 # design matrix
 # big odds ratios in medicine
 # interprtation next to forest plots 
