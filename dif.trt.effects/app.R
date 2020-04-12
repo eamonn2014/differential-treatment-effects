@@ -10,6 +10,10 @@ library(shinyalert)
 library(reshape)
 library(rms)
 
+# design matrix
+# big odds ratios in medicine
+# interprtation next to forest plots 
+
  
 options(max.print=1000000)    
 fig.width <- 400
@@ -62,7 +66,9 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                 h4("It is is desired to investigate if there is evidence of different treatment effects depending levels of factor variables or the level 
                 of continuous variables following a RCT. One or more interactions between baseline covariates and treatment are then investigated.
                 Here we investigate a binary response. Note this objective will be extremely underpowered, typically wants to detect a
-                differential effect that is smaller than the overall detectable treatment effect [FH Ref]
+                differential effect that is smaller than the overall detectable treatment effect. 'It is important to note that assessing treatment effect 
+                in an isolated subgroup defined by a categorical covariate does not establish differential treatment effects and results in unreliable estimates. 
+                Differential treatment effect must be demonstrated.' [1]
                 
          "), 
                 
@@ -137,14 +143,14 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                   splitLayout(
                                     textInput("v7", div(h5(tags$span(style="color:blue", "vas coefficient"))), value= "0.25/30"),
                                     textInput("v8", div(h5(tags$span(style="color:blue", "time coefficient"))), value= "-.1/10"),
-                                    textInput("v9", div(h5(tags$span(style="color:blue", "joints coefficient"))), value= "1/50")
+                                    textInput("v9", div(h5(tags$span(style="color:blue", "joints coefficient"))), value= "-1/50")
                                     
                                   ),
                                   
                                   
                                   splitLayout(
                                     textInput("v10", div(h5(tags$span(style="color:blue", "nails coefficient"))), value= "log(2)"),
-                                    textInput("v11", div(h5(tags$span(style="color:blue", "evidence coefficient"))), value= "log(1)"),
+                                    textInput("v11", div(h5(tags$span(style="color:blue", "evidence coefficient"))), value= "-log(1)"),
                                     textInput("v12", div(h5(tags$span(style="color:blue", "sex coefficient"))), value= "log(0.5)")
                                     
                                   ),
@@ -173,7 +179,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                             .navbar-default .navbar-nav > li > a[data-value='t3'] {color: green;background-color: lightgreen;}
                    ")),
                               
-                              tabPanel("0 Select", #No-interaction logit-additive model that assumes constancy of treatment ORs
+                              tabPanel("1 Select", #No-interaction logit-additive model that assumes constancy of treatment ORs
                                       # h4(paste("Table 1. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
@@ -196,7 +202,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               
                               
                               
-                              tabPanel("1 No-interact.", #No-interaction logit-additive model that assumes constancy of treatment ORs
+                              tabPanel("2 No-interact.", #No-interaction logit-additive model that assumes constancy of treatment ORs
                                        h4(paste("Table 1. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
@@ -214,7 +220,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               ),
                            
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("2 Forest plot no-interact.", value=7, 
+                              tabPanel("3 Forest plot no-interact.", value=7, 
                                        # h4("The distribution of the baseline version of the response variable is specified here.
                                        #   By selecting a beta distribution using the shape parameters the
                                        #  expected baseline counts in categories can be approximated. The default is Beta(22,21)."),
@@ -235,7 +241,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                            
                                          ))),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("3 LR test", value=7, 
+                              tabPanel("4 LR test", value=7, 
                                        
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
@@ -281,7 +287,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               
                             
                               
-                              tabPanel("4 Forest plot trt x all", value=3, 
+                              tabPanel("5 Forest plot trt x all", value=3, 
                                        
                                        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                        fluidRow(
@@ -319,7 +325,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                       
                               ),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("5 Forest plot trt x smoking", value=3, 
+                              tabPanel("6 Forest plot trt x smoking", value=3, 
                                        
                                        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                        fluidRow(
@@ -359,7 +365,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                         
                               
                   
-                              tabPanel("6 Rel. expl. variaton", value=3, 
+                              tabPanel("7 Rel. expl. variaton", value=3, 
                                        #  h4("Tables 5 & 6 and Figure 7"),
                                        
                                        h4(htmlOutput("textWithNumber1",) ),
@@ -375,7 +381,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               ),
                               
    
-                              tabPanel("7 All models", value=3, 
+                              tabPanel("8 All models", value=3, 
                                        
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
@@ -393,7 +399,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                        
                               ),
                               
-                              tabPanel("8 Data/References", 
+                              tabPanel("9 Data/References", 
                                        
                                        fluidRow(
                                          
@@ -496,6 +502,7 @@ server <- shinyServer(function(input, output   ) {
     randomi <- randomness()$randomi
     
     sample <- random.sample()
+    
     n <- as.numeric(input$n )
     v1 <- as.numeric(    eval(parse(text= (input$v1)) ) )
     v2 <- as.numeric(    eval(parse(text= (input$v2)) ) )
@@ -1143,7 +1150,7 @@ server <- shinyServer(function(input, output   ) {
          log=TRUE, xlim=c(log(.2),log(10)),
          q=c( 0.95 ), at=c( .1,.2,.3,.5,.75,1, 1.2,1.5, 2,3,4,6,8,10), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
-         col.points='black', cex=1, main= "Odds Ratio", cex.main=1.8 
+         col.points='black', cex=1,  main=" <- worse outcomes      Odds Ratio       better outcomes ->                ", cex.main=1.8 
     )
     
   })
