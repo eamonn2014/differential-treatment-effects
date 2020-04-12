@@ -63,9 +63,9 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                 
                 h2("Differential treatment effects"), 
                 
-                h4("It is is desired to investigate if there is evidence of different treatment effects depending levels of factor variables or the level 
-                of continuous variables following a RCT. One or more interactions between baseline covariates and treatment are then investigated.
-                Here we investigate a binary response. Note this objective will be extremely underpowered, typically wants to detect a
+                h4("It is often desired to investigate if there is evidence of different treatment effects depending levels of baseline factor variables or the level 
+                of continuous variables following a RCT. One or more interactions between baseline covariates and treatment are then explored.
+                Here we have a binary response. Note this objective will be extremely underpowered, typically one wants to detect a
                 differential effect that is smaller than the overall detectable treatment effect. 'It is important to note that assessing treatment effect 
                 in an isolated subgroup defined by a categorical covariate does not establish differential treatment effects and results in unreliable estimates. 
                 Differential treatment effect must be demonstrated.' [1]
@@ -89,7 +89,8 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                 br(),  
                                 tags$style(".well {background-color:#b6aebd ;}"), 
                                 
-                                h4("Instructions: The first input below isxxxxxxxxxxxxxxxxxx."),
+                                h4("Instructions: The first input below the sample size for patients randomly assigned to treatment arms 1:1:1. 
+                                   "),
                                 div(
                                   
                                   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -125,33 +126,35 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                           "Treatment interacts with all variables"
                                               ), width='80%'),
                                   
+                                  div(h5(tags$span(style="color:blue", "Enter treatment coefficients:"))),
+                                  
                                   splitLayout(
-                                    textInput("v1", div(h5(tags$span(style="color:blue", "treatment coefficient"))), value= "1"),
-                                    textInput("v2", div(h5(tags$span(style="color:blue", "age coefficient"))), value= "1/(65-18)"),
-                                    textInput("v3", div(h5(tags$span(style="color:blue", "smoking coefficient"))), value= "0.4")
+                                    textInput("v1", div(h5(tags$span(style="color:blue", "Treatment 3 arms"))), value= "1"),
+                                    textInput("v2", div(h5(tags$span(style="color:blue", "Age (continuous)"))), value= "1/(65-18)"),
+                                    textInput("v3", div(h5(tags$span(style="color:blue", "Smoking (factor)"))), value= "0.4")
                                     
                                   ),
                                   
                                   splitLayout(
-                                    textInput("v4", div(h5(tags$span(style="color:blue", "bmi coefficient"))), value= "0"),
-                                    textInput("v5", div(h5(tags$span(style="color:blue", "crp coefficient"))), value= "1/3"),
-                                    textInput("v6", div(h5(tags$span(style="color:blue", "berlin coefficient"))), value= "-.5/10")
+                                    textInput("v4", div(h5(tags$span(style="color:blue", "BMI(continuous)"))), value= "0"),
+                                    textInput("v5", div(h5(tags$span(style="color:blue", "CRP (continuous)"))), value= "1/3"),
+                                    textInput("v6", div(h5(tags$span(style="color:blue", "Berlin (continuous)"))), value= "-.5/10")
                                     
                                   ),
                              
                                   
                                   splitLayout(
-                                    textInput("v7", div(h5(tags$span(style="color:blue", "vas coefficient"))), value= "0.25/30"),
-                                    textInput("v8", div(h5(tags$span(style="color:blue", "time coefficient"))), value= "-.1/10"),
-                                    textInput("v9", div(h5(tags$span(style="color:blue", "joints coefficient"))), value= "-1/50")
+                                    textInput("v7", div(h5(tags$span(style="color:blue", "Vas (continuous)"))), value= "0.25/30"),
+                                    textInput("v8", div(h5(tags$span(style="color:blue", "Time (continuous)"))), value= "-.1/10"),
+                                    textInput("v9", div(h5(tags$span(style="color:blue", "Joints (continuous)"))), value= "-1/50")
                                     
                                   ),
                                   
                                   
                                   splitLayout(
-                                    textInput("v10", div(h5(tags$span(style="color:blue", "nails coefficient"))), value= "log(2)"),
-                                    textInput("v11", div(h5(tags$span(style="color:blue", "evidence coefficient"))), value= "-log(1)"),
-                                    textInput("v12", div(h5(tags$span(style="color:blue", "sex coefficient"))), value= "log(0.5)")
+                                    textInput("v10", div(h5(tags$span(style="color:blue", "Nails (binary)"))), value= "log(2)"),
+                                    textInput("v11", div(h5(tags$span(style="color:blue", "Evidence (binary)"))), value= "-log(1)"),
+                                    textInput("v12", div(h5(tags$span(style="color:blue", "Sex (binary)"))), value= "log(0.5)")
                                     
                                   ),
                                   
@@ -186,18 +189,19 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                 
                                                #  h4(paste("Table 1.",," ")), 
                                               #  div(verbatimTextOutput("userx")),
-                                               h4(htmlOutput("textWithNumber2",) ),
-                                                div( verbatimTextOutput("user") )
+                                              # h4(htmlOutput("textWithNumber2",) ),
+                                               # div( verbatimTextOutput("user") )
                                                 
                                                 
-                                         )
+                                         ),
                                          
-                                         # fluidRow(
-                                         #   column(width = 5, offset = 0, style='padding:1px;',
-                                         #          h4(paste("An explanation of the inputs:")), 
-                                         #          h4(htmlOutput("textWithNumber",) ),
-                                         #   ))),
-                                       )
+                                         fluidRow(
+                                           column(width = 5, offset = 0, style='padding:1px;',
+                                                  #h4(paste("An explanation of the inputs:")), 
+                                                  h4(htmlOutput("textWithNumber2",) ),
+                                                  div( verbatimTextOutput("user") )
+                                           ))),
+                                       #)
                               ),
                               
                               
