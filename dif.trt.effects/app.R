@@ -962,27 +962,25 @@ server <- shinyServer(function(input, output   ) {
     
     HTML(paste0("For ",rownames(x)[1]  , " the average change in odds of the outcome comparing patients aged ",x[2,1]," with patients aged ",x[2,2]
                 
-      , br(),br(),
+      , br(), 
      
      " on treatment 1  while being identical in all other predictors is ",p2(x[2,4])," with  95%CI (",p2(x[2,6]),", ",p2(x[2,7]),") "
-     , br(),br(),
+      ,br(),
       " on treatment 2  while being identical in all other predictors is ",p2(x2[2,4])," with 95%CI (",p2(x2[2,6]),", ",p2(x2[2,7]),")" 
-      , br(),br(), 
+      ,br(), 
         " on treatment 3  while being identical in all other predictors is ",p2(x3[2,4])," with 95%CI (",p2(x3[2,6]),", ",p2(x3[2,7]),")" 
                 
                 
                 , br(),br(),
-                "For ",rownames(x)[3]  , " the average change in odds of the outcome comparing patients with level ",x[4,1]," to patients with level ",x[4,2],
-                " on treatment 1  while being identical in all other predictors is ",p2(x[4,4])," with 
-    95%CI (",p2(x[4,6]),", ",p2(x[4,7]),") "
-                , br(),
-                "For ",rownames(x2)[3]  , " the average change in odds of the outcome comparing patients with level ",x2[4,1]," to patients with level ",x2[4,2],
-                " on treatment 2  while being identical in all other predictors is ",p2(x2[4,4])," with 
-    95%CI (",p2(x2[4,6]),", ",p2(x2[4,7]),") "
-                , br(),
-                "For ",rownames(x3)[3]  , " the average change in odds of the outcome comparing patients with level ",x3[4,1]," to patients with level ",x3[4,2],
-                " on treatment 3  while being identical in all other predictors is ",p2(x3[4,4])," with 
-    95%CI (",p2(x3[4,6]),", ",p2(x3[4,7]),")" 
+                "For ",rownames(x)[3]  , " the average change in odds of the outcome comparing patients with level ",x[4,1]," to patients with level ",x[4,2]
+     , br(), 
+                " on treatment 1  while being identical in all other predictors is ",p2(x[4,4])," with 95%CI (",p2(x[4,6]),", ",p2(x[4,7]),") "
+     , br(), 
+                 
+                " on treatment 2  while being identical in all other predictors is ",p2(x2[4,4])," with 95%CI (",p2(x2[4,6]),", ",p2(x2[4,7]),") "
+     ,br(), 
+                
+                " on treatment 3  while being identical in all other predictors is ",p2(x3[4,4])," with 95%CI (",p2(x3[4,6]),", ",p2(x3[4,7]),")" 
     
     
     
