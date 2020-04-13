@@ -227,7 +227,7 @@ options(width=200)
     
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    A <- B
+    Ax <- B
     
     par(mfrow=c(1,3))
     
@@ -235,21 +235,21 @@ options(width=200)
     
     options(digits=1)
     
-    plot(summary(A, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels")),
+    plot(summary(Ax, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels")),
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
          col.points='black', cex=1, main= "Odds Ratio (Treatment 1)", cex.main=1.8
     )
     
-    plot(summary(A, smoking=1,   trt=2, est.all=FALSE, vnames=c( "labels")),
+    plot(summary(Ax, smoking=1,   trt=2, est.all=FALSE, vnames=c( "labels")),
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
          col.points='black', cex=1, main= "Odds Ratio (Treatment 2)", cex.main=1.8
     )
     
-    plot(summary(A, smoking=1,   trt=3, est.all=FALSE, vnames=c( "labels")),
+    plot(summary(Ax, smoking=1,   trt=3, est.all=FALSE, vnames=c( "labels")),
          log=TRUE, xlim=c(log(.01),log(40)),
          q=c(  0.95 ), at=c(.02,0.05,.1,.2,.5,1,2,4,8,20), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
@@ -260,14 +260,14 @@ options(width=200)
     
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
-    A <- C
+    Ax <- C
     
     par(oma=c(3,4,1,1))
     
     options(digits=1)
     
     
-    plot(summary(A, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels")),
+    plot(summary(Ax, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels")),
          log=TRUE, xlim=c(log(.2),log(10)),
          q=c( 0.95 ), at=c( .1,.2,.3,.5,.75,1, 1.2,1.5, 2,3,4,6,8,10), lwd=3, pch=17,
          col=   rgb(red=.4,green=.1,blue=.5,alpha=c(.5,.3,.2)),
