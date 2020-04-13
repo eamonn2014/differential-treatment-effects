@@ -100,7 +100,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                   tags$head(
                                     tags$style(HTML('#resample{background-color:orange}'))
                                   ),
-                                  tags$hr(),
+                                  #tags$hr(),
                                   textInput('n',
                                             div(h5(tags$span(style="color:blue", "Sample size"))), value= "1000"),
                                   
