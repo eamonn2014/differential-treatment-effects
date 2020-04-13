@@ -302,15 +302,15 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                          fluidRow(
                                            column(width = 6, offset = 0, style='padding:1px;',
                                                   br(),br(),
-                                                  h4("A small P-Value in the top most table provides binary2 against
+                                                  h4("A small P-Value in the top most table provides evidence against
                                                         the simpler model fitting the data better. The simpler model 
                                                         being the no-interaction logit-additive model that assumes constancy of treatment ORs."),
                                                 br(),br(),br(),br(),br(),br(),br(),br() ,
-                                                  h4("A small P-Value in the middle table provides binary2 against
+                                                  h4("A small P-Value in the middle table provides evidence against
                                                         the simpler model fitting the data better. The simpler model 
                                                         being the no-interaction logit-additive model that assumes constancy of treatment ORs."),
                                                 br(),br(),br(),br(),br(),br(),br(),br() ,
-                                                  h4("A small P-Value in the bottom table provides binary2 against
+                                                  h4("A small P-Value in the bottom table provides evidence against
                                                         the simpler model fitting the data better. The simpler model 
                                                         being the Treatment x Smoking interaction model."),
                                                   
@@ -1345,6 +1345,8 @@ server <- shinyServer(function(input, output   ) {
     
     #http://www.cookbook-r.com/Manipulating_data/Converting_data_between_wide_and_long_format/
     L <- gather(mydata, condition, predictor, predictors, factor_key=TRUE)
+    
+   # LL <- L[L$condition %in% predictors,]
     
     require(ggplot2)
     ggplot(L, aes(logits, predictor))+
