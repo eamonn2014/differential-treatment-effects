@@ -276,5 +276,19 @@ options(width=200)
     
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # EXPLORE SUMMARY AND CONTRAST EQUIVALENCE
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # focus on smoking effects
+    
+  (k1 <- contrast(A, list(smoking=c(2), trt=c(1:3)), list(smoking=c(1), trt=c(1:3)) , fun=exp) )
+    
+  (A1 <- summary(A, smoking=1,  trt=1, est.all=FALSE, vnames=c( "labels")))
+  (A2 <- summary(A, smoking=1,  trt=2, est.all=FALSE, vnames=c( "labels"))) 
+  (A3 <- summary(A, smoking=1,  trt=3, est.all=FALSE, vnames=c( "labels"))) 
+  
+  (A1 <- summary(A, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels")))
+  (A2 <- summary(A, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=2, est.all=FALSE, vnames=c( "labels")))
+  (A3 <- summary(A, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels")))
+    
  
  
