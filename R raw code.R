@@ -1,5 +1,5 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# R code stripped from R shiny
+# R code stripped from R shiny 12April2020.
 # Investigating differential trt effects (logistic regression)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 rm(list=ls())   
@@ -29,7 +29,7 @@ options(width=200)
  Design = "Treatment interacts with smoking only" 
  Design = "No-interaction logit-additive model"
                                   
- # coefficient on log odds scale
+ # coefficients on log odds scale
  
                                   intercept <- -3
                                   n=1000
@@ -47,8 +47,8 @@ options(width=200)
                                   v12 = log(0.5)
                  
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    randomi <- runif(n) # for Rshiny needed this separate so could control this
+    # for Rshiny needed this separate so could control this
+    randomi <- runif(n)    # this determine Y=1 later, 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
     trt.coef       <-  v1     # log odds ratio so 1 -> 2.718, so 1 is LARGE
@@ -63,7 +63,6 @@ options(width=200)
     fact1.coef     <-  v10    # log odds 0.693 per change in binary, or odds of 2   
     binary2.coef   <-  v11    # log odds 0 per change in binary, or odds of 1  
     sex.coef       <-  v12    # log odds -0.693 per change in binary, or odds of .5  
-    
     
     # made up data structure 
     trt      <- sample(1:3,   n, replace=TRUE)      # trt 3 levels
@@ -82,33 +81,31 @@ options(width=200)
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~linear predictor
     if ( ( Design) == "Treatment interacts with all variables" )  {
       
-      lp = intercept + trt*trt.coef*(smoking*smoke.coef   +   age*age.coef  + bmi*bmi.coef + covar3*covar3.coef +
-                                       covar1*covar1.coef + vas*vas.coef + time*time.coef + covar2*covar2.coef +
-                                       fact1*fact1.coef +
+      lp = intercept + trt*trt.coef*(smoking*smoke.coef   +   age*age.coef  + bmi*bmi.coef   + covar3*covar3.coef +
+                                       covar1*covar1.coef +   vas*vas.coef  + time*time.coef + covar2*covar2.coef +
+                                       fact1*fact1.coef   +
                                        binary2*binary2.coef + sex*sex.coef) 
       
     }   else if ( ( Design ) == "Treatment interacts with smoking only" ) {    
       
       # truth  only smoking interacts  with trt
       lp = intercept + (trt*trt.coef*smoking*smoke.coef)   +   age*age.coef   + bmi*bmi.coef + covar3*covar3.coef +
-                                       covar1*covar1.coef + vas*vas.coef + time*time.coef + covar2*covar2.coef + fact1*fact1.coef +
-                                      binary2*binary2.coef + sex*sex.coef
+                                       covar1*covar1.coef  + vas*vas.coef   + time*time.coef + covar2*covar2.coef + fact1*fact1.coef +
+                                       binary2*binary2.coef + sex*sex.coef
       
     }   else if ( ( Design) == "No-interaction logit-additive model" ) {  
       
       # truth no interactions
-      lp = intercept + trt*trt.coef + smoking*smoke.coef + age*age.coef  + bmi*bmi.coef + covar3*covar3.coef +
-                                      covar1*covar1.coef + vas*vas.coef + time*time.coef + covar2*covar2.coef + fact1*fact1.coef +
-                                       binary2*binary2.coef + sex*sex.coef
+      lp = intercept + trt*trt.coef + smoking*smoke.coef + age*age.coef  + bmi*bmi.coef  + covar3*covar3.coef  +
+                                      covar1*covar1.coef + vas*vas.coef  + time*time.coef + covar2*covar2.coef + fact1*fact1.coef +
+                                      binary2*binary2.coef + sex*sex.coef
     }
     
+    y <- ifelse(randomi < plogis(lp), 1, 0)   # one liner  randomi object is necessary for R shiny only
     
-    y <- ifelse(randomi < plogis(lp), 1, 0)   # one liner ,  randomi obj is necessary for R shiny
-    
-    datx <- data.frame(cbind(y,  trt ,  smoking, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi))
+    datx <- data.frame(cbind(y,  trt ,smoking,  age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi))
  
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     da <-  datx 
     
     da$trt <-     factor(da$trt)
@@ -134,26 +131,15 @@ options(width=200)
     dd <<- datadist(da)
     options(datadist="dd")
     
+    # RUN REGRESSONS
     A<-lrm(y~   trt * (smoking  + age  + bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex),da)  # all interact with trt
     B<-lrm(y~  (trt *  smoking) + age  + bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex, da)  # smoking * trt only
     C<-lrm(y~   trt +  smoking  + age +  bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex, da)  # main effect
     
-    #outputx <- Design
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # rel explained variation
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    if ( Design == "Treatment interacts with all variables" )  {
-      
-      f <- A
-      
-    }   else if (  Design == "Treatment interacts with smoking only" ) {
-      
-      f <- B
-      
-    }   else if (  Design== "No-interaction logit-additive model" ) {
-      
-      f <- C
-    }
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~rel explained variation
- 
     L1 <-   var(predict(B, type='fitted')) / 
             var(predict(A, type='fitted')) 
     
@@ -168,8 +154,9 @@ options(width=200)
     L3 
     
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  
- 
+  # LRTESTS
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     k1 <- contrast(A, list(smoking=c(2), trt=c(1:3)), list(smoking=c(1), trt=c(1:3)) , fun=exp) 
     z1 <- print(k1, X=TRUE)   
     
@@ -179,10 +166,8 @@ options(width=200)
     
     lrtest( B, C)
     
-     
-  
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   # FULL INTERACTION MODEL
+   # FULL INTERACTION MODEL SUMMARY
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
     (A1 <- summary(A, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels")))
@@ -192,7 +177,7 @@ options(width=200)
     (A3 <- summary(A, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels")))
     
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # SMOKING TRT INTERACTION MODEL
+  # SMOKING TRT INTERACTION MODEL SUMMARY
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     (A1 <- summary(B, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels")))
@@ -201,15 +186,14 @@ options(width=200)
     
     (A3 <- summary(B, smoking=1,   trt=3, est.all=FALSE, vnames=c( "labels")))
     
-    
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # MAIN EFFECTS MODELL
+  # MAIN EFFECTS MODEL SUMMARY
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
     (A1 <- summary(C, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=1, est.all=FALSE, vnames=c( "labels")))
     
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # 
+  # Plotting the summaries in forest plots
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
     par(mfrow=c(1,3)) 
