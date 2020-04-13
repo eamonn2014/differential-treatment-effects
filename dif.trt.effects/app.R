@@ -117,7 +117,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                   
                                   
                                   selectInput("Model",
-                                              div(h5(tags$span(style="color:blue", "Select modelling preference (impacts only Table 1 & tab 10):"))),
+                                              div(h5(tags$span(style="color:blue", "Select modelling preference (impacts Table 1 & tab 10):"))),
                                               choices=c(  "No-interaction logit-additive model",
                                                           "Treatment interacts with smoking only" ,
                                                           "Treatment interacts with all variables"
