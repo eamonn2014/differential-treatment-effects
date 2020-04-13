@@ -9,6 +9,7 @@ library(reshape)
 library(rms)
  
 options(max.print=1000000)    
+options(scipen=999)
 
 ## convenience functions
 p0 <- function(x) {formatC(x, format="f", digits=1)}
@@ -25,9 +26,9 @@ is.even <-   function(x){ x %% 2 == 0 }                       # function to id. 
 options(width=200)
 
  # select the design to simulate
- Design = "Treatment interacts with all variables" 
+ #Design = "Treatment interacts with all variables" 
  Design = "Treatment interacts with smoking only" 
- Design = "No-interaction logit-additive model"
+ #Design = "No-interaction logit-additive model"
                                   
  # coefficients on log odds scale
  
@@ -290,5 +291,31 @@ options(width=200)
   (A2 <- summary(A, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=2, est.all=FALSE, vnames=c( "labels")))
   (A3 <- summary(A, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels")))
     
+ ####
+    # anova(A)
+    # x<- lrtest(A,C)
+    # print(x$stats[3], digits=6)
+    # plot(anova(A))
+    # 
+   
+    # do this if interaction! 
+    # shows total effect and interaction only
+    # for example if we interact with smoking in reality but report the trt x all interactions
+    # we can see smoking is important overall and interacts
+    # we can see another var is important overall but does not interact
+    x <- anova(A, india=FALSE, vnames='labels' )
+    print(x, which=c( 'subscripts' ))
+    plot(x)
  
+    
+    # do this if no interaction
+    x <- anova(C, india=FALSE, vnames='labels' )
+    print(x, which=c( 'subscripts' ))
+    plot(x)
  
+    
+    
+    
+    
+    
+    
