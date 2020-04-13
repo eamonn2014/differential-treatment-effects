@@ -62,7 +62,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                 ),
                 
                 h2("Differential Treatment Effects"), 
-                h4("It is often desired to investigate if there is evidence of different treatment effects depending on the levels of baseline factor variables or the level 
+                h4("It is often desired to investigate if there is evidence for different treatment effects depending on the levels of baseline factor variables or the level 
                 of continuous variables following an RCT. One or more interactions between baseline covariates and treatment are then explored.
                 Here we simulate an RCT with a binary response, 3 treatment arms and 11 baseline covariates. Note in reality this objective will be extremely underpowered, typically one wants to detect a
                 differential effect that is smaller than the overall detectable treatment effect. 'It is important to note that assessing treatment effect 
@@ -82,7 +82,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                 actionButton(inputId='ab1', label="R Shiny ",   icon = icon("th"),   
                                              onclick ="window.open('https://raw.githubusercontent.com/eamonn2014/differential-treatment-effects/master/dif.trt.effects/app.R', '_blank')"), 
                                 actionButton(inputId='ab1', label="R code",   icon = icon("th"),   
-                                             onclick ="window.open('https://raw.githubusercontent.com/eamonn2014/proportional-odds-model2/master/app%20stripped%20code.R', '_blank')"),  
+                                             onclick ="window.open('https://raw.githubusercontent.com/eamonn2014/differential-treatment-effects/master/R%20raw%20code.R', '_blank')"),  
                                 actionButton("resample", "Simulate a new sample"),
                                 br(),  
                                 tags$style(".well {background-color:#b6aebd ;}"), 
@@ -134,8 +134,8 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                   
                                   splitLayout(
                                     textInput("v4", div(h5(tags$span(style="color:blue", "BMI (factor)"))), value= "0"),
-                                    textInput("v5", div(h5(tags$span(style="color:blue", "covar3 (continuous)"))), value= "1/3"),
-                                    textInput("v6", div(h5(tags$span(style="color:blue", "covar1 (continuous)"))), value= "-.5/10")
+                                    textInput("v5", div(h5(tags$span(style="color:blue", "covar3 (biomarker)"))), value= "1/3"),
+                                    textInput("v6", div(h5(tags$span(style="color:blue", "covar1 (Blood score)"))), value= "-.5/10")
                                     
                                   ),
                              
@@ -143,14 +143,14 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                   splitLayout(
                                     textInput("v7", div(h5(tags$span(style="color:blue", "Vas (continuous)"))), value= "0.25/30"),
                                     textInput("v8", div(h5(tags$span(style="color:blue", "Time (continuous)"))), value= "-.1/10"),
-                                    textInput("v9", div(h5(tags$span(style="color:blue", "covar2 (continuous)"))), value= "-1/50")
+                                    textInput("v9", div(h5(tags$span(style="color:blue", "covar2 (Fitness score)"))), value= "-1/50")
                                     
                                   ),
                                   
                                   
                                   splitLayout(
-                                    textInput("v10", div(h5(tags$span(style="color:blue", "fact1 (binary)"))), value= "log(2)"),
-                                    textInput("v11", div(h5(tags$span(style="color:blue", "binary2 (binary)"))), value= "-log(1)"),
+                                    textInput("v10", div(h5(tags$span(style="color:blue", "fact1 (History binary)"))), value= "log(2)"),
+                                    textInput("v11", div(h5(tags$span(style="color:blue", "binary2 (Employed)"))), value= "-log(1)"),
                                     textInput("v12", div(h5(tags$span(style="color:blue", "Sex (binary)"))), value= "log(0.5)")
                                     
                                   ),
