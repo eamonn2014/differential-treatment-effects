@@ -117,7 +117,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                   
                                   
                                   selectInput("Model",
-                                              div(h5(tags$span(style="color:blue", "Select modelling preference (impacts Table 1 & tab 10):"))),
+                                              div(h5(tags$span(style="color:blue", "Select modelling preference (impacts Table 1 & tab 10 & 11):"))),
                                               choices=c(  "No-interaction logit-additive model",
                                                           "Treatment interacts with smoking only" ,
                                                           "Treatment interacts with all variables"
@@ -154,6 +154,14 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                     textInput("v12", div(h5(tags$span(style="color:blue", "Sex (binary)"))), value= "log(0.5)")
                                     
                                   ),
+                                  
+                                  div(h4("References:")),
+                                  tags$a(href = "https://www.fharrell.com/post/varyor/", tags$span(style="color:blue", "[1] Frank Harrell...much more here"),),
+                                  div(p(" ")),
+                                  tags$a(href = "https://eamonn.shinyapps.io/responder-non-responder-fallacy-in-RCTs/", tags$span(style="color:blue", "[2] Responder non responder fallacy"),),
+                                  div(p(" ")),
+                                  tags$a(href = "https://projecteuclid.org/download/pdfview_1/euclid.aoas/1231424214",  tags$span(style="color:blue", "[3] Andrew Gelman"),),
+                                  div(p(" ")),
                                   
                                 )
                                 
@@ -197,7 +205,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                        There are three choices once again i) a main effects model, that is a 
                                                        no-interaction logit-additive model that assumes constancy of treatment ORs ii) 
                                                        a model with a treatment X smoking interaction and iii) a model in which all baseline covariates interact 
-                                                       with treatment. This only impacts what is presented in Table 1 and tab 10.")), 
+                                                       with treatment. This only impacts what is presented in Table 1 and tab 10/11.")), 
                                               #br(),
                                               h4(paste("Twelve input boxes follow and allow the user to specify the coefficients for treatment and 11
                                               baseline covariates on the log odds scale.
@@ -206,7 +214,8 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                        Age in years is uniformly distributed between 18 and 65. covar3 is uniformly distributed
                                                        between 0 to 3, covar1 uniformly distributed between 0 to 10, vas between 1 to 30 and time in years uniformly
                                                        distributed between 0 to 10. Smoking and BMI are 3 level factors and fact1, binary2 and sex are binary factors.
-                                                       For the factors the coefficient entered describes the true relationship between all adjacent levels."  )), 
+                                                       For the factors the coefficient entered describes the true relationship between all adjacent levels. We also 
+                                                       add labels to the variables and they appear on some of the outputs."  )), 
                                               h4(paste("Click the simulate button to generate another data set from the same population.")),
                                               h4(paste("Tab 1 presents the regression table of the 3 models, the particular model can be selected. ")),
                                               h4(paste("Tab 2 presents the regression table of the 
@@ -225,7 +234,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                              
                                               h4(paste("The 9th  tab presents another way to estimate treatment effects with interactions using contrast statements.")),
                                               h4(paste("The 10th tab presents anova table and dot plot.")),
-                                              h4(paste("The final tab presents a listing of the simulated data and references."))
+                                              h4(paste("The final tab presents a listing of the simulated data and diagnostics."))
                                          ),
                                          
                                          fluidRow(
@@ -445,7 +454,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                     
                                         fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
-                                            #    div( verbatimTextOutput(print("z1.")   ) ),
+                                            #  div( verbatimTextOutput(print("z1.")   ) ),
                                          ) ,
                                          
                                          fluidRow(
@@ -466,7 +475,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                          
                                          column(width = 6, offset = 0, style='padding:1px;',
                                                 # h4("Notes"),
-                                                h4("Table 18 Analysis of variance "),
+                                                h4("Table 17 Analysis of variance "),
                                                 div( verbatimTextOutput("an") ),
                                                 h4("Use the select design and select modelling preference to alter the output"),
                                                 
@@ -474,33 +483,36 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                          ),
                                          column(width = 3, offset = 0, style='padding:1px;',
                                                 #div(h4("References:")),  
-                                                h4("Figure 4 Relative importance "),
+                                                # is to display the Wald χ2 statistic minus its degrees of freedom for assessing the partial effect of each variable. 
+                                                # Even though this is not scaled [0,1] it is 
+                                                # probably the best method in general because it penalizes a variable requiring a large number of parameters to achieve the
+                                                h4("Figure 4 Relative importance"),
                                                 div(plotOutput("anovaf", width=fig.height1, height=fig.height9)),
                                          ),
                                        )
                               ),##end,
                               
-                              tabPanel("11 Data/Ref.", 
+                              tabPanel("11 Data/Diag.", 
                                        
                                        fluidRow(
                                          
                                          
                                          column(width = 6, offset = 0, style='padding:1px;',
                                                 # h4("Notes"),
-                                                h4("Table 17 Simulated data listing"),
-                                                div( verbatimTextOutput("datx") ),
-                                                
+                                       
+                                                h4("Figure 5 Linear relationship between continuous predictor variables and the logit of outcome"),
+                                                div(plotOutput("residz", width=fig.height1, height=fig.height7)),
+                                                h4("Table 18 Global test of model fit, if 'Expected value|H0' is coincidental with the 'Sum of squared errors'... don't discard model"),
+                                                div( verbatimTextOutput("gofx") ),
                                                 
                                                 
                                          ),
-                                         column(width = 3, offset = 0, style='padding:1px;',
-                                                div(h4("References:")),  
-                                                tags$a(href = "https://www.fharrell.com/post/varyor/", tags$span(style="color:blue", "[1] Frank Harrell...much more here"),),   
-                                                div(p(" ")),
-                                                tags$a(href = "https://eamonn.shinyapps.io/responder-non-responder-fallacy-in-RCTs/", tags$span(style="color:blue", "[2] Responder non responder fallacy"),),
-                                                div(p(" ")),
-                                                tags$a(href = "https://projecteuclid.org/download/pdfview_1/euclid.aoas/1231424214",  tags$span(style="color:blue", "[3] Andrew Gelman"),),   
-                                                div(p(" ")),
+                                         column(width = 6, offset = 0, style='padding:1px;',
+                                                h4("Table 19 Simulated data listing"),
+                                                div( verbatimTextOutput("datx") ),
+                                                #br(),br(),
+                                             
+                                             
                                                 
                                          ),
                                        )
@@ -745,9 +757,9 @@ server <- shinyServer(function(input, output   ) {
     dd <<- datadist(da)
     options(datadist="dd")
     
-    A<-lrm(y~   trt * (smoking  + age  + bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex),da)  # all interact with trt
-    B<-lrm(y~  (trt *  smoking) + age  + bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex, da)  # smoking * trt only
-    C<-lrm(y~   trt +  smoking  + age +  bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex, da)  # main effect
+    A<-lrm(y~   trt * (smoking  + age  + bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex),da, y=TRUE, x=TRUE)   # all interact with trt
+    B<-lrm(y~  (trt *  smoking) + age  + bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex, da, y=TRUE, x=TRUE)   # smoking * trt only
+    C<-lrm(y~   trt +  smoking  + age +  bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex, da, y=TRUE, x=TRUE)   # main effect
     
     outputx <- input$Model 
     
@@ -1255,7 +1267,6 @@ server <- shinyServer(function(input, output   ) {
   })
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  
   output$datx <- renderPrint({
     return(print(lp1()$datx, digits=3))
   }) 
@@ -1271,34 +1282,82 @@ server <- shinyServer(function(input, output   ) {
   output$Cx2 <- renderPrint({
     return(print(analysis()$C, digits=3))
   }) 
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # anova table output and gof test
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   anov <- reactive({
     
     f <- analysis()$f
     x <- anova(f, india=FALSE, vnames='labels' )
-    #print(x, which=c( 'subscripts' ))
+
     
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return(list( x=x)) 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    GOF <- resid(f, "gof")   # global test of goodness of fit
+    #if 'Expected value|H0'  coincidental with the 'Sum of squared errors'...don't discard model
+
+  return(list( x=x, GOF= GOF)) 
     
   })
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  
   output$an <- renderPrint({
     return( print(anov()$x, which=c( 'subscripts' )))
   }) 
   
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # https://stats.stackexchange.com/questions/155246/which-variable-relative-importance-method-to-use
   output$anovaf <- renderPlot({
     
     f <- anov()$x
     
-    plot(f)
+    plot(f, main=
+           "Wald χ2 statistic minus its degrees of freedom for assessing \nthe partial effect of each variable")
     
   })
   
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
-  
-  
+  output$gofx <- renderPrint({
+    return( print(anov()$GOF))
+  }) 
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # model checking
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # http://www.sthda.com/english/articles/36-classification-methods-essentials/148-logistic-regression-assumptions-and-diagnostics-in-r/#logistic-regression-diagnostics
+  output$residz <- renderPlot({
+    
+    f <- analysis()$f
+    
+    da <- lp1()$datx 
+    
+    # model checking
+    library(tidyverse)
+    
+    logits <- predict(f)
+    
+    mydata <- da %>%
+      dplyr::select_if(is.numeric) 
+    
+    predictors <- colnames(mydata)
+    
+    mydata <- cbind(mydata, logits)
+    
+    #http://www.cookbook-r.com/Manipulating_data/Converting_data_between_wide_and_long_format/
+    L <- gather(mydata, condition, predictor, predictors, factor_key=TRUE)
+    
+    require(ggplot2)
+    ggplot(L, aes(logits, predictor))+
+      geom_point(size = 0.5, alpha = 0.5) +
+      geom_smooth(method = "loess") + 
+      theme_bw() + 
+      facet_wrap(~condition, scales = "free_y")
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+  })
+ 
+ 
   
   
 })

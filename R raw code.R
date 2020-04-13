@@ -133,9 +133,9 @@ options(width=200)
     options(datadist="dd")
     
     # RUN REGRESSONS
-    A<-lrm(y~   trt * (smoking  + age  + bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex),da)  # all interact with trt
-    B<-lrm(y~  (trt *  smoking) + age  + bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex, da)  # smoking * trt only
-    C<-lrm(y~   trt +  smoking  + age +  bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex, da)  # main effect
+    A<-lrm(y~   trt * (smoking  + age  + bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex),da, y=TRUE ,x=TRUE)  # all interact with trt
+    B<-lrm(y~  (trt *  smoking) + age  + bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex, da, y=TRUE, x=TRUE)  # smoking * trt only
+    C<-lrm(y~   trt +  smoking  + age +  bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex, da, y=TRUE, x=TRUE)  # main effect
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # rel explained variation
@@ -291,7 +291,7 @@ options(width=200)
   (A2 <- summary(A, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=2, est.all=FALSE, vnames=c( "labels")))
   (A3 <- summary(A, smoking=1, age, covar3, covar1, vas, time, covar2, fact1, binary2, sex, bmi=1, trt=3, est.all=FALSE, vnames=c( "labels")))
     
- ####
+ #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
     # anova(A)
     # x<- lrtest(A,C)
     # print(x$stats[3], digits=6)
@@ -313,9 +313,39 @@ options(width=200)
     print(x, which=c( 'subscripts' ))
     plot(x)
  
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+    #Variance inflation
+    car::vif(A)
     
     
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+    # model checking
+    library(tidyverse)
+    logits <- predict(A)
     
+    mydata <- da %>%
+    dplyr::select_if(is.numeric) 
     
+    predictors <- colnames(mydata)
+    
+    mydata <- cbind(mydata, logits)
+    
+    #http://www.cookbook-r.com/Manipulating_data/Converting_data_between_wide_and_long_format/
+    L <- gather(mydata, condition, predictor, predictors, factor_key=TRUE)
+
+    
+    ggplot(L, aes(logits, predictor))+
+      geom_point(size = 0.5, alpha = 0.5) +
+      geom_smooth(method = "loess") + 
+      theme_bw() + 
+      facet_wrap(~condition, scales = "free_y")
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+    
+    resid(A, "partial", pl="loess")  # same as last 3 lines
+    resid(A, "partial", pl=TRUE)     # plots for all columns of X using supsmu
+    resid(A, "gof")                  # global test of goodness of fit
+    #'Expected value|H0' is so coincidental with the 'Sum of squared errors'...keep the model
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
     
     
