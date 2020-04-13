@@ -117,7 +117,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                   
                                   
                                   selectInput("Model",
-                                              div(h5(tags$span(style="color:blue", "Select modelling preference (impacts only Table 1):"))),
+                                              div(h5(tags$span(style="color:blue", "Select modelling preference (impacts only Table 1 & tab 10):"))),
                                               choices=c(  "No-interaction logit-additive model",
                                                           "Treatment interacts with smoking only" ,
                                                           "Treatment interacts with all variables"
@@ -197,13 +197,13 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                        There are three choices once again i) a main effects model, that is a 
                                                        no-interaction logit-additive model that assumes constancy of treatment ORs ii) 
                                                        a model with a treatment X smoking interaction and iii) a model in which all baseline covariates interact 
-                                                       with treatment. This only impacts what is presented in Table 1.")), 
+                                                       with treatment. This only impacts what is presented in Table 1 and tab 10.")), 
                                               #br(),
                                               h4(paste("Twelve input boxes follow and allow the user to specify the coefficients for treatment and 11
                                               baseline covariates on the log odds scale.
                                                        Note a typical change in an input variable would be unlikely to correspond to a change as large 
                                                        as 5 on the logistic scale (which would move the probability from 0.01 to 0.50 or from 0.50 to 0.99) [3].
-                                                      Age in years is uniformly distributed between 18 and 65. covar3 is uniformly distributed
+                                                       Age in years is uniformly distributed between 18 and 65. covar3 is uniformly distributed
                                                        between 0 to 3, covar1 uniformly distributed between 0 to 10, vas between 1 to 30 and time in years uniformly
                                                        distributed between 0 to 10. Smoking and BMI are 3 level factors and fact1, binary2 and sex are binary factors.
                                                        For the factors the coefficient entered describes the true relationship between all adjacent levels."  )), 
@@ -220,10 +220,11 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                        tables of the ORs and log odds ratios. For good measure we also describe a couple of the estimated regression coefficients.")),
                                               h4(paste("Tab 6 presents the forest plots by treatment for the treatment x smoking interaction model and 
                                                        tables of the ORs and log odds ratios.")),
-                                              h4(paste("Tab 7 presents relative measures of explained variation and the AIC of each model is reported.")),
+                                              h4(paste("Tab 7 presents relative measures of explained variation (RMEV) and the AIC of each model is reported.")),
                                               h4(paste("Tab 8 No new information is presented on this tab, but only the 3 model outputs presented together.")),
                                              
                                               h4(paste("The 9th  tab presents another way to estimate treatment effects with interactions using contrast statements.")),
+                                              h4(paste("The 10th tab presents anova table and dot plot.")),
                                               h4(paste("The final tab presents a listing of the simulated data and references."))
                                          ),
                                          
@@ -392,7 +393,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                      
                               ),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("7 Rel. expl. variation", value=3, 
+                              tabPanel("7 RMEV", value=3, 
 
                                        h4(htmlOutput("textWithNumber1",) ),
                                        fluidRow(
@@ -454,7 +455,32 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               ),
                               
                               
-                              tabPanel("10 Data/Ref.", 
+                          
+                              
+                              
+                              
+                              tabPanel("10 Anova", 
+                                       
+                                       fluidRow(
+                                         
+                                         
+                                         column(width = 6, offset = 0, style='padding:1px;',
+                                                # h4("Notes"),
+                                                h4("Table 18 Analysis of variance "),
+                                                div( verbatimTextOutput("an") ),
+                                                h4("Use the select design and select modelling preference to alter the output"),
+                                                
+                                                
+                                         ),
+                                         column(width = 3, offset = 0, style='padding:1px;',
+                                                #div(h4("References:")),  
+                                                h4("Figure 4 Relative importance "),
+                                                div(plotOutput("anovaf", width=fig.height1, height=fig.height9)),
+                                         ),
+                                       )
+                              ),##end,
+                              
+                              tabPanel("11 Data/Ref.", 
                                        
                                        fluidRow(
                                          
@@ -479,24 +505,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                          ),
                                        )
                               )##end,
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
+                             
                               
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                             
@@ -615,13 +624,13 @@ server <- shinyServer(function(input, output   ) {
       age.coef       =age.coef,
       smoke.coef     =smoke.coef,
       bmi.coef       =bmi.coef,
-      covar3.coef       =covar3.coef,
+      covar3.coef    =covar3.coef,
       covar1.coef    =covar1.coef,
       vas.coef       =vas.coef,
       time.coef      =time.coef,
       covar2.coef    =covar2.coef,
       fact1.coef     =fact1.coef,
-      binary2.coef  =binary2.coef,
+      binary2.coef   =binary2.coef,
       sex.coef       =sex.coef,
       
       trt= trt, 
@@ -1263,6 +1272,35 @@ server <- shinyServer(function(input, output   ) {
     return(print(analysis()$C, digits=3))
   }) 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  
+  anov <- reactive({
+    
+    f <- analysis()$f
+    x <- anova(f, india=FALSE, vnames='labels' )
+    #print(x, which=c( 'subscripts' ))
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    return(list( x=x)) 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+  })
+  output$an <- renderPrint({
+    return( print(anov()$x, which=c( 'subscripts' )))
+  }) 
+  
+  output$anovaf <- renderPlot({
+    
+    f <- anov()$x
+    
+    plot(f)
+    
+  })
+  
+  
+  
+  
+  
+  
 })
 
 # Run the application 
