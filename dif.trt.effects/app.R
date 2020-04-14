@@ -192,7 +192,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               
                               tabPanel("1 Select",  
                                         fluidRow(
-                                         column(width = 4, offset = 0, style='padding:1px;',
+                                         column(width = 5, offset = 0, style='padding:1px;',
                                       
                                               h4(paste("An explanation of the inputs and tabs")), 
                                               h4(paste("The first input left is the sample size for patients randomly 
