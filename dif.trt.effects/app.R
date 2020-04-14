@@ -13,6 +13,7 @@ library(rms)
 # design matrix
 # interprtation next to forest plots 
 options(max.print=1000000)    
+options(scipen=999)
 fig.width <- 400
 fig.height <- 300
 fig.width1 <- 1380
@@ -875,11 +876,11 @@ server <- shinyServer(function(input, output   ) {
     
     X <- analysis() 
     
-    L1 <- lrtest(X$A, X$B)
+    L1 <- (lrtest(X$A, X$B))
     
-    L2 <- lrtest(X$A, X$C)
+    L2 <- (lrtest(X$A, X$C))
     
-    L3 <- lrtest(X$B, X$C)
+    L3 <- (lrtest(X$B, X$C))
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return(list(  L1=L1, L2= L2, L3= L3)) 
