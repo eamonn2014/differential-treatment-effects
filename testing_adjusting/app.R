@@ -595,7 +595,158 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                       
                                                ),
                                            )
-                                  )##end,
+                                  )
+                                  
+                                  ,
+                                  
+                                 
+                                  tabPanel("12 Double differences", value=3, 
+                                           h4(paste("Figure 2 Forest plots by treatment for the model in which treatment is interacted with all baseline covariates. 
+                                           Defaults are 0 for continuous variable, so we will match the default regression output!
+                                                      ")),
+                                          # h4(htmlOutput("textWithNumber99",) ),
+                                           
+                                           
+                                           splitLayout(
+                                               textInput("adj.smoking", div(h5(tags$span(style="color:blue", "Smoking ref (factor)"))), value= "1"),
+                                               textInput("adj.age", div(h5(tags$span(style="color:blue", "Age (continuous)"))), value= "0"),  #18
+                                               textInput("adj.biomarker", div(h5(tags$span(style="color:blue", "covar3 (biomarker)"))), value=  "0"),
+                                               textInput("adj.blood", div(h5(tags$span(style="color:blue", "covar1 (Blood score)"))), value= "0"),
+                                               textInput("adj.vas", div(h5(tags$span(style="color:blue", "Vas (continuous)"))), value= "0"),  #1
+                                               textInput("adj.time", div(h5(tags$span(style="color:blue", "Time (continuous)"))), value= "0")
+                                               
+                                           ),
+                                           
+                                           splitLayout(
+                                               
+                                               textInput("adj.fitness", div(h5(tags$span(style="color:blue", "covar2 (Fitness score)"))), value= "0"),  #1
+                                               textInput("adj.history", div(h5(tags$span(style="color:blue", "fact1 ref (History binary)"))), value= "0"),
+                                               textInput("adj.employed", div(h5(tags$span(style="color:blue", "binary2 ref (Employed)"))), value= "0"),
+                                               textInput("adj.sex", div(h5(tags$span(style="color:blue", "Sex red (binary)"))), value= "0"),
+                                               textInput("adj.BMI", div(h5(tags$span(style="color:blue", "BMI ref (factor)"))), value= "1")
+                                               # textInput("adj.employed", div(h5(tags$span(style="color:blue", "binary2 ref (Employed)"))), value= "0"),
+                                               # textInput("adj.sex", div(h5(tags$span(style="color:blue", "Sex red (binary)"))), value= "0"),
+                                               # textInput("adj.BMI", div(h5(tags$span(style="color:blue", "BMI ref (factor)"))), value= "1")
+                                               #textInput("adj.trt", div(h5(tags$span(style="color:blue", "Treatment ref"))), value= "1"),
+                                               
+                                           ),
+                                           
+                                           
+                                           
+                                           fluidRow(
+                                               column(12,
+                                                      #  div( verbatimTextOutput("int.trt1" ) ),
+                                                      fluidRow(
+                                                          column(12,
+                                                                 #  div( verbatimTextOutput("int.trt2" ) ),
+                                                                 fluidRow(
+                                                                     h4(paste("Tables 7, 8 and 9 odds ratios for treatment 1, 2 and 3")), 
+                                                                     # column(4, 
+                                                                     #        div( verbatimTextOutput("int.trt1" ) )),
+                                                                     # 
+                                                                     # column(4,
+                                                                     #        div( verbatimTextOutput("int.trt2" ) )),
+                                                                     # 
+                                                                     # column(4,
+                                                                     #        div( verbatimTextOutput("int.trt3" ) )),
+                                                                     
+                                                                 )
+                                                          )#,
+                                                          #column(width = 6,
+                                                          # "Fluid 6")
+                                                      )
+                                               )
+                                           ),
+                                           #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                           fluidRow(
+                                               column(width = 6, offset = 0, style='padding:1px;',
+                                                  #    div(plotOutput("f.plot1", width=fig.width4, height=fig.height7)),
+                                                      
+                                               )),
+                                           h4(paste("Examples describing the regression coefficients. For continuous
+                                                    variables we estimate the effect based on the 25th and 75th percentile of the variables distribution.")),
+                                           #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                           #h4(paste("We can interpret the forest plot effect estimates thus...")),
+                                          # h4(htmlOutput("textWithNumber3",) ),
+                                           
+                                           
+                                           fluidRow(
+                                               column(12,
+                                                      #  div( verbatimTextOutput("int.trt1" ) ),
+                                                      fluidRow(
+                                                          column(12,
+                                                                 #  div( verbatimTextOutput("int.trt2" ) ),
+                                                                 fluidRow(
+                                                                     h4(paste("Table 15. Model treatment interacting with all baseline covariates, using trt refernce levels 1,2,3")),  
+                                                                     # column(4, 
+                                                                     #        div( verbatimTextOutput("Ax" ) )),
+                                                                     # 
+                                                                     # column(4,
+                                                                     #        div( verbatimTextOutput("Ax2" ) )
+                                                                     # ),
+                                                                     # 
+                                                                     # column(4,
+                                                                     #        div( verbatimTextOutput("Ax3" ) )
+                                                                     # ),
+                                                                     
+                                                                 )
+                                                          )#,
+                                                          #column(width = 6,
+                                                          # "Fluid 6")
+                                                      )
+                                               )
+                                           ),
+                                           
+                                           
+                                           
+                                           #  h4(paste("Table 15. Model treatment interacting with all baseline covariates")), 
+                                           #  div( verbatimTextOutput("Ax") )
+                                           
+                                           
+                                           
+                                           
+                                           
+                                           
+                                           
+                                           
+                                           
+                                           
+                                           
+                                           
+                                           
+                                           #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                  )#, end 12
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
                                   
                                   
                                   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1575,6 +1726,16 @@ server <- shinyServer(function(input, output   ) {
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         
     })
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~double differences~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~see harrell ref
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~double differences~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~see harrell ref
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~double differences~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~see harrell ref
+    
+    
+    
+    
+    
+    
     
     
     
