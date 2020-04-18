@@ -15,6 +15,7 @@ library(rms)
 # interprtation next to forest plots 
 options(max.print=1000000)    
 options(scipen=999)
+options(digits=4)
 fig.width <- 400
 fig.height <- 300
 fig.width1 <- 1380
@@ -50,8 +51,8 @@ is.even <- function(x){ x %% 2 == 0 } # function to id. odd maybe useful
 options(width=200)
 
 
-# varz <-  c(  "smoking", "age", "bmi", "covar3", "covar1", "vas", "time", 
-#            "covar2", "fact1", "binary2")
+ varz <-  c(  "smoking", "age", "bmi", "covar3", "covar1", "vas", "time", 
+            "covar2", "fact1", "binary2")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/packages/shinythemes/versions/1.1.2
@@ -111,18 +112,18 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                       selectInput("Design",
                                                   div(h5(tags$span(style="color:blue", "Select design preference:"))),
                                                   
-                                                  choices=c(  "No-interaction logit-additive model", 
-                                                              "Treatment interacts with smoking only" ,
-                                                              "Treatment interacts with all variables" 
+                                                  choices=c(  "Treatment interacts with all variables" ,"No-interaction logit-additive model", 
+                                                              "Treatment interacts with smoking only" 
+                                                              
                                                   ), width='80%'),
                                       
                                       
                                       
                                       selectInput("Model",
                                                   div(h5(tags$span(style="color:blue", "Select modelling preference (impacts Table 1 & tab 10 & 11):"))),
-                                                  choices=c(  "No-interaction logit-additive model",
-                                                              "Treatment interacts with smoking only" ,
-                                                              "Treatment interacts with all variables"
+                                                  choices=c(  "Treatment interacts with all variables" ,"No-interaction logit-additive model",
+                                                              "Treatment interacts with smoking only" 
+                                                             
                                                   ), width='80%'),
                                       
                                       div(h5(tags$span(style="color:blue", "Enter treatment coefficients:"))),
@@ -342,6 +343,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                                                      ),
                                            
                                            splitLayout(
+                                               
                                                
                                                textInput("adj.fitness", div(h5(tags$span(style="color:blue", "covar2 (Fitness score)"))), value= "0"),  #1
                                                textInput("adj.history", div(h5(tags$span(style="color:blue", "fact1 ref (History binary)"))), value= "0"),
@@ -601,38 +603,29 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                   
                                  
                                   tabPanel("12 Double differences", value=3, 
-                                           h4(paste("Figure 2 Forest plots by treatment for the model in which treatment is interacted with all baseline covariates. 
-                                           Defaults are 0 for continuous variable, so we will match the default regression output!
+                                           h4(paste("Tables x. We are testing [Smoking level B - A in treatment level B] - [Smoking level B - A in treatment level A] 
+                                           this is the double difference we can check it matches the interaction term. The smoking default will match the trt=2 * smoking=2 interaction.
                                                       ")),
                                           # h4(htmlOutput("textWithNumber99",) ),
                                            
                                            
-                                           splitLayout(
-                                               textInput("adj.smoking", div(h5(tags$span(style="color:blue", "Smoking ref (factor)"))), value= "1"),
-                                               textInput("adj.age", div(h5(tags$span(style="color:blue", "Age (continuous)"))), value= "0"),  #18
-                                               textInput("adj.biomarker", div(h5(tags$span(style="color:blue", "covar3 (biomarker)"))), value=  "0"),
-                                               textInput("adj.blood", div(h5(tags$span(style="color:blue", "covar1 (Blood score)"))), value= "0"),
-                                               textInput("adj.vas", div(h5(tags$span(style="color:blue", "Vas (continuous)"))), value= "0"),  #1
-                                               textInput("adj.time", div(h5(tags$span(style="color:blue", "Time (continuous)"))), value= "0")
-                                               
-                                           ),
+                                            splitLayout(
+                                                
+                                                textInput("treatment.level1", div(h5(tags$span(style="color:blue", "Treatment level A "))), value= "1"),
+                                                textInput("treatment.level2", div(h5(tags$span(style="color:blue", "Treatment level B"))), value= "2"),
+                                                textInput("interest.level1", div(h5(tags$span(style="color:blue", "Smoking level A "))), value= "1"),
+                                                textInput("interest.level2", div(h5(tags$span(style="color:blue", "smoking level B"))), value= "2")
+                                        
+                                            ),
                                            
-                                           splitLayout(
-                                               
-                                               textInput("adj.fitness", div(h5(tags$span(style="color:blue", "covar2 (Fitness score)"))), value= "0"),  #1
-                                               textInput("adj.history", div(h5(tags$span(style="color:blue", "fact1 ref (History binary)"))), value= "0"),
-                                               textInput("adj.employed", div(h5(tags$span(style="color:blue", "binary2 ref (Employed)"))), value= "0"),
-                                               textInput("adj.sex", div(h5(tags$span(style="color:blue", "Sex red (binary)"))), value= "0"),
-                                               textInput("adj.BMI", div(h5(tags$span(style="color:blue", "BMI ref (factor)"))), value= "1")
-                                               # textInput("adj.employed", div(h5(tags$span(style="color:blue", "binary2 ref (Employed)"))), value= "0"),
-                                               # textInput("adj.sex", div(h5(tags$span(style="color:blue", "Sex red (binary)"))), value= "0"),
-                                               # textInput("adj.BMI", div(h5(tags$span(style="color:blue", "BMI ref (factor)"))), value= "1")
-                                               #textInput("adj.trt", div(h5(tags$span(style="color:blue", "Treatment ref"))), value= "1"),
-                                               
-                                           ),
+                                            splitLayout(
+                                            # textInput("interest.level1", div(h5(tags$span(style="color:blue", "Smoking level"))), value= "1"),
+                                            # textInput("interest.level2", div(h5(tags$span(style="color:blue", "smoking level"))), value= "2")
+                                             
+                                            ),
                                            
                                            
-                                           
+                                          br(), br(),
                                            fluidRow(
                                                column(12,
                                                       #  div( verbatimTextOutput("int.trt1" ) ),
@@ -640,12 +633,12 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                           column(12,
                                                                  #  div( verbatimTextOutput("int.trt2" ) ),
                                                                  fluidRow(
-                                                                     h4(paste("Tables 7, 8 and 9 odds ratios for treatment 1, 2 and 3")), 
-                                                                     # column(4, 
-                                                                     #        div( verbatimTextOutput("int.trt1" ) )),
-                                                                     # 
-                                                                     # column(4,
-                                                                     #        div( verbatimTextOutput("int.trt2" ) )),
+                                                                    # h4(paste("Tables 7, 8 and 9 odds ratios for treatment 1, 2 and 3")), 
+                                                                     column(6, 
+                                                                             div( verbatimTextOutput("DD1" ) )),
+                                                                      
+                                                                      column(6,
+                                                                             div( verbatimTextOutput("DD2" ) )),
                                                                      # 
                                                                      # column(4,
                                                                      #        div( verbatimTextOutput("int.trt3" ) )),
@@ -657,17 +650,25 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                       )
                                                )
                                            ),
+                                          
+                                          splitLayout(
+                                              
+                                              # textInput("treatment.level1", div(h5(tags$span(style="color:blue", "Treatment level"))), value= "1"),
+                                              # textInput("treatment.level2", div(h5(tags$span(style="color:blue", "Treatment level"))), value= "2"),
+                                              textInput("interest.level3", div(h5(tags$span(style="color:blue", "age level"))), value= "29"),
+                                              textInput("interest.level4", div(h5(tags$span(style="color:blue", "age level"))), value= "54")
+                                              
+                                          ),
                                            #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                            fluidRow(
                                                column(width = 6, offset = 0, style='padding:1px;',
-                                                  #    div(plotOutput("f.plot1", width=fig.width4, height=fig.height7)),
+                                                   
                                                       
                                                )),
                                            h4(paste("Examples describing the regression coefficients. For continuous
                                                     variables we estimate the effect based on the 25th and 75th percentile of the variables distribution.")),
                                            #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                           #h4(paste("We can interpret the forest plot effect estimates thus...")),
-                                          # h4(htmlOutput("textWithNumber3",) ),
+                                    
                                            
                                            
                                            fluidRow(
@@ -678,11 +679,11 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                                  #  div( verbatimTextOutput("int.trt2" ) ),
                                                                  fluidRow(
                                                                      h4(paste("Table 15. Model treatment interacting with all baseline covariates, using trt refernce levels 1,2,3")),  
-                                                                     # column(4, 
-                                                                     #        div( verbatimTextOutput("Ax" ) )),
-                                                                     # 
-                                                                     # column(4,
-                                                                     #        div( verbatimTextOutput("Ax2" ) )
+                                                                     column(6, 
+                                                                            div( verbatimTextOutput("DD3" ) )),
+                                                                     
+                                                                     column(6,
+                                                                            div( verbatimTextOutput("DD4" ) )),
                                                                      # ),
                                                                      # 
                                                                      # column(4,
@@ -1731,10 +1732,133 @@ server <- shinyServer(function(input, output   ) {
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~double differences~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~see harrell ref
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~double differences~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~see harrell ref
     
+    doubleD <- reactive({
+        
+        X <- analysis() 
+        A <- X$A  # trt x all model
+        da <- lp1()$datx 
+        
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~AGE
+        #ddz <<- datadist(da)  # need the double in this environ <<
+        #options(datadist='ddz')
+        
+        L1 <- as.numeric(    eval(parse(text= (input$treatment.level1)) ) )
+        L2 <- as.numeric(    eval(parse(text= (input$treatment.level2)) ) )
+        
+        I1 <- as.numeric(    eval(parse(text= (input$interest.level1)) ) )
+        I2 <- as.numeric(    eval(parse(text= (input$interest.level2)) ) )
+        
+   
+        
+        tmp <- contrast(A, list(trt=L1,  smoking=I1),
+                           list(trt=L2,  smoking=I1),
+                           list(trt=L1,  smoking=I2),
+                           list(trt=L2,  smoking=I2), conf.int=.95)
+        
+        #z.1v2 <- print(tmp, X=TRUE)    # this will double the print out
+        smoking <-  tmp 
+        
+        
+        w <- with(da, c(sum(smoking=I1), sum(smoking=I2)))
+        
+        tmp1 <- contrast(A,    list(trt=L1,  smoking=c(I1,I2)),
+                               list(trt=L2,  smoking=c(I1,I2)),
+                 type='average', weights=w)
+        
+        smoking2 <- tmp1 # print(tmp1, X=TRUE)  
+        
+        
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~AGE
+        
+        I3 <- as.numeric(    eval(parse(text= (input$interest.level3)) ) )
+        I4 <- as.numeric(    eval(parse(text= (input$interest.level4)) ) )
+        
+        
+        
+        tmp <- contrast(A, list(trt=L1,  age=I3),
+                           list(trt=L2,  age=I3),
+                           list(trt=L1,  age=I4),
+                           list(trt=L2,  age=I4), conf.int=.95)
+        
+        #z.1v2 <- print(tmp, X=TRUE)    # this will double the print out
+        age <-  tmp 
+        
+        
+       # w <- with(da, c(sum(age=I3), sum(age=I4)))
+        
+        tmp1 <- contrast(A,    list(trt=L1,  age=c(I3,I4)),
+                               list(trt=L2,  age=c(I3,I4)), type='average'
+                          )
+        
+        age2 <- tmp1 # print(tmp1, X=TRUE)  
+        
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~BMI
+        # 
+        # I5 <- as.numeric(    eval(parse(text= (input$interest.level5)) ) )
+        # I6 <- as.numeric(    eval(parse(text= (input$interest.level6)) ) )
+        # 
+        # tmp <- contrast(A, list(trt=L1,  bmi=I5),
+        #                    list(trt=L2,  bmi=I5),
+        #                    list(trt=L1,  bmi=I6),
+        #                    list(trt=L2,  bmi=I6), conf.int=.95)
+        # 
+        # #z.1v2 <- print(tmp, X=TRUE)    # this will double the print out
+        # bmi <-  tmp 
+        # 
+        # 
+        # # w <- with(da, c(sum(bmi=I3), sum(bmi=I4)))
+        # 
+        # tmp1 <- contrast(A,    list(trt=L1,  bmi=c(I5,I6)),
+        #                        list(trt=L2,  bmi=c(I5,I6)), type='average'
+        # )
+        # 
+        # bmi2 <- tmp1 # print(tmp1, X=TRUE)  
+        # 
+        # 
+        
+        
+        
+        
+        
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        return(list(    smoking=smoking, smoking2=smoking2 ,
+                        age=age, age2=age2)) #, bmi=bmi, bmi2=bmi2)) 
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        
+    })
+    
+    
+    # varz <-  c(  "smoking", "age", "bmi", "covar3", "covar1", "vas", "time", 
+    #              "covar2", "fact1", "binary2")
+    # 
     
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    output$DD1 <- renderPrint({
+        return( print(doubleD()$smoking, digits=4))
+    }) 
+    output$DD2 <- renderPrint({
+        return( print(doubleD()$smoking2, digits=4))
+    }) 
+    
+    output$DD3 <- renderPrint({
+        return( print(doubleD()$age, digits=4))
+    }) 
+    output$DD4 <- renderPrint({
+        return( print(doubleD()$age2, digits=4))
+    }) 
     
     
     
@@ -1744,3 +1868,13 @@ server <- shinyServer(function(input, output   ) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
+
+
+
+
+
+
+
+
+
+
