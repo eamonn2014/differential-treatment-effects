@@ -607,16 +607,26 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                            this is the double difference we can check it matches the interaction term. The smoking default will match the trt=2 * smoking=2 interaction.
                                                       ")),
                                           # h4(htmlOutput("textWithNumber99",) ),
-                                           
+                                          textInput('preds', 
+                                                    div(h5(tags$span(style="color:blue", "predictor of interest"))), "smoking"),
                                            
                                             splitLayout(
                                                 
                                                 textInput("treatment.level1", div(h5(tags$span(style="color:blue", "Treatment level A "))), value= "1"),
-                                                textInput("treatment.level2", div(h5(tags$span(style="color:blue", "Treatment level B"))), value= "2"),
-                                                textInput("interest.level1", div(h5(tags$span(style="color:blue", "Smoking level A "))), value= "1"),
-                                                textInput("interest.level2", div(h5(tags$span(style="color:blue", "smoking level B"))), value= "2")
+                                                textInput("treatment.level2", div(h5(tags$span(style="color:blue", "Treatment level B"))), value= "2")
+                                               # textInput("interest.level1", div(h5(tags$span(style="color:blue", "Smoking level A "))), value= "1"),
+                                                #textInput("interest.level2", div(h5(tags$span(style="color:blue", "smoking level B"))), value= "2")
                                         
                                             ),
+                                          
+                                          splitLayout(
+                                              
+                                              #textInput("treatment.level1", div(h5(tags$span(style="color:blue", "Treatment level A "))), value= "1"),
+                                              #textInput("treatment.level2", div(h5(tags$span(style="color:blue", "Treatment level B"))), value= "2"),
+                                              textInput("interest.level1", div(h5(tags$span(style="color:blue", "Smoking level A "))), value= "1"),
+                                              textInput("interest.level2", div(h5(tags$span(style="color:blue", "smoking level B"))), value= "2")
+                                              
+                                          ),
                                            
                                             splitLayout(
                                             # textInput("interest.level1", div(h5(tags$span(style="color:blue", "Smoking level"))), value= "1"),
@@ -651,6 +661,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                )
                                            ),
                                           
+                                          h4(paste("Age")),
                                           splitLayout(
                                               
                                               # textInput("treatment.level1", div(h5(tags$span(style="color:blue", "Treatment level"))), value= "1"),
@@ -665,8 +676,8 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                    
                                                       
                                                )),
-                                           h4(paste("Examples describing the regression coefficients. For continuous
-                                                    variables we estimate the effect based on the 25th and 75th percentile of the variables distribution.")),
+                                           # h4(paste("Examples describing the regression coefficients. For continuous
+                                           #          variables we estimate the effect based on the 25th and 75th percentile of the variables distribution.")),
                                            #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                     
                                            
@@ -678,7 +689,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                           column(12,
                                                                  #  div( verbatimTextOutput("int.trt2" ) ),
                                                                  fluidRow(
-                                                                     h4(paste("Table 15. Model treatment interacting with all baseline covariates, using trt refernce levels 1,2,3")),  
+                                                                  #   h4(paste("Table 15. Model treatment interacting with all baseline covariates, using trt refernce levels 1,2,3")),  
                                                                      column(6, 
                                                                             div( verbatimTextOutput("DD3" ) )),
                                                                      
@@ -697,7 +708,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                       )
                                                )
                                            ),
-                                           
+                                          h4(paste("BMI")),
                                           splitLayout(
                                               
                                               # textInput("treatment.level1", div(h5(tags$span(style="color:blue", "Treatment level"))), value= "1"),
@@ -717,7 +728,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                          column(12,
                                                                 #  div( verbatimTextOutput("int.trt2" ) ),
                                                                 fluidRow(
-                                                                    h4(paste("Table 15. Model treatment interacting with all baseline covariates, using trt refernce levels 1,2,3")),  
+                                                                   # h4(paste("Table 15. Model treatment interacting with all baseline covariates, using trt refernce levels 1,2,3")),  
                                                                     column(6, 
                                                                            div( verbatimTextOutput("DD5" ) )),
                                                                     
@@ -1771,6 +1782,24 @@ server <- shinyServer(function(input, output   ) {
         X <- analysis() 
         A <- X$A  # trt x all model
         da <- lp1()$datx 
+        
+        i <- as.numeric(unlist(strsplit(input$preds,",")))
+        
+        i = i[1]           
+        v <-  eval(parse(text= (i)))
+        
+        L1 <- as.numeric(    eval(parse(text= (input$treatment.level1)) ) )
+        L2 <- as.numeric(    eval(parse(text= (input$treatment.level2)) ) )
+        
+        I1 <- as.numeric(    eval(parse(text= (input$interest.level1)) ) )
+        I2 <- as.numeric(    eval(parse(text= (input$interest.level2)) ) )
+        
+        
+        tmp <- contrast(A, list(trt=L1,  v=I1),
+                        list(trt=L2,  v=I1),
+                        list(trt=L1,  v=I2),
+                        list(trt=L2,  v=I2), conf.int=.95)
+        
         
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~AGE
         #ddz <<- datadist(da)  # need the double in this environ <<
