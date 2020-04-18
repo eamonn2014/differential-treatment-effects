@@ -698,16 +698,50 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                )
                                            ),
                                            
-                                           
+                                          splitLayout(
+                                              
+                                              # textInput("treatment.level1", div(h5(tags$span(style="color:blue", "Treatment level"))), value= "1"),
+                                              # textInput("treatment.level2", div(h5(tags$span(style="color:blue", "Treatment level"))), value= "2"),
+                                              textInput("interest.level5", div(h5(tags$span(style="color:blue", "bmi level"))), value= "1"),
+                                              textInput("interest.level6", div(h5(tags$span(style="color:blue", "bmi level"))), value= "2")
+                                              
+                                          ),
                                            
                                            #  h4(paste("Table 15. Model treatment interacting with all baseline covariates")), 
                                            #  div( verbatimTextOutput("Ax") )
                                            
+                                          fluidRow(
+                                              column(12,
+                                                     #  div( verbatimTextOutput("int.trt1" ) ),
+                                                     fluidRow(
+                                                         column(12,
+                                                                #  div( verbatimTextOutput("int.trt2" ) ),
+                                                                fluidRow(
+                                                                    h4(paste("Table 15. Model treatment interacting with all baseline covariates, using trt refernce levels 1,2,3")),  
+                                                                    column(6, 
+                                                                           div( verbatimTextOutput("DD5" ) )),
+                                                                    
+                                                                    column(6,
+                                                                           div( verbatimTextOutput("DD6" ) )),
+                                                                    # ),
+                                                                    # 
+                                                                    # column(4,
+                                                                    #        div( verbatimTextOutput("Ax3" ) )
+                                                                    # ),
+                                                                    
+                                                                )
+                                                         )#,
+                                                         #column(width = 6,
+                                                         # "Fluid 6")
+                                                     )
+                                              )
+                                          ),
                                            
                                            
                                            
-                                           
-                                           
+                                          
+                                     
+                                          
                                            
                                            
                                            
@@ -1794,26 +1828,25 @@ server <- shinyServer(function(input, output   ) {
         
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~BMI
         # 
-        # I5 <- as.numeric(    eval(parse(text= (input$interest.level5)) ) )
-        # I6 <- as.numeric(    eval(parse(text= (input$interest.level6)) ) )
-        # 
-        # tmp <- contrast(A, list(trt=L1,  bmi=I5),
-        #                    list(trt=L2,  bmi=I5),
-        #                    list(trt=L1,  bmi=I6),
-        #                    list(trt=L2,  bmi=I6), conf.int=.95)
-        # 
+         I5 <- as.numeric(    eval(parse(text= (input$interest.level5)) ) )
+         I6 <- as.numeric(    eval(parse(text= (input$interest.level6)) ) )
+        # # 
+        tmp <- contrast(A,   list(trt=L1,  bmi=I5),
+                             list(trt=L2,  bmi=I5),
+                             list(trt=L1,  bmi=I6),
+                             list(trt=L2,  bmi=I6), conf.int=.95)
+        # # 
         # #z.1v2 <- print(tmp, X=TRUE)    # this will double the print out
-        # bmi <-  tmp 
+         bmi <-  tmp 
         # 
         # 
-        # # w <- with(da, c(sum(bmi=I3), sum(bmi=I4)))
-        # 
-        # tmp1 <- contrast(A,    list(trt=L1,  bmi=c(I5,I6)),
-        #                        list(trt=L2,  bmi=c(I5,I6)), type='average'
-        # )
-        # 
-        # bmi2 <- tmp1 # print(tmp1, X=TRUE)  
-        # 
+         w <- with(da, c(sum(bmi=I5), sum(bmi=I6)))
+         
+         tmp1 <- contrast(A,    list(trt=L1,  smoking=c(I5,I6)),
+                                list(trt=L2,  smoking=c(I5,I6)),
+                          type='average', weights=w)
+         
+         bmi2 <- tmp1 # print(tmp1, X=TRUE)
         # 
         
         
@@ -1822,7 +1855,7 @@ server <- shinyServer(function(input, output   ) {
         
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return(list(    smoking=smoking, smoking2=smoking2 ,
-                        age=age, age2=age2)) #, bmi=bmi, bmi2=bmi2)) 
+                        age=age, age2=age2, bmi=bmi, bmi2=bmi2)) 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         
     })
@@ -1860,7 +1893,12 @@ server <- shinyServer(function(input, output   ) {
         return( print(doubleD()$age2, digits=4))
     }) 
     
-    
+    output$DD5 <- renderPrint({
+        return( print(doubleD()$bmi, digits=4))
+    }) 
+    output$DD6 <- renderPrint({
+        return( print(doubleD()$bmi2, digits=4))
+    }) 
     
     
     
