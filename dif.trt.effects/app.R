@@ -699,7 +699,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                          column(width = 6, offset = 0, style='padding:1px;',
                                                 # h4("Notes"),
                                                 
-                                                h4("Figure 5 Linear relationship between continuous predictor variables and the logit of outcome"),
+                                                h4("Figure 5 Linear relationship between continuous predictor variables and the logit of outcome. Focus on the continuous predictors."),
                                                 div(plotOutput("residz", width=fig.height1, height=fig.height7)),
                                                 h4("Table 23 Global test of model fit, if 'Expected value|H0' is coincidental with the 'Sum of squared errors'... don't discard model"),
                                                 div( verbatimTextOutput("gofx") ),
@@ -707,7 +707,9 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                 
                                          ),
                                          column(width = 6, offset = 0, style='padding:1px;',
-                                                h4("Table 24 Simulated data listing"),
+                                                h4("Table 23 Simulated data listing (note the data are simulated and result in very 'clean' data, 
+                                                there are no data management errors and the data behave according to the simualted distributions,
+                                                Of course we can build in missing data etc. if we so wish."),
                                                 div( verbatimTextOutput("datx") ),
                                                 #br(),br(),
                                                 
