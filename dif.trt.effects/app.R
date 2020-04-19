@@ -485,7 +485,8 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                 # h4("Notes"),
                                                 h4("Table 16 Analysis of variance "),
                                                 div( verbatimTextOutput("an") ),
-                                                h4("Use the select design and select modelling preference to alter the output"),
+                                                h4("Use the select design and select modelling preference to alter the output. To approximate the anova 
+                                                   table you can perform likelihood ratio ests using models with the component and without the component of interest."),
                                                 
                                                 
                                          ),
@@ -563,7 +564,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                   column(12,
                                                          #  div( verbatimTextOutput("int.trt2" ) ),
                                                          fluidRow(
-                                                           h4(paste("Table 18. Double differences. This should match the interaction term (ie double difference in log odds)
+                                                           h4(paste("Table 18. Double differences. This should match the interaction term (ie double difference in log odds). Note the exponential is a multiplicated factor on the odds scale.
                                                                              
                                                                              ")), 
                                                            column(6, 
