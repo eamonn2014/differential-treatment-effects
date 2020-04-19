@@ -486,7 +486,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                 h4("Table 16 Analysis of variance "),
                                                 div( verbatimTextOutput("an") ),
                                                 h4("Use the select design and select modelling preference to alter the output. To approximate the anova 
-                                                   table you can perform likelihood ratio ests using models with the component and without the component of interest."),
+                                                   table you can perform likelihood ratio tests using models with the component and without the component of interest."),
                                                 
                                                 
                                          ),
