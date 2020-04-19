@@ -709,7 +709,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                          column(width = 6, offset = 0, style='padding:1px;',
                                                 h4("Table 23 Simulated data listing (note the data are simulated and result in very 'clean' data, 
                                                 there are no data management errors and the data behave according to the simualted distributions,
-                                                Of course we can build in missing data etc. if we so wish."),
+                                                of course we can build in missing data etc. if we so wish."),
                                                 div( verbatimTextOutput("datx") ),
                                                 #br(),br(),
                                                 
