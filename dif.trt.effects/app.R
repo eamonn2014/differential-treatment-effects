@@ -564,7 +564,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                   column(12,
                                                          #  div( verbatimTextOutput("int.trt2" ) ),
                                                          fluidRow(
-                                                           h4(paste("Table 18. Double differences. This should match the interaction term (ie double difference in log odds). Note the exponential is a multiplicated factor on the odds scale.
+                                                           h4(paste("Table 17. Double differences. This should match the interaction term (ie double difference in log odds). Note the exponential is a multiplicated factor on the odds scale.
                                                                              
                                                                              ")), 
                                                            column(6, 
@@ -639,16 +639,16 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                        
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
-                                                h4(paste("Table 19. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
+                                                h4(paste("Table 18. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
                                                 div( verbatimTextOutput("Cx") ),
-                                                h4(paste("Table 20. Model treatment x smoking interaction only")), 
+                                                h4(paste("Table 19. Model treatment x smoking interaction only")), 
                                                 div( verbatimTextOutput("Bx") )
                                                 
                                          ),
                                          
                                          fluidRow(
                                            column(width = 5, offset = 0, style='padding:1px;',
-                                                  h4(paste("Tables 21. Model treatment interacting with all baseline covariates")), 
+                                                  h4(paste("Tables 20. Model treatment interacting with all baseline covariates")), 
                                                   div( verbatimTextOutput("Ax") )
                                            ))),
                                        
@@ -662,7 +662,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                      # selectInput("predictors",
                                      #               strong("predictors"),
                                      #               choices=varz),
-                                     h4(paste("Table 22. Contrast output (showing design matrix) to see the effect of smoking in each treatment on the log odds scale, compare 
+                                     h4(paste("Table 21. Contrast output (showing design matrix) to see the effect of smoking in each treatment on the log odds scale, compare 
                                               to tab 5")), 
                                      
                                      textInput('levz', 
@@ -707,7 +707,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                 
                                          ),
                                          column(width = 6, offset = 0, style='padding:1px;',
-                                                h4("Table 23 Simulated data listing (note the data are simulated and result in very 'clean' data, 
+                                                h4("Table 22 Simulated data listing (note the data are simulated and result in very 'clean' data, 
                                                 there are no data management errors and the data behave according to the simualted distributions,
                                                 of course we can build in missing data etc. if we so wish.)"),
                                                 div( verbatimTextOutput("datx") ),
