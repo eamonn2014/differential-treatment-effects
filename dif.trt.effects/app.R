@@ -190,7 +190,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                               
-                              tabPanel("1 Design modelling selection",  
+                              tabPanel("1 Design and modelling selection",  
                                         fluidRow(
                                          column(width = 5, offset = 0, style='padding:1px;',
                                       
@@ -227,14 +227,17 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                               h4(paste("Tab 4 presents the likelihood ratio test assessing each model with each other.")),
                                              
                                               h4(paste("Tab 5 presents the forest plots by treatment for the treatment interacting with all baseline covariates model plus 
-                                                       tables of the ORs and log odds ratios. For good measure we also describe a couple of the estimated regression coefficients.")),
+                                                       tables of the ORs and log odds ratios and the regression tables. For good measure we also describe a couple of the estimated regression coefficients.")),
                                               h4(paste("Tab 6 presents the forest plots by treatment for the treatment x smoking interaction model and 
                                                        tables of the ORs and log odds ratios.")),
-                                              h4(paste("Tab 7 presents relative measures of explained variation (RMEV) and the AIC of each model is reported.")),
-                                              h4(paste("Tab 8 No new information is presented on this tab, but only the 3 model outputs presented together.")),
+                                              h4(paste("Tab 7 presents relative measures of explained variation and the AIC of each model is reported.")),
+                                              h4(paste("Tab 8 tab presents anova table and dot plot.")),
+                                              h4(paste("Tab 9 tab presents double differences on the log odds scale (ie. the interactions) .")),
+                                              
+                                              h4(paste("Tab 10 No new information is presented on this tab, but only the 3 model outputs presented together.")),
                                              
-                                              h4(paste("The 9th  tab presents another way to estimate treatment effects with interactions using contrast statements.")),
-                                              h4(paste("The 10th tab presents anova table and dot plot.")),
+                                              h4(paste("The 11th  tab presents another way to estimate treatment effects with interactions using contrast statements.")),
+            
                                               h4(paste("The final tab presents a listing of the simulated data and diagnostics."))
                                          ),
                                          
@@ -271,7 +274,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               ),
                            
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("3 Forest plot no-interaction model", value=7, 
+                              tabPanel("3 Forest plot, no-interaction model", value=7, 
                                        h4(paste("Figure 1 & Table 3. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
@@ -323,7 +326,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               ) ,
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                               
-                              tabPanel("5 Forest plot trt. x all variable", value=3, 
+                              tabPanel("5 Forest plot, treatment. x all variables", value=3, 
                                        h4(paste("Figure 2 Forest plots by treatment for the model in which treatment is interacted with all baseline covariates")),
                                        
                                        h4(paste("The boxes below can be used to adjust the factor levels and continuous variables. Only the treatment bars will change as treatment interacts with 
@@ -397,7 +400,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                   column(12,
                                                          #  div( verbatimTextOutput("int.trt2" ) ),
                                                          fluidRow(
-                                                           h4(paste("Table 15. Model treatment interacting with all baseline covariates, using trt refernce levels 1,2,3")),  
+                                                           h4(paste("Table 10, 11 and 12 Model treatment interacting with all baseline covariates, using trt reference levels 1,2,3")),  
                                                            column(4, 
                                                                   div( verbatimTextOutput("Ax1" ) )),
                                                            
@@ -421,7 +424,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                        
                               ),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("6 Forest plot trt x smoking only", value=3, 
+                              tabPanel("6 Forest plot, treatment x smoking only", value=3, 
                                        h4(paste("Figure 3 Forest plots by treatment for the model in which treatment is interacted with smoking covariate only")), 
                                        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                        fluidRow(
@@ -440,7 +443,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                   column(12,
                                                          #  div( verbatimTextOutput("int.trt2" ) ),
                                                          fluidRow(
-                                                           h4(paste("Table 10, 11 and 12 odds ratios treatment 1, 2 and 3")), 
+                                                           h4(paste("Table 13, 14 and 15 odds ratios treatment 1, 2 and 3")), 
                                                            column(4, 
                                                                   div( verbatimTextOutput("int.trt1B" ) )), #
                                                            
@@ -460,7 +463,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                      
                               ),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("7 relative measures of effect", value=3, 
+                              tabPanel("7 Relative measures of effect", value=3, 
 
                                        h4(htmlOutput("textWithNumber1",) ),
                                        fluidRow(
@@ -473,14 +476,14 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                 
                                            ))),
                               ),
-                              tabPanel("10 Anova", 
+                              tabPanel("8 Anova", 
                                        
                                        fluidRow(
                                          
                                          
                                          column(width = 6, offset = 0, style='padding:1px;',
                                                 # h4("Notes"),
-                                                h4("Table 17 Analysis of variance "),
+                                                h4("Table 16 Analysis of variance "),
                                                 div( verbatimTextOutput("an") ),
                                                 h4("Use the select design and select modelling preference to alter the output"),
                                                 
@@ -504,9 +507,9 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                               
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ dd
-                              tabPanel("12 Double differences", value=3, 
-                                       h4(paste("Tables x. We are testing [Smoking level B - A in treatment level B] - [Smoking level B - A in treatment level A] 
-                                           this is the double difference we can check it matches the interaction term in tab 5. The smoking default will match the trt=2 * smoking=2 interaction.
+                              tabPanel("9 Double differences", value=3, 
+                                       h4(paste("We are testing [Smoking level B - A in treatment level B] - [Smoking level B - A in treatment level A] 
+                                           this is the double difference we can check it matches the interaction term in tab 5. This default will match the trt=2 * smoking=2 interaction.
                                         Basically we are pulling out the interaction terms. For the continuous variables, the range will make no difference to the p-value as the effects are truly linear.
                                                     For the binary variables enter 0 and 1 only.")),
                                        # h4(htmlOutput("textWithNumber99",) ),
@@ -514,7 +517,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                        #          div(h5(tags$span(style="color:blue", "predictor of interest"))), "smoking"),
                                        
                                        sliderTextInput("Vars",
-                                                       div(h5(tags$span(style="color:blue", "predictor of interest "))), 
+                                                       div(h5(tags$span(style="color:blue", "Select the predictor of interest "))), 
                                                        choices = c("smoking", "age", "bmi", "covar3", "covar1", "vas", "time", 
                                                                    "covar2", "fact1", "sex","binary2"), #add further months 
                                                        selected = c("smoking"), #values which will be selected by default
@@ -535,7 +538,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                          #textInput("interest.level2", div(h5(tags$span(style="color:blue", "smoking level B"))), value= "2")
                                          
                                        ),
-                                       h4(paste("For factors enter (1,2,3) for binary factors enter (0,1), for continuous variables enter a range for that variable.")),
+                                       h4(paste("Select the predictor levels. For factors enter (1,2,3) for binary factors enter (0,1), for continuous variables enter a range for that variable.")),
                                        splitLayout(
                                          
                                          #textInput("treatment.level1", div(h5(tags$span(style="color:blue", "Treatment level A "))), value= "1"),
@@ -560,7 +563,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                   column(12,
                                                          #  div( verbatimTextOutput("int.trt2" ) ),
                                                          fluidRow(
-                                                           h4(paste("This should match the interaction term (ie double difference in log odds)
+                                                           h4(paste("Table 18. Double differences. This should match the interaction term (ie double difference in log odds)
                                                                              
                                                                              ")), 
                                                            column(6, 
@@ -631,20 +634,20 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               ),
                               
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("8 Print all models", value=3,    
+                              tabPanel("10 Print all models", value=3,    
                                        
                                        fluidRow(
                                          column(width = 6, offset = 0, style='padding:1px;',
-                                                h4(paste("Table 13. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
+                                                h4(paste("Table 19. No-interaction logit-additive model that assumes constancy of treatment ORs")), 
                                                 div( verbatimTextOutput("Cx") ),
-                                                h4(paste("Table 14. Model treatment x smoking interaction only")), 
+                                                h4(paste("Table 20. Model treatment x smoking interaction only")), 
                                                 div( verbatimTextOutput("Bx") )
                                                 
                                          ),
                                          
                                          fluidRow(
                                            column(width = 5, offset = 0, style='padding:1px;',
-                                                  h4(paste("Table 15. Model treatment interacting with all baseline covariates")), 
+                                                  h4(paste("Tables 21. Model treatment interacting with all baseline covariates")), 
                                                   div( verbatimTextOutput("Ax") )
                                            ))),
                                        
@@ -652,13 +655,13 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("9 Contrast example", value=3, 
+                              tabPanel("11 Contrast example", value=3, 
                                      
                                         
                                      # selectInput("predictors",
                                      #               strong("predictors"),
                                      #               choices=varz),
-                                     h4(paste("Table 16. Contrast output (showing design matrix) to see the effect of smoking in each treatment on the log odds scale, compare 
+                                     h4(paste("Table 22. Contrast output (showing design matrix) to see the effect of smoking in each treatment on the log odds scale, compare 
                                               to tab 5")), 
                                      
                                      textInput('levz', 
@@ -687,7 +690,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               
                               
                               
-                              tabPanel("11 Data & diagnostics", 
+                              tabPanel("12 Data & diagnostics", 
                                        
                                        fluidRow(
                                          
@@ -697,13 +700,13 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                 
                                                 h4("Figure 5 Linear relationship between continuous predictor variables and the logit of outcome"),
                                                 div(plotOutput("residz", width=fig.height1, height=fig.height7)),
-                                                h4("Table 18 Global test of model fit, if 'Expected value|H0' is coincidental with the 'Sum of squared errors'... don't discard model"),
+                                                h4("Table 23 Global test of model fit, if 'Expected value|H0' is coincidental with the 'Sum of squared errors'... don't discard model"),
                                                 div( verbatimTextOutput("gofx") ),
                                                 
                                                 
                                          ),
                                          column(width = 6, offset = 0, style='padding:1px;',
-                                                h4("Table 19 Simulated data listing"),
+                                                h4("Table 24 Simulated data listing"),
                                                 div( verbatimTextOutput("datx") ),
                                                 #br(),br(),
                                                 
