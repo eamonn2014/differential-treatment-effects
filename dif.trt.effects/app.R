@@ -330,7 +330,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                        h4(paste("Figure 2 Forest plots by treatment for the model in which treatment is interacted with all baseline covariates")),
                                        
                                        h4(paste("The boxes below can be used to adjust the factor levels and continuous variables. Only the treatment bars will change as treatment interacts with 
-                                                all varaibles. ")),
+                                                all variables. ")),
                                        
                                        splitLayout(
                                          textInput("adj.smoking", div(h5(tags$span(style="color:blue", "Smoking ref (factor)"))), value= "1"),
