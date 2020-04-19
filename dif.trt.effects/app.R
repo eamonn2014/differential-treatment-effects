@@ -62,7 +62,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                   direction = "bottom"
                 ),
                 
-                h2("Differential Treatment Effects"), 
+                h2("Differential Treatment Effects (Double Differences)"), 
                 h4("It is often desired to investigate if there is evidence for different treatment effects depending on the levels of baseline factor variables or the level 
                 of continuous variables following an RCT. One or more interactions between baseline covariates and treatment are then explored.
                 Here we simulate an RCT with a binary response, 3 treatment arms and 11 baseline covariates. Note in reality this objective will be extremely underpowered, typically one wants to detect a
@@ -564,7 +564,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                   column(12,
                                                          #  div( verbatimTextOutput("int.trt2" ) ),
                                                          fluidRow(
-                                                           h4(paste("Table 17. Double differences. This should match the interaction term (ie double difference in log odds). Note the exponential is a multiplicated factor on the odds scale.
+                                                           h4(paste("Table 17. Double differences. This should match the interaction term (ie double difference in log odds). Note the exponential of which is a multiplicative factor on the odds scale.
                                                                              
                                                                              ")), 
                                                            column(6, 
@@ -731,7 +731,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
 server <- shinyServer(function(input, output   ) {
   
   shinyalert("Welcome! \nModelling Differential Treatment Effects!",
-             "Treatment covariate interactions", 
+             "Treatment covariate interactions and double differences", 
              type = "info")
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
