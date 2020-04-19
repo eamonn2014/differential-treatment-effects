@@ -564,7 +564,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                   column(12,
                                                          #  div( verbatimTextOutput("int.trt2" ) ),
                                                          fluidRow(
-                                                           h4(paste("Table 17. Double differences. This should match the interaction term (ie double difference in log odds). Note the exponential is a multiplicated factor on the odds scale.
+                                                           h4(paste("Table 17. Double differences. This should match the interaction term (ie double difference in log odds). Note the exponential of which is a multiplicative factor on the odds scale.
                                                                              
                                                                              ")), 
                                                            column(6, 
