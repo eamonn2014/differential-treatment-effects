@@ -511,7 +511,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               tabPanel("9 Double differences", value=3, 
                                        h4(paste("We are testing [(Smoking level 2 - Smoking level 1) in treatment level 2] - [(Smoking level 2 - Smoking level 1)  in treatment level 1] 
                                            this is the double difference, we can check it matches the interaction term in tab 5. This default will match the trt=2 * smoking=2 interaction.
-                                        Basically we are pulling out the interaction terms. For the continuous variables, the range will make no difference to the p-value as the effects are truly linear.
+                                        Basically we are pulling out the interaction terms. For the continuous variables, the range will make no difference to the p-value as the effects are modelled as truly linear.
                                                     For the binary variables enter 0 and 1 only.")),
                                        # h4(htmlOutput("textWithNumber99",) ),
                                        # textInput('preds', 
