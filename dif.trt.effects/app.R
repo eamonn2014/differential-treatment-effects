@@ -68,7 +68,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                 Here we simulate an RCT with a binary response, 3 treatment arms and 11 baseline covariates. Note in reality this objective will be extremely underpowered, typically one wants to detect a
                 differential effect that is smaller than the overall detectable treatment effect [1].  'It is important to note that assessing treatment effect 
                 in an isolated subgroup defined by a categorical covariate does not establish differential treatment effects and results in unreliable estimates. 
-                Differential treatment effect must be demonstrated.'[2]. However, before embarking on this endeavour it is advisable to assess the variation in the response in the treatment arms first [3].
+                Differential treatment effect must be demonstrated.' [2]. However, before embarking on this endeavour it is advisable to assess the variation in the response in the treatment arms first [3].
          "), 
                 
                 h3("  "), 
