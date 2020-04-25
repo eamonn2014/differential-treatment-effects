@@ -66,9 +66,9 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                 h4("It is often desired to investigate if there is evidence for different treatment effects depending on the levels of baseline factor variables or the level 
                 of continuous variables following an RCT. One or more interactions between baseline covariates and treatment are then explored.
                 Here we simulate an RCT with a binary response, 3 treatment arms and 11 baseline covariates. Note in reality this objective will be extremely underpowered, typically one wants to detect a
-                differential effect that is smaller than the overall detectable treatment effect. 'It is important to note that assessing treatment effect 
+                differential effect that is smaller than the overall detectable treatment effect [1].  'It is important to note that assessing treatment effect 
                 in an isolated subgroup defined by a categorical covariate does not establish differential treatment effects and results in unreliable estimates. 
-                Differential treatment effect must be demonstrated.'[1]. However, before embarking on this endeavour it is advisable to assess the variation in the response in the treatment arms first [2].
+                Differential treatment effect must be demonstrated.'[2]. However, before embarking on this endeavour it is advisable to assess the variation in the response in the treatment arms first [3].
          "), 
                 
                 h3("  "), 
@@ -157,11 +157,13 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                   ),
                                   
                                   div(h4("References:")),
-                                  tags$a(href = "https://www.fharrell.com/post/varyor/", tags$span(style="color:blue", "[1] Frank Harrell...much more here"),),
+                                  tags$a(href = "https://statmodeling.stat.columbia.edu/2018/03/15/need-16-times-sample-size-estimate-interaction-estimate-main-effect/", tags$span(style="color:blue", "[1] Andrew Gelman"),),
                                   div(p(" ")),
-                                  tags$a(href = "https://eamonn.shinyapps.io/responder-non-responder-fallacy-in-RCTs/", tags$span(style="color:blue", "[2] Responder non responder fallacy"),),
+                                  tags$a(href = "https://www.fharrell.com/post/varyor/", tags$span(style="color:blue", "[2] Frank Harrell...much more here"),),
                                   div(p(" ")),
-                                  tags$a(href = "https://projecteuclid.org/download/pdfview_1/euclid.aoas/1231424214",  tags$span(style="color:blue", "[3] Andrew Gelman"),),
+                                  tags$a(href = "https://eamonn.shinyapps.io/responder-non-responder-fallacy-in-RCTs/", tags$span(style="color:blue", "[3] Responder non responder fallacy"),),
+                                  div(p(" ")),
+                                  tags$a(href = "https://projecteuclid.org/download/pdfview_1/euclid.aoas/1231424214",  tags$span(style="color:blue", "[4] Andrew Gelman"),),
                                   div(p(" ")),
                                   
                                 )
@@ -211,7 +213,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                               h4(paste("Twelve input boxes follow and allow the user to specify the coefficients for treatment and 11
                                               baseline covariates on the log odds scale.
                                                        Note a typical change in an input variable would be unlikely to correspond to a change as large 
-                                                       as 5 on the logistic scale (which would move the probability from 0.01 to 0.50 or from 0.50 to 0.99) [3].
+                                                       as 5 on the logistic scale (which would move the probability from 0.01 to 0.50 or from 0.50 to 0.99) [4].
                                                        Age in years is uniformly distributed between 18 and 65. covar3 is uniformly distributed
                                                        between 0 to 3, covar1 uniformly distributed between 0 to 10, vas between 1 to 30 and time in years uniformly
                                                        distributed between 0 to 10. Smoking and BMI are 3 level factors and fact1, binary2 and sex are binary factors.
