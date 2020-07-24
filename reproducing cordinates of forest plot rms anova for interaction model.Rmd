@@ -1,12 +1,32 @@
 ---
-title: "showing how coordinates of forest plot can be found for interaction model, scaling the regression coef and se and duplicating rms anova"
+title: "showing how coordinates of forest plot can be found for interaction model, scaling the regression coef and se and duplicating rms summary"
+author: "Eamonn"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+header-includes:
+- \usepackage{eso-pic,graphicx,transparent}
+- \usepackage{graphicx}
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \setlength\headheight{22pt}
+- \fancyhead[L]{\includegraphics[width=2.5cm]{}}
+- \fancyfoot[RO]{test}
+- \usepackage{lastpage}
+- \cfoot{Page \thepage\ of \pageref{LastPage}}
 output: html_document
+
 ---
+
+
+\AddToShipoutPictureFG{
+  \AtPageCenter{% or \AtTextCenter
+    \makebox[0pt]{\rotatebox[origin=c]{45}{%
+      \scalebox{5}{\texttransparent{0.3}{ }}%
+    }}
+  }
+}
 
 ```{r setup, include=FALSE, echo=FALSE, }
  
-
-
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #  
@@ -216,20 +236,107 @@ c(eff,
   se,
   (eff+c(-1,1)*     qnorm(.975)*se))
 
+``` 
+
+### anova
+
+```{r anova, include=TRUE, echo=TRUE}
+
+    x <- anova(A, india=FALSE, vnames='labels' )
+    print(x, which=c( 'subscripts' ))
+
+    A <- lrm(y~   trt * ( age  ),da, y=TRUE ,x=TRUE)  # all interact with trt
+
+    x <- anova(A, india=FALSE, vnames='labels' )
+    print(x, which=c( 'subscripts' ))
+   
+    cov <- vcov(A, regcoef.only = TRUE, intercepts = "none") 
+    cov
+  
+    ref="trt" 
+    ref="age"
+    ref="* age"
+
+    c1 <- cov[grepl(ref, rownames(cov)), grepl(ref, colnames(cov))  ]
+    
+    idx <- colnames(c1)
+    co <-  A$coefficients[idx]
+    
+    # function solves the equation a %*% x = b for x, where b can be either a vector or a matrix. a is square
+    (chi <- co %*% solvet( cov[idx, idx], co ))
+    (df. = length(idx))
+    (pvalue =(1 - pchisq(chi, df.)))
+   
+    
+    ## total, use the whole variance covariance matrix
+    idx <- colnames(cov)
+    co <-  A$coefficients[-1] 
+    
+    # function solves the equation a %*% x = b for x, where b can be either a vector or a matrix. a is square
+    (chi <- co %*% solvet( cov, co ))
+    (df. = length(idx))
+    (pvalue =(1 - pchisq(chi, df.)))
+   
+    
+``` 
+
+### anova
+
+```{r anova, include=TRUE, echo=TRUE}
+  
+    
+    cov <- vcov(A, regcoef.only = TRUE, intercepts = "none") 
+  
+    ref="trt" 
+    ref="age"
+    ref="* age"
+
+    c1 <- cov[grepl(ref, rownames(cov)), grepl(ref, colnames(cov))  ]
+    
+    idx <- colnames(c1)
+    co <-  A$coefficients[idx]
+    
+    # function solves the equation a %*% x = b for x, where b can be either a vector or a matrix. a is square
+    (chi <- co %*% solvet( cov[idx, idx], co ))
+    (df. = length(idx))
+    (pvalue =(1 - pchisq(chi, df.)))
+   
+    
+    ## total, use the whole variance covariance matrix
+    idx <- colnames(cov)
+    co <-  A$coefficients[-1] 
+    
+    # function solves the equation a %*% x = b for x, where b can be either a vector or a matrix. a is square
+    (chi <- co %*% solvet( cov, co ))
+    (df. = length(idx))
+    (pvalue =(1 - pchisq(chi, df.)))
+    
+    
+   
 
 ```
 
 
+```{r}
+
+    namez <- gsub(".*\\*","", names(coef(A)))[-1]
+      
+   
+    cov <- vcov(A, regcoef.only = TRUE, intercepts = "none") 
+
+     for ( i in 1 : length(namez))  {
+       
+       par <- namez[i]
+       c1 <- cov[grepl(par, rownames(cov)), grepl(par, colnames(cov))  ]
+       idx <- colnames(c1)
+       co <-  A$coefficients[idx]
+       
+       
+       
+       
+     }
+    
 
 
-
-
-
-
-
-
-
-
-```
 
  
