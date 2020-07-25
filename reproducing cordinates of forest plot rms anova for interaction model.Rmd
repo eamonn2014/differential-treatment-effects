@@ -284,10 +284,15 @@ options(datadist="dd")
     # select regression coefficients of interest
     co <-  A$coefficients[idx] 
     # show selected information of interest from variance covariance matrix
-    cov[idx, idx]
+    cov[idx, idx] 
     # solvet function solves the equation a %*% x = b for x, #
     # where b can be either a vector or a matrix. a is square
+    
     chi <- co %*% solvet( cov[idx, idx], co )
+    
+    # so regression coeff %*% solvet gives chi square
+    # so covariance %*% solvet solution will give the regression coefficients
+    
     df. = length(idx)
     pvalue =(1 - pchisq(chi, df.))
    
