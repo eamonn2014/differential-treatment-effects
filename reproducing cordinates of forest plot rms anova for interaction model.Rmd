@@ -1,29 +1,33 @@
 ---
-title: "showing how coordinates of forest plot can be found for interaction model, scaling the regression coef and se and duplicating rms summary"
+title: "(i) Show how coordinates of forest plot can be found for interaction model by scaling the regression coeficients and stbadard error by duplicating R rms summary function and (ii) duplicating anova.rms function"
 author: "Eamonn"
 date: '`r format(Sys.time(), "%d %B, %Y")`'
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 2
+  fig_height: 6
+  fig_width: 8
 header-includes:
 - \usepackage{eso-pic,graphicx,transparent}
 - \usepackage{graphicx}
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}
 - \setlength\headheight{22pt}
-- \fancyhead[L]{\includegraphics[width=2.5cm]{}}
-- \fancyfoot[RO]{test}
+- \fancyfoot[RO]{Reproducing R functions by hand}
 - \usepackage{lastpage}
 - \cfoot{Page \thepage\ of \pageref{LastPage}}
-output: html_document
-
 ---
 
+\newpage  
+<!-- \tableofcontents   -->
+<!-- \listoffigures -->
+<!-- \listoftables -->
+\newpage
 
-\AddToShipoutPictureFG{
-  \AtPageCenter{% or \AtTextCenter
-    \makebox[0pt]{\rotatebox[origin=c]{45}{%
-      \scalebox{5}{\texttransparent{0.3}{ }}%
-    }}
-  }
-}
+
+
+
 
 ```{r setup, include=FALSE, echo=FALSE, }
  
@@ -34,7 +38,7 @@ output: html_document
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 rm(list=ls())   
 set.seed(3333)          # reproducible
-
+knitr::opts_chunk$set(comment = NA)
 library(reshape)
 library(rms)
 
@@ -163,180 +167,251 @@ dd <<- datadist(da)
 options(datadist="dd")
 
 ```
-
-### trt 1 is reference
+# Summary function (useful to obtain coordinates for forest plot)
+## Reproduce summary rms function on logistic regression with treatment 1 as reference level on simulated data
 
 ```{r effect0, include=TRUE, echo=TRUE}
+  
+  # I have simulated data (da) that I use to show how to reproduce R functions 
+  # Make treatment 1  reference level, 
+  da$trt <- relevel(da$trt, ref= "1")
+  
+  # model in which we analyse all vars interacting with treatment
+  (A <- lrm(y~   trt * (smoking  + age  + bmi + covar3 + covar1 + 
+                       vas + time + covar2 + fact1 + binary2 +sex),da, y=TRUE ,x=TRUE) ) 
 
-da$trt <- relevel(da$trt, ref= "1")
-
-A<-lrm(y~   trt * (smoking  + age  + bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex),da, y=TRUE ,x=TRUE)  # all interact with trt
-
-A
 
 ```
-
-### focus on age
+\newpage
+## Reproduce summary rms function on logistic regression with treatment 1 as reference level on age only using simulated data
 
 ```{r effect1, include=TRUE, echo=TRUE}
 
-
-variable <- "age"
-
-# estimate effect over this range
-low<-30  # low age
-upp<-60  # high age
-
-
-low<-1  # low age
-upp<-1.5  # high age
-
-# built in function we want to reproduce by 'hand'
-(A1 <- summary(A, age=c(low,upp),  trt=1, est.all=FALSE, vnames=c( "labels"))) 
-
-var <- vcov(A)   # variance covariance matrix , se is here or get it from regression table
-
-(diff <- upp-low)
-
-(eff <- coef(A)[variable][[1]]*diff)
-
-
-se <-  diff*sqrt(diag(var)[variable][[1]])  # or standard error from model  sqrt covariance , or Se from reg table
-
-# here is our estimates
-c(eff,
-  se,
-  (eff+c(-1,1)*     qnorm(.975)*se))
- 
+  variable <- "age"
+  
+  # estimate effect over the following age range
+  # note there are at least 9 diff ways to calculate percentiles R and SAS use different defaults, 
+  # this can make a difference! type option controls this in R
+  Ty=2 # select percentile method
+  (low<-quantile(da$age, probs = c(.25), type=Ty))  # low age
+  (upp<-quantile(da$age, probs = c(.75), type=Ty))  # high age
+  
+  # this is Frank Harrell's built in summary function we want to reproduce age effect by 'hand'
+  (A1 <- summary(A, age=c(low,upp),  trt=1, est.all=FALSE, vnames=c( "labels"))) 
+  
+  # get the variance covariance matrix, standard error (se) is here or
+  # get it from regression table
+  var <- vcov(A)   
+  
+  # range
+  diff <- upp-low 
+  
+  # rescale the effect of variable (reg coefficient) on log odds of response, 
+  # the coefficient is over 1 unit by default in regression table
+  (eff <- coef(A)[variable][[1]]*diff) 
+  
+  # rescale standard error from model or sqrt covariance from matrix
+  se <-  diff*sqrt(diag(var)[variable][[1]]) 
+  
+  # here are our estimates, we successfully reproduce the summary function, 
+  # these can be coordinates in forest plot for treatment 1
+   res <- c(eff,  se, (eff+c(-1,1)* qnorm(.975)*se))
+   names(res )  <- c( 'Effect','S.E.','Lower 0.9','Upper 0.95')
+   res
 ```
-
-### trt 2 is reference now
+\newpage
+## Reproduce summary rms function on logistic regression with treatment 2 as reference level on age only using simulated data
 
 ```{r effect2, include=TRUE, echo=TRUE}
 
-da$trt <- relevel(da$trt,ref= "2")
-
-A<-lrm(y~   trt * (smoking  + age  + bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex),da, y=TRUE ,x=TRUE)  # all interact with trt
-A
-
-(A1 <- summary(A, age=c(low,upp),  trt=2, est.all=FALSE, vnames=c( "labels")))
-
-#relevel model trt dp treat 1 is refernce level
+  # Now make treatment 2 the reference level and repeat
+  da$trt <- relevel(da$trt, ref= "2")
+  
+  # all vars interact with trt
+  (A <- lrm(y~   trt * (smoking  + age  + bmi + covar3 + covar1 + 
+                       vas + time + covar2 + fact1 + binary2 +sex),da, y=TRUE ,x=TRUE) ) 
+  
+  # this is Frank Harrell's built in summary function we want to reproduce age effect by 'hand'
+  (A1 <- summary(A, age=c(low,upp),  trt=2, est.all=FALSE, vnames=c( "labels"))) 
+  
+  var <- vcov(A)   # get the variance covariance matrix, standard error (se) is here or
+  #get it from regression table
+  
+  (diff <- upp-low)  # range
+  
+  # rescale the effect of variable on log odds of response,
+  # the coefficient is over 1 unit by default in regression table
+  (eff <- coef(A)[variable][[1]]*diff)   
  
-
-
-eff <- coef(A)[variable][[1]]*diff
-
-var <- vcov(A)   # variance covariance matrix , se is here or get it from regression table
-
-
-se <-  diff*sqrt(diag(var)[variable][[1]])  # or standard error from model   # sqrt covariance , or Se from reg table
-
-c(eff,
-  se,
-  (eff+c(-1,1)*     qnorm(.975)*se))
-
+  se <-  diff*sqrt(diag(var)[variable][[1]])  # rescale standard error from model sqrt covariance , 
+  #or se from reg table
+  
+  # here are our estimates, we successfully reproduce the summary function
+  # these can be coordinates in forest plot for treatment 1
+   res <- c(eff,  se, (eff+c(-1,1)* qnorm(.975)*se))
+   names(res )  <- c( 'Effect','S.E.','Lower 0.9','Upper 0.95')
+   res
+ 
+  
+  
 ``` 
 
-### anova
+\newpage
+# ANOVA function (use this info to construct anova table and dot plot)
+## Reproduce anova rms function, first show simple example for interaction effect of age only
 
-```{r anova, include=TRUE, echo=TRUE}
+```{r anova0, include=TRUE, echo=TRUE}
 
+     # text that we will use to select information
+     ref="* age"
+
+    # run smaller regression
+    A <- lrm(y~ trt * (age ),da, y=TRUE ,x=TRUE)  
+
+    # This is the ANOVA function that want to reproduce
     x <- anova(A, india=FALSE, vnames='labels' )
     print(x, which=c( 'subscripts' ))
-
-    A <- lrm(y~   trt * ( age  ),da, y=TRUE ,x=TRUE)  # all interact with trt
-
-    x <- anova(A, india=FALSE, vnames='labels' )
-    print(x, which=c( 'subscripts' ))
-   
+ 
+    # get the variance covariance matrix without intercept
     cov <- vcov(A, regcoef.only = TRUE, intercepts = "none") 
-    cov
-  
-    ref="trt" 
-    ref="age"
-    ref="* age"
-
+    
+    # select only information of interest
     c1 <- cov[grepl(ref, rownames(cov)), grepl(ref, colnames(cov))  ]
     
-    idx <- colnames(c1)
-    co <-  A$coefficients[idx]
-    
-    # function solves the equation a %*% x = b for x, where b can be either a vector or a matrix. a is square
-    (chi <- co %*% solvet( cov[idx, idx], co ))
-    (df. = length(idx))
-    (pvalue =(1 - pchisq(chi, df.)))
+    # labels of interest
+    idx <- colnames(c1) 
+    # select only information of interest
+    co <-  A$coefficients[idx] 
+    # select only information of interest, show matrix
+    cov[idx, idx]
+    # function solves the equation a %*% x = b for x, #
+    # where b can be either a vector or a matrix. a is square
+    chi <- co %*% solvet( cov[idx, idx], co )
+    df. = length(idx)
+    pvalue =(1 - pchisq(chi, df.))
    
+    # here are our estimates, we successfully reproduce the anova function above
+    res <- cbind(chi, df. , pvalue)
+    res <- as.data.frame(res)
+    names(res) <- c("Chi-square","d.f.","P")
+    print(res)
     
-    ## total, use the whole variance covariance matrix
-    idx <- colnames(cov)
-    co <-  A$coefficients[-1] 
     
-    # function solves the equation a %*% x = b for x, where b can be either a vector or a matrix. a is square
-    (chi <- co %*% solvet( cov, co ))
-    (df. = length(idx))
-    (pvalue =(1 - pchisq(chi, df.)))
-   
-    
+
+  
 ``` 
 
-### anova
+\newpage
+## Reproduce anova rms function on more variables 
 
-```{r anova, include=TRUE, echo=TRUE}
-  
-    
+```{r anova1, include=TRUE, echo=TRUE  }
+
+    # run regression
+    A <- lrm(y~ trt * (smoking  + age  + bmi + covar3 + covar1 + vas + 
+                         time + covar2 + fact1 + binary2 +sex),da, y=TRUE ,x=TRUE)  
+
+    # This is the ANOVA function that want to reproduce
+    x <- anova(A, india=FALSE, vnames='labels' )
+    print(x, which=c( 'subscripts' ))
+ 
+    # get the variance covariance matrix without intercept
     cov <- vcov(A, regcoef.only = TRUE, intercepts = "none") 
-  
-    ref="trt" 
-    ref="age"
-    ref="* age"
-
-    c1 <- cov[grepl(ref, rownames(cov)), grepl(ref, colnames(cov))  ]
     
-    idx <- colnames(c1)
-    co <-  A$coefficients[idx]
+    cov[1:3,1:3] # show first 3 columns and rows
     
-    # function solves the equation a %*% x = b for x, where b can be either a vector or a matrix. a is square
-    (chi <- co %*% solvet( cov[idx, idx], co ))
-    (df. = length(idx))
-    (pvalue =(1 - pchisq(chi, df.)))
-   
+    # working on the text here...
+    namez2 <- colnames(cov)                     # capture factor names
+    namez <- gsub(".*\\*","", colnames(cov))    # remove text starting and including *
+    namez <-  gsub("(.*)\\=.*", "\\1", namez )  # remove text starting and including =
+    namez <- unique(namez)                      
     
-    ## total, use the whole variance covariance matrix
-    idx <- colnames(cov)
-    co <-  A$coefficients[-1] 
-    
-    # function solves the equation a %*% x = b for x, where b can be either a vector or a matrix. a is square
-    (chi <- co %*% solvet( cov, co ))
-    (df. = length(idx))
-    (pvalue =(1 - pchisq(chi, df.)))
+    at <- A$Design
+    labels <- at$label
     
     
-   
-
-```
-
-
-```{r}
-
-    namez <- gsub(".*\\*","", names(coef(A)))[-1]
-      
-   
-    cov <- vcov(A, regcoef.only = TRUE, intercepts = "none") 
-
+   res <- matrix(, nrow = length(labels), ncol = 4)
+    
+     # loop to create anova table
      for ( i in 1 : length(namez))  {
-       
-       par <- namez[i]
-       c1 <- cov[grepl(par, rownames(cov)), grepl(par, colnames(cov))  ]
-       idx <- colnames(c1)
+        # select parameters we are interested in
+       par <- namez[i]                   
+       # select appropriate data from var covar matrix
+       c1 <- cov[grepl(par, rownames(cov)), grepl(par, colnames(cov))  ]   
+       # get the names of columns
+       idx <- colnames(c1)   
+       # select regression coefficients of interest
        co <-  A$coefficients[idx]
+     
+     # do the calculations.
+     # solvet is function solves the equation a %*% x = b for x, 
+     # where b can be either a vector or a matrix. a is square
+     (chi <- co %*% solvet( c1, co ))  # chi square value
+     (df. <- length(idx))              # degrees of freedom
+     (pvalue <-(1 - pchisq(chi, df.))) # pvalue
+        
        
-       
-       
+    res[i,]  <- c(labels[i], chi, df., pvalue)  # collect information
        
      }
     
+    # here are our estimates, we successfully reproduce the anova function above
+     
+    res <- as.data.frame(res)
+    names(res) <- c("Factor","Chi-square","d.f.","P")
+    print(res)
 
+``` 
 
+\newpage
+## Reproduce anova rms function TOTAL row
 
+```{r anova2, include=TRUE, echo=TRUE, results='asis'}
+
+    # total, use the whole variance covariance matrix
+    idx <- colnames(cov)
+    co <-  A$coefficients[-1] 
+    
+    # function solves the equation a %*% x = b for x as before
+    chi <- co %*% solvet( cov, co )
+    df. = length(idx)
+    pvalue =(1 - pchisq(chi, df.))
+
+    res <- cbind(chi, df. , pvalue)
+    res <- as.data.frame(res)
+    names(res) <- c("Chi-square","d.f.","P")
+    print(res)
+    
+
+``` 
+
+\newpage
+## Reproduce anova rms on TOTAL INTERACTION row
+
+```{r anova3, include=TRUE, echo=TRUE}    
+    
+    # all interactions only, use the whole variance covariance matrix
+    # variance covariance matrix without intercept
+    cov <- vcov(A, regcoef.only = TRUE, intercepts = "none") 
+    # extract names if they contain *
+    idx <- colnames(cov)[grepl("*", colnames(cov), fixed=TRUE)]  
+    # extract coefficients only with * in name
+    c1 <-  cov[(idx),(idx)]                                       
+    co <- A$coefficients[idx] 
+    
+    idx # information of interest
+    c1  # covariance matrix information of interest
+    co  # regression coefficients of interest
+    
+    # function solves the equation a %*% x = b for x, where b can be either a vector or a matrix. a is square
+    chi <- co %*% solvet( c1, co )
+    df. = length(idx)
+    pvalue =(1 - pchisq(chi, df.))
+    
+    
+    res <- cbind(chi, df. , pvalue)
+    res <- as.data.frame(res)
+    names(res) <- c("Chi-square","d.f.","P")
+    print(res)
+    
+    
  
