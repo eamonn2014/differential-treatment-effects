@@ -1,5 +1,5 @@
 ---
-title: "(i) Show how coordinates of forest plot can be found for interaction model by scaling the regression coeficients and stbadard error by duplicating R rms summary function and (ii) duplicating anova.rms function"
+title: "(i) Show how coordinates of forest plot can be found for interaction model by scaling the regression coeficients and standard error by duplicating R rms summary function and (ii) duplicating anova.rms function"
 author: "Eamonn"
 date: '`r format(Sys.time(), "%d %B, %Y")`'
 output:
@@ -231,20 +231,21 @@ options(datadist="dd")
   (A <- lrm(y~   trt * (smoking  + age  + bmi + covar3 + covar1 + 
                        vas + time + covar2 + fact1 + binary2 +sex),da, y=TRUE ,x=TRUE) ) 
   
-  # this is Frank Harrell's built in summary function we want to reproduce age effect by 'hand'
+  # this is Frank Harrell's built in summary function, we want to reproduce age effect by 'hand'
   (A1 <- summary(A, age=c(low,upp),  trt=2, est.all=FALSE, vnames=c( "labels"))) 
   
-  var <- vcov(A)   # get the variance covariance matrix, standard error (se) is here or
-  #get it from regression table
+  # get the variance covariance matrix, standard error (se) is here or
+  # get it from regression table
+  var <- vcov(A)   
   
-  (diff <- upp-low)  # range
+  diff <- upp-low  # range
   
-  # rescale the effect of variable on log odds of response,
-  # the coefficient is over 1 unit by default in regression table
+  # rescale the effect of variable on log odds of response using diff,
+  # the coefficient is effect on reponse over 1 unit by default in regression table
   (eff <- coef(A)[variable][[1]]*diff)   
  
-  se <-  diff*sqrt(diag(var)[variable][[1]])  # rescale standard error from model sqrt covariance , 
-  #or se from reg table
+  # rescale standard error from model sqrt of covariance matrix or get se from reg table
+  se <-  diff*sqrt(diag(var)[variable][[1]])  
   
   # here are our estimates, we successfully reproduce the summary function
   # these can be coordinates in forest plot for treatment 1
@@ -280,11 +281,11 @@ options(datadist="dd")
     
     # labels of interest
     idx <- colnames(c1) 
-    # select only information of interest
+    # select regression coefficients of interest
     co <-  A$coefficients[idx] 
-    # select only information of interest, show matrix
+    # show selected information of interest from variance covariance matrix
     cov[idx, idx]
-    # function solves the equation a %*% x = b for x, #
+    # solvet function solves the equation a %*% x = b for x, #
     # where b can be either a vector or a matrix. a is square
     chi <- co %*% solvet( cov[idx, idx], co )
     df. = length(idx)
@@ -328,12 +329,12 @@ options(datadist="dd")
     at <- A$Design
     labels <- at$label
     
-    
+   # empty matrix in which to collect information 
    res <- matrix(, nrow = length(labels), ncol = 4)
     
      # loop to create anova table
      for ( i in 1 : length(namez))  {
-        # select parameters we are interested in
+       # select parameter we are interested in
        par <- namez[i]                   
        # select appropriate data from var covar matrix
        c1 <- cov[grepl(par, rownames(cov)), grepl(par, colnames(cov))  ]   
@@ -342,20 +343,17 @@ options(datadist="dd")
        # select regression coefficients of interest
        co <-  A$coefficients[idx]
      
-     # do the calculations.
-     # solvet is function solves the equation a %*% x = b for x, 
+     # do the calculations. solvet is function solves the equation a %*% x = b for x, 
      # where b can be either a vector or a matrix. a is square
-     (chi <- co %*% solvet( c1, co ))  # chi square value
-     (df. <- length(idx))              # degrees of freedom
-     (pvalue <-(1 - pchisq(chi, df.))) # pvalue
+     chi <- co %*% solvet( c1, co )  # chi square value
+     df. <- length(idx)              # degrees of freedom
+     pvalue <-(1 - pchisq(chi, df.)) # p-value
         
-       
     res[i,]  <- c(labels[i], chi, df., pvalue)  # collect information
        
      }
     
-    # here are our estimates, we successfully reproduce the anova function above
-     
+    # here are our estimates, we successfully reproduce the rms anova function above
     res <- as.data.frame(res)
     names(res) <- c("Factor","Chi-square","d.f.","P")
     print(res)
@@ -365,7 +363,7 @@ options(datadist="dd")
 \newpage
 ## Reproduce anova rms function TOTAL row
 
-```{r anova2, include=TRUE, echo=TRUE, results='asis'}
+```{r anova2, include=TRUE, echo=TRUE }
 
     # total, use the whole variance covariance matrix
     idx <- colnames(cov)
@@ -379,6 +377,7 @@ options(datadist="dd")
     res <- cbind(chi, df. , pvalue)
     res <- as.data.frame(res)
     names(res) <- c("Chi-square","d.f.","P")
+    # here are our estimates, we successfully reproduce the rms anova function above
     print(res)
     
 
@@ -394,15 +393,17 @@ options(datadist="dd")
     cov <- vcov(A, regcoef.only = TRUE, intercepts = "none") 
     # extract names if they contain *
     idx <- colnames(cov)[grepl("*", colnames(cov), fixed=TRUE)]  
-    # extract coefficients only with * in name
-    c1 <-  cov[(idx),(idx)]                                       
+    # extract var covariance info  of interest
+    c1 <-  cov[(idx),(idx)]    
+    # extract reg coefficients only with * in name
     co <- A$coefficients[idx] 
     
     idx # information of interest
     c1  # covariance matrix information of interest
     co  # regression coefficients of interest
     
-    # function solves the equation a %*% x = b for x, where b can be either a vector or a matrix. a is square
+    # function solves the equation a %*% x = b for x, 
+    # where b can be either a vector or a matrix. a is square
     chi <- co %*% solvet( c1, co )
     df. = length(idx)
     pvalue =(1 - pchisq(chi, df.))
@@ -411,6 +412,7 @@ options(datadist="dd")
     res <- cbind(chi, df. , pvalue)
     res <- as.data.frame(res)
     names(res) <- c("Chi-square","d.f.","P")
+    # here are our estimates, we successfully reproduce the rms anova function above
     print(res)
     
     
