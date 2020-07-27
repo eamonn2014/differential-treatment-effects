@@ -300,7 +300,7 @@ options(datadist="dd")
     res <- cbind(chi, df. , pvalue)
     res <- as.data.frame(res)
     names(res) <- c("Chi-square","d.f.","P")
-    print(res)
+    print(res) 
     
     
 
