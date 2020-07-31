@@ -36,7 +36,7 @@ fig.width9 <- 1380
 fig.height9 <- 679
 
 ## convenience functions
-p0 <- function(x) {formatC(x, format="f", digits=1)}
+p0 <- function(x) {formatC(x, format="f", digits=0)}
 p1 <- function(x) {formatC(x, format="f", digits=1)}
 p2 <- function(x) {formatC(x, format="f", digits=2)}
 p3 <- function(x) {formatC(x, format="f", digits=3)}
@@ -364,7 +364,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                 div(plotOutput("f.plot1", width=fig.width4, height=fig.height7)),
                                                 
                                          )),
-                                       h4(paste("Examples describing the regression coefficients. For continuous variables we estimate the effect based on the 25th and 75th percentile of the variables distribution.")),
+                                       h4(paste("Examples describing the regression coefficients. For continuous variables we estimate the effect based on the 25th and 75th percentile of the variables distribution. Better outcomes are indicated on the right of dotted line, worse outcomes to the left.")),
                                        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                        #h4(paste("We can interpret the forest plot effect estimates thus...")),
                                        h4(htmlOutput("textWithNumber3",) ),
@@ -1206,24 +1206,233 @@ server <- shinyServer(function(input, output   ) {
     x2 <- zummary()$A2
     x3 <- zummary()$A3
     
-    HTML(paste0("For ",rownames(x)[1]  , " the average change in odds of the outcome comparing patients aged ",x[2,1]," with patients aged ",x[2,2]
-      , br(), 
-      " on treatment 1  while being identical in all other predictors is ",p2(x[2,4])," with  95%CI (",p2(x[2,6]),", ",p2(x[2,7]),") "
-      ,br(),
-      " on treatment 2  while being identical in all other predictors is ",p2(x2[2,4])," with 95%CI (",p2(x2[2,6]),", ",p2(x2[2,7]),")" 
-      ,br(), 
-      " on treatment 3  while being identical in all other predictors is ",p2(x3[2,4])," with 95%CI (",p2(x3[2,6]),", ",p2(x3[2,7]),")" 
-                
-      , br(),br(),
-      "For ",rownames(x)[3]  , " the average change in odds of the outcome comparing patients with level ",x[4,1]," to patients with level ",x[4,2]
-      , br(), 
-      " on treatment 1  while being identical in all other predictors is ",p2(x[4,4])," with 95%CI (",p2(x[4,6]),", ",p2(x[4,7]),") "
-      , br(), 
-      " on treatment 2  while being identical in all other predictors is ",p2(x2[4,4])," with 95%CI (",p2(x2[4,6]),", ",p2(x2[4,7]),") "
-     ,br(), 
-      " on treatment 3  while being identical in all other predictors is ",p2(x3[4,4])," with 95%CI (",p2(x3[4,6]),", ",p2(x3[4,7]),")" 
+    ########################
     
-    ))
+    txt1   <- paste0("For ",rownames(x)[1]  , " the average change in odds of the outcome comparing patients aged ",x[2,2]," 
+                      with patients aged ",x[2,1] )
+    
+    ##treatment 1
+    if ( p2(x[2,4])  > 1) { 
+
+      txt2.1  <- paste0( " on treatment 1  while being identical in all other predictors is ",p2(x[2,4])," with  95%CI (",p2(x[2,6]),", ",p2(x[2,7]),"). 
+                    This means that the odds of a good outcome for a patient aged ",x[2,2]," are ",p2(x[2,4])," that of the odds of a good outcome for a patient aged ",x[2,1]," if they take treatment 1. 
+                    The odds (and hence probability) of a good outcome are increased for the older patient by taking the treatment 1. ")
+      
+      txt3.1 <- paste0( "We can also express the increase by saying that the odds are increased by approximately ",p0 ((x[2,4]-1)*100),"%.")
+       
+    } else { 
+        
+      txt2.1  <- paste0( " on treatment 1  while being identical in all other predictors is ",p2(x[2,4])," with  95%CI (",p2(x[2,6]),", ",p2(x[2,7]),").  
+                    This means that the odds of a good outcome for a patient aged ",x[2,2]," are ",p2(x[2,4])," that of the odds of a good outcome for a patient aged ",x[2,1]," if they take treatment 1. 
+                    The odds (and hence probability) of a good outcome are decreased for the older patient by taking the treatment 1. ")
+      
+      txt3.1 <- paste0( "We can also express the decrease by saying that the odds are decreased by approximately ",p0 (abs(x[2,4]-1)*100),"%,
+                      since the odds are reduced by a factor of ",p2(x[2,4]),"")
+      
+    }
+    ############################
+    
+    
+    if ( p2(x2[2,4])  > 1) { 
+      
+      txt2.2  <- paste0( " on treatment 2  while being identical in all other predictors is ",p2(x2[2,4])," with  95%CI (",p2(x2[2,6]),", ",p2(x2[2,7]),"). 
+                    This means that the odds of a good outcome for a patient aged ",x2[2,2]," are ",p2(x2[2,4])," that of the odds of a good outcome for a patient aged ",x2[2,1]," if they take treatment 2. 
+                    The odds (and hence probability) of a good outcome are increased for the older patient by taking the treatment 2. ") 
+      
+      txt3.2 <- paste0( "We can also express the increase by saying that the odds are increased by approximately ",p0 ((x2[2,4]-1)*100),"%.")
+      
+    } else { 
+      
+      txt2.2  <- paste0( " on treatment 2  while being identical in all other predictors is ",p2(x2[2,4])," with  95%CI (",p2(x2[2,6]),", ",p2(x2[2,7]),"). 
+                    This means that the odds of a good outcome for a patient aged ",x2[2,2]," are ",p2(x2[2,4])," that of the odds of a good outcome for a patient aged ",x2[2,1]," if they take treatment 2. 
+                    The odds (and hence probability) of a good outcome are decreased for the older patient by taking the treatment 2. ")
+      
+      txt3.2 <- paste0( "We can also express the decrease by saying that the odds are decreased by approximately ",p0 (abs(x2[2,4]-1)*100),"%,
+                      since the odds are reduced by a factor of ",p1(x2[2,4]),"")
+      
+    }
+    
+    
+    ###########################
+    
+    if ( p2(x3[2,4])  > 1) { 
+      
+      txt2.3  <- paste0( " on treatment 3  while being identical in all other predictors is ",p2(x3[2,4])," with  95%CI (",p2(x3[2,6]),", ",p2(x3[2,7]),").  
+                    This means that the odds of a good outcome for a patient aged ",x3[2,2]," are ",p2(x3[2,4])," that of the odds of a good outcome for a patient aged ",x3[2,1]," if they take treatment 3. 
+                    The odds (and hence probability) of a good outcome are increased for the older patient by taking the treatment 3. ") 
+      
+      txt3.3 <- paste0( "We can also express the increase by saying that the odds are increased by approximately ",p0 ((x3[2,4]-1)*100),"%.")
+      
+    } else { 
+      
+      txt2.3  <- paste0( " on treatment 3  while being identical in all other predictors is ",p2(x3[2,4])," with  95%CI (",p2(x3[2,6]),", ",p2(x3[2,7]),").  
+                    This means that the odds of a good outcome for a patient aged ",x3[2,2]," are ",p2(x3[2,4])," that of the odds of a good outcome for a patient aged ",x3[2,1]," if they take treatment 3. 
+                    The odds (and hence probability) of a good outcome are decreased for the older patient by taking the treatment 3. ")
+      
+      txt3.3 <- paste0( "We can also express the decrease by saying that the odds are decreased by approximately ",p0 (abs(x3[2,4]-1)*100),"%,
+                      since the odds are reduced by a factor of ",p2(x3[2,4]),"")
+      
+    }
+    
+    
+    
+   
+    
+    ###second example
+    
+    
+    # , br(),br(),
+    # "For ",rownames(x)[3]  , " the average change in odds of the outcome comparing patients with measurement ",x[4,1]," to patients with level ",x[4,2]
+    # , br(), 
+    # " on treatment 1  while being identical in all other predictors is ",p2(x[4,4])," with 95%CI (",p2(x[4,6]),", ",p2(x[4,7]),") "
+    # , br(), 
+    # " on treatment 2  while being identical in all other predictors is ",p2(x2[4,4])," with 95%CI (",p2(x2[4,6]),", ",p2(x2[4,7]),") "
+    # ,br(), 
+    # " on treatment 3  while being identical in all other predictors is ",p2(x3[4,4])," with 95%CI (",p2(x3[4,6]),", ",p2(x3[4,7]),")" 
+    
+    
+    txt1x   <- paste0("For ",rownames(x)[3]  , " the average change in odds of the outcome comparing patients with measurement ",x[4,1]," to patients with measurement ",x[4,2] )
+    
+    ##treatment 1
+    if ( p2(x[4,4])  > 1) { 
+      
+      txt2.1x  <- paste0( " on treatment 1  while being identical in all other predictors is ",p2(x[4,4])," with  95%CI (",p2(x[4,6]),", ",p2(x[4,7]),"). 
+                    This means that the odds of a good outcome for a patient with measurement ",x[4,2]," are ",p2(x[4,4])," that of the odds of a good outcome for a patient with measurement ",x[4,1]," if they take treatment 1. 
+                    The odds (and hence probability) of a good outcome are increased for the patient with the higher measurement by taking the treatment 1. ")
+      
+      txt3.1x <- paste0( "We can also express the increase by saying that the odds are increased by approximately ",p0 ((x[4,4]-1)*100),"%.")
+      
+    } else { 
+      
+      txt2.1x  <- paste0( " on treatment 1  while being identical in all other predictors is ",p2(x[4,4])," with  95%CI (",p2(x[4,6]),", ",p2(x[4,7]),").  
+                    This means that the odds of a good outcome for a patient with measurement ",x[4,2]," are ",p2(x[4,4])," that of the odds of a good outcome for a patient with measurement ",x[4,1]," if they take treatment 1. 
+                    The odds (and hence probability) of a good outcome are decreased for the patient with the higher measurement by taking the treatment 1. ")
+      
+      txt3.1x <- paste0( "We can also express the decrease by saying that the odds are decreased by approximately ",p0 (abs(x[4,4]-1)*100),"%,
+                      since the odds are reduced by a factor of ",p2(x[4,4]),"")
+      
+    }
+    ############################
+    
+    
+    if ( p2(x2[4,4])  > 1) { 
+      
+      txt2.2x  <- paste0( " on treatment 1  while being identical in all other predictors is ",p2(x2[4,4])," with  95%CI (",p2(x2[4,6]),", ",p2(x2[4,7]),"). 
+                    This means that the odds of a good outcome for a patient with measurement ",x2[4,2]," are ",p2(x2[4,4])," that of the odds of a good outcome for a patient with measurement ",x2[4,1]," if they take treatment 2. 
+                    The odds (and hence probability) of a good outcome are increased for the patient with the higher measurement by taking the treatment 2. ")
+      
+      txt3.2x <- paste0( "We can also express the increase by saying that the odds are increased by approximately ",p0 ((x2[4,4]-1)*100),"%.")
+      
+    } else { 
+      
+      txt2.2x  <- paste0( " on treatment 1  while being identical in all other predictors is ",p2(x2[4,4])," with  95%CI (",p2(x2[4,6]),", ",p2(x2[4,7]),").  
+                    This means that the odds of a good outcome for a patient with measurement ",x2[4,2]," are ",p2(x2[4,4])," that of the odds of a good outcome for a patient with measurement ",x2[4,1]," if they take treatment 2. 
+                    The odds (and hence probability) of a good outcome are decreased for the patient with the higher measurement by taking the treatment 1. ")
+      
+      txt3.2x <- paste0( "We can also express the decrease by saying that the odds are decreased by approximately ",p0 (abs(x[4,4]-1)*100),"%,
+                      since the odds are reduced by a factor of ",p2(x[4,4]),"")
+      
+      
+    }
+    
+    
+    ###########################
+    
+    if ( p2(x3[4,4])  > 1) { 
+      
+      txt2.3x  <- paste0( " on treatment 3  while being identical in all other predictors is ",p2(x3[4,4])," with  95%CI (",p2(x3[4,6]),", ",p2(x3[4,7]),").  
+                    This means that the odds of a good outcome for a patient with measurement ",x3[4,2]," are ",p2(x3[4,4])," that of the odds of a good outcome for a patient with measurement ",x3[4,1]," if they take treatment 3. 
+                    The odds (and hence probability) of a good outcome are increased for the patient with the higher measurement by taking the treatment 3. ") 
+      
+      txt3.3x <- paste0( "We can also express the increase by saying that the odds are increased by approximately ",p0 ((x3[4,4]-1)*100),"%.")
+      
+    } else { 
+      
+      txt2.3x  <- paste0( " on treatment 3  while being identical in all other predictors is ",p2(x3[4,4])," with  95%CI (",p2(x3[4,6]),", ",p2(x3[4,7]),").  
+                    This means that the odds of a good outcome for a patient with measurement ",x3[4,2]," are ",p2(x3[2,4])," that of the odds of a good outcome for a patient with measurement ",x3[4,1]," if they take treatment 3. 
+                    The odds (and hence probability) of a good outcome are decreased for the patient with the higher measurementt by taking the treatment 3. ")
+      
+      txt3.3x <- paste0( "We can also express the decrease by saying that the odds are decreased by approximately ",p0 (abs(x3[4,4]-1)*100),"%,
+                      since the odds are reduced by a factor of ",p2(x3[4,4]),"")
+      
+    }
+    
+ 
+    
+    #######################
+    HTML(paste0(
+      br(), txt1, txt2.1 , txt3.1 ,
+      br(),
+      br(), txt1, txt2.2 , txt3.2 ,
+      br(), 
+      br(), txt1, txt2.3 , txt3.3 
+      
+      , br(),br(),
+      br(), txt1x, txt2.1x , txt3.1x ,
+      br(),
+      br(), txt1x, txt2.2x , txt3.2x ,
+      br(), 
+      br(), txt1x, txt2.3x , txt3.3x 
+      
+      # 
+      # 
+      # 
+      # 
+      # , br(),br(),
+      # "For ",rownames(x)[3]  , " the average change in odds of the outcome comparing patients with measurement ",x[4,1]," to patients with level ",x[4,2]
+      # , br(), 
+      # " on treatment 1  while being identical in all other predictors is ",p2(x[4,4])," with 95%CI (",p2(x[4,6]),", ",p2(x[4,7]),") "
+      # , br(), 
+      # " on treatment 2  while being identical in all other predictors is ",p2(x2[4,4])," with 95%CI (",p2(x2[4,6]),", ",p2(x2[4,7]),") "
+      # ,br(), 
+      # " on treatment 3  while being identical in all other predictors is ",p2(x3[4,4])," with 95%CI (",p2(x3[4,6]),", ",p2(x3[4,7]),")" 
+      
+    ) )
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    # 
+    # 
+    # 
+    # #######################
+    # HTML(paste0("For ",rownames(x)[1]  , " the average change in odds of the outcome comparing patients aged ",x[2,1]," with patients aged ",x[2,2]
+    #   , br(), 
+    #   " on treatment 1  while being identical in all other predictors is ",p2(x[2,4])," with  95%CI (",p2(x[2,6]),", ",p2(x[2,7]),") "
+    #   ,br(),
+    #   " on treatment 2  while being identical in all other predictors is ",p2(x2[2,4])," with 95%CI (",p2(x2[2,6]),", ",p2(x2[2,7]),")" 
+    #   ,br(), 
+    #   " on treatment 3  while being identical in all other predictors is ",p2(x3[2,4])," with 95%CI (",p2(x3[2,6]),", ",p2(x3[2,7]),")" 
+    #             
+    #   
+    #   
+    #   
+    #       , br(),br(),
+    #   "For ",rownames(x)[3]  , " the average change in odds of the outcome comparing patients with level ",x[4,1]," to patients with level ",x[4,2]
+    #   , br(), 
+    #   " on treatment 1  while being identical in all other predictors is ",p2(x[4,4])," with 95%CI (",p2(x[4,6]),", ",p2(x[4,7]),") "
+    #   , br(), 
+    #   " on treatment 2  while being identical in all other predictors is ",p2(x2[4,4])," with 95%CI (",p2(x2[4,6]),", ",p2(x2[4,7]),") "
+    #  ,br(), 
+    #   " on treatment 3  while being identical in all other predictors is ",p2(x3[4,4])," with 95%CI (",p2(x3[4,6]),", ",p2(x3[4,7]),")" 
+    # 
+    # ))
+    # 
+    # 
+    
+    
+    
+    
+    
+    
                             
  
   })
