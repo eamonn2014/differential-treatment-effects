@@ -1439,17 +1439,17 @@ server <- shinyServer(function(input, output   ) {
     
     X <- analysis() 
     
-    v0. <- as.numeric(    eval(parse(text= (input$adj.smoking)) ) )
-    v1. <- as.numeric(    eval(parse(text= (input$adj.age)) ) )
-    v2. <- as.numeric(    eval(parse(text= (input$adj.biomarker)) ) )
-    v3. <- as.numeric(    eval(parse(text= (input$adj.blood)) ) )
-    v4. <- as.numeric(    eval(parse(text= (input$adj.vas)) ) )   
-    v5. <- as.numeric(    eval(parse(text= (input$adj.time)) ) ) 
-    v6. <- as.numeric(    eval(parse(text= (input$adj.fitness)) ) ) 
-    v7. <- as.numeric(    eval(parse(text= (input$adj.history)) ) )
-    v8. <- as.numeric(    eval(parse(text= (input$adj.employed)) ) )
-    v9. <- as.numeric(    eval(parse(text= (input$adj.sex)) ) )
-    v10. <-as.numeric(    eval(parse(text= (input$adj.BMI)) ) )
+    v0. <- isolate(as.numeric(    eval(parse(text= (input$adj.smoking)) ) ))
+    v1. <- isolate(as.numeric(    eval(parse(text= (input$adj.age)) ) ))
+    v2. <- isolate(as.numeric(    eval(parse(text= (input$adj.biomarker)) ) ))
+    v3. <- isolate( as.numeric(    eval(parse(text= (input$adj.blood)) ) ))
+    v4. <- isolate(as.numeric(    eval(parse(text= (input$adj.vas)) ) )   )
+    v5. <- isolate(as.numeric(    eval(parse(text= (input$adj.time)) ) ) )
+    v6. <- isolate(as.numeric(    eval(parse(text= (input$adj.fitness)) ) ) )
+    v7. <- isolate(as.numeric(    eval(parse(text= (input$adj.history)) ) ))
+    v8. <- isolate(as.numeric(    eval(parse(text= (input$adj.employed)) ) ))
+    v9. <- isolate(as.numeric(    eval(parse(text= (input$adj.sex)) ) ))
+    v10. <-isolate(as.numeric(    eval(parse(text= (input$adj.BMI)) ) ))
     
     A1 <- summary(X$A, smoking=v0., age=v1., covar3=v2., covar1=v3., vas=v4., time=v5., 
                   covar2=v6., fact1=v7., binary2=v8., sex=v9., bmi=v10., 
