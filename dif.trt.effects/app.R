@@ -335,7 +335,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               ) ,
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                               
-                              tabPanel("5 Forest plot, treat. x all variables", value=3, 
+                              tabPanel("5 Forest plot, treatment x all variables", value=3, 
                                        h4(paste("Figure 2 Forest plots by treatment for the model in which treatment is interacted with all baseline covariates")),
                                        
                                        h4(paste("The boxes below can be used to adjust the range for which the effect is estimated for continuous predictors. 
@@ -448,7 +448,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                        
                               ),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("6 Forest plot, treat. x smoking only", value=3, 
+                              tabPanel("6 Forest plot, treatment x smoking only", value=3, 
                                        h4(paste("Figure 3 Forest plots by treatment for the model in which treatment is interacted with smoking covariate only")), 
                                        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                        fluidRow(
@@ -487,7 +487,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                      
                               ),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("7 Rel. measures of effect", value=3, 
+                              tabPanel("7 Relative measures of effect", value=3, 
 
                                        h4(htmlOutput("textWithNumber1",) ),
                                        fluidRow(
@@ -680,7 +680,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("11 Contrast", value=3, 
+                              tabPanel("11 Contrast example", value=3, 
                                      
                                         
                                      # selectInput("predictors",
