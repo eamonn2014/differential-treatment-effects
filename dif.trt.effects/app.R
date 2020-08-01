@@ -48,6 +48,11 @@ inv_logit <- function(logit) exp(logit) / (1 + exp(logit))
 is.even <- function(x){ x %% 2 == 0 } # function to id. odd maybe useful
 options(width=200)
 
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
 
 # varz <-  c(  "smoking", "age", "bmi", "covar3", "covar1", "vas", "time", 
 #            "covar2", "fact1", "binary2")
@@ -331,23 +336,23 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               tabPanel("5 Forest plot, treatment. x all variables", value=3, 
                                        h4(paste("Figure 2 Forest plots by treatment for the model in which treatment is interacted with all baseline covariates")),
                                        
-                                       h4(paste("The boxes below can be used to adjust the factor levels and continuous variables. Only the treatment bars will change as treatment interacts with 
-                                                all variables. ")),
+                                       h4(paste("The boxes below can be used to adjust the factor reference levels (affecting forest plot only). The continuous variables are held at sensible values (we did not center the continuous variables in the regression). 
+                                       Set the continuous to zero and observe the treatment comparison confidence intervals. Only the treatment bars will change as treatment interacts with all variables. ")),
                                        
                                        splitLayout(
                                          textInput("adj.smoking", div(h5(tags$span(style="color:blue", "Smoking ref (factor)"))), value= "1"),
-                                         textInput("adj.age", div(h5(tags$span(style="color:blue", "Age (continuous)"))), value= "0"),  #18
-                                         textInput("adj.biomarker", div(h5(tags$span(style="color:blue", "covar3 (biomarker)"))), value=  "0"),
-                                         textInput("adj.blood", div(h5(tags$span(style="color:blue", "covar1 (Blood score)"))), value= "0"),
-                                         textInput("adj.vas", div(h5(tags$span(style="color:blue", "Vas (continuous)"))), value= "0"),  #1
-                                         textInput("adj.time", div(h5(tags$span(style="color:blue", "Time (continuous)"))), value= "0")
+                                         textInput("adj.age", div(h5(tags$span(style="color:blue", "Age (continuous)"))), value= "40"),  #18
+                                         textInput("adj.biomarker", div(h5(tags$span(style="color:blue", "covar3 (biomarker)"))), value=  "1.3"),
+                                         textInput("adj.blood", div(h5(tags$span(style="color:blue", "covar1 (Blood score)"))), value= "5"),
+                                         textInput("adj.vas", div(h5(tags$span(style="color:blue", "Vas (continuous)"))), value= "17"),  #1
+                                         textInput("adj.time", div(h5(tags$span(style="color:blue", "Time (continuous)"))), value= "4")
                                          
                                        ),
                                        
                                        splitLayout(
                                          
                                          
-                                         textInput("adj.fitness", div(h5(tags$span(style="color:blue", "covar2 (Fitness score)"))), value= "0"),  #1
+                                         textInput("adj.fitness", div(h5(tags$span(style="color:blue", "covar2 (Fitness score)"))), value= "20"),  #1
                                          textInput("adj.history", div(h5(tags$span(style="color:blue", "fact1 ref (History binary)"))), value= "0"),
                                          textInput("adj.employed", div(h5(tags$span(style="color:blue", "binary2 ref (Employed)"))), value= "0"),
                                          textInput("adj.sex", div(h5(tags$span(style="color:blue", "Sex red (binary)"))), value= "0"),
@@ -805,13 +810,13 @@ server <- shinyServer(function(input, output   ) {
     age.coef       <-  v2     # log odds of 1 over the age range
     smoke.coef     <-  v3     # this is odds of 1.5
     bmi.coef       <-  v4     # this is an odds of 1..50:50
-    covar3.coef       <-  v5     # log odds 1 over range of 3
+    covar3.coef    <-  v5     # log odds 1 over range of 3
     covar1.coef    <-  v6     # log odds -.05 per unit change
     vas.coef       <-  v7     # log odds .008 per unit change. log odds .25 over 30 units odds 1.27
     time.coef      <-  v8     # log odds -.01 per year, log odds -.1 over 10 years or odds .90
     covar2.coef    <-  v9     # log odds 0.02 per joint, log odds 1 over 50 units or odds 2.7
     fact1.coef     <-  v10    # log odds 0.693 per change in binary, or odds of 2   
-    binary2.coef  <-  v11    # log odds 0 per change in binary, or odds of 1  
+    binary2.coef   <-  v11    # log odds 0 per change in binary, or odds of 1  
     sex.coef       <-  v12    # log odds -0.693 per change in binary, or odds of .5  
     
     intercept <- -5
@@ -820,15 +825,23 @@ server <- shinyServer(function(input, output   ) {
     age      <- sample(18:65, n, replace=TRUE)      # continuous
     bmi      <- sample(1:3,   n, replace=TRUE)      # assume 3 equal groups?
     smoking  <- sample(1:3,   n, replace=TRUE)      # categorical assume 3 equal groups?
-    covar3      <- round(runif(n,0,3),2)
+    covar3   <- round(runif(n,0,3),2)
     covar1   <- round(runif(n,0,10),2)
     vas      <- sample(1:30, n, replace=TRUE)
     time     <- round(runif(n,0,10),2)              # years
     covar2   <- sample(1:50, n, replace=TRUE)
     fact1    <- sample(0:1,  n, replace=TRUE)
-    binary2 <- sample(0:1,  n, replace=TRUE)
+    binary2  <- sample(0:1,  n, replace=TRUE)
     sex      <- sample(0:1,  n, replace=TRUE)
     
+    # get means of continuous vars for presentation of forest plot
+    mage   <-   mean(age)
+    mcovar3 <-   mean(covar3)
+    mcovar1 <- mean(covar1)
+    mvas  <- mean(vas)
+    mtime <- mean(time)
+    mcovar2   <- getmode(covar2)
+  
     
     return(list(    
       
@@ -858,6 +871,15 @@ server <- shinyServer(function(input, output   ) {
       binary2=binary2, 
       sex=sex,
       
+      #not used
+      mage   <-   mage,
+      mcovar3 <-  mcovar3,
+      mcovar1 <- mcovar1,
+      mvas  <- mvas,
+      mtime <- mtime,
+      mcovar2   <- mcovar2,
+    
+  
       randomi=randomi))
     
     
@@ -1442,7 +1464,7 @@ server <- shinyServer(function(input, output   ) {
     v0. <- isolate(as.numeric(    eval(parse(text= (input$adj.smoking)) ) ))
     v1. <- isolate(as.numeric(    eval(parse(text= (input$adj.age)) ) ))
     v2. <- isolate(as.numeric(    eval(parse(text= (input$adj.biomarker)) ) ))
-    v3. <- isolate( as.numeric(    eval(parse(text= (input$adj.blood)) ) ))
+    v3. <- isolate(as.numeric(    eval(parse(text= (input$adj.blood)) ) ))
     v4. <- isolate(as.numeric(    eval(parse(text= (input$adj.vas)) ) )   )
     v5. <- isolate(as.numeric(    eval(parse(text= (input$adj.time)) ) ) )
     v6. <- isolate(as.numeric(    eval(parse(text= (input$adj.fitness)) ) ) )
@@ -1451,19 +1473,34 @@ server <- shinyServer(function(input, output   ) {
     v9. <- isolate(as.numeric(    eval(parse(text= (input$adj.sex)) ) ))
     v10. <-isolate(as.numeric(    eval(parse(text= (input$adj.BMI)) ) ))
     
-    A1 <- summary(X$A, smoking=v0., age=v1., covar3=v2., covar1=v3., vas=v4., time=v5., 
-                  covar2=v6., fact1=v7., binary2=v8., sex=v9., bmi=v10., 
+    
+    ##add in means of continuous vars here
+    
+    d <- design()
+ 
+   # v1.     <-d$mage       
+    # v2.     <-d$mcovar3      
+    # v3.     <-d$mcovar1   
+    # v4.     <-d$mvas       
+    # v5.     <-d$mtime      
+    # v6.     <-d$mcovar2    
+    # 
+   
+    
+    A1 <- summary(X$A, smoking=v0., age=v1., covar3=v2., covar1=v3., vas=v4., time=v5.,
+                  covar2=v6., fact1=v7., binary2=v8., sex=v9., bmi=v10.,
                   trt=1, est.all=FALSE, vnames=c( "labels"))
-    
-    A2 <- summary(X$A, smoking=v0., age=v1., covar3=v2., covar1=v3., vas=v4., time=v5., 
-                  covar2=v6., fact1=v7., binary2=v8., sex=v9., bmi=v10.,  
+
+    A2 <- summary(X$A, smoking=v0., age=v1., covar3=v2., covar1=v3., vas=v4., time=v5.,
+                  covar2=v6., fact1=v7., binary2=v8., sex=v9., bmi=v10.,
                   trt=2, est.all=FALSE, vnames=c( "labels"))
-    
-    A3 <- summary(X$A, smoking=v0., age=v1., covar3=v2., covar1=v3., vas=v4., time=v5., 
-                  covar2=v6., fact1=v7., binary2=v8., sex=v9., bmi=v10., 
+
+    A3 <- summary(X$A, smoking=v0., age=v1., covar3=v2., covar1=v3., vas=v4., time=v5.,
+                  covar2=v6., fact1=v7., binary2=v8., sex=v9., bmi=v10.,
                   trt=3, est.all=FALSE, vnames=c( "labels"))
     
-    
+    # lets add in the means of vars in data instead
+ 
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return(list(  A1=A1, A2= A2, A3= A3)) 
