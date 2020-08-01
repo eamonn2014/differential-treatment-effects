@@ -336,6 +336,20 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               tabPanel("5 Forest plot, treatment. x all variables", value=3, 
                                        h4(paste("Figure 2 Forest plots by treatment for the model in which treatment is interacted with all baseline covariates")),
                                        
+                                       h4(paste("The boxes below can be used to adjust the range for which the effect is estimated. Default is from the 25th to 75th percentile of the variables distribution")),
+                                       
+                                       splitLayout(
+                                         textInput("age.range", div(h5(tags$span(style="color:blue", "Age (continuous)"))), value= "30,54"),
+                                         textInput("biomarker.range", div(h5(tags$span(style="color:blue", "covar3 (biomarker)"))), value= "0.7675,2.2300"),  #18
+                                         textInput("blood.range", div(h5(tags$span(style="color:blue", "covar1 (Blood score)"))), value= "2.5700, 7.7525"),
+                                         textInput("vas.range", div(h5(tags$span(style="color:blue", "Vas (continuous)"))), value= "18,23"),  #1
+                                         textInput("time.range", div(h5(tags$span(style="color:blue", "Time (continuous)"))), value= "2.355,7.420")
+                                       ),
+                                       
+                                    
+                                       
+                                       
+                                       
                                        h4(paste("The boxes below can be used to adjust the factor reference levels (affecting forest plot only). The continuous variables are held at sensible values (we did not center the continuous variables in the regression). 
                                        Set the continuous to zero and observe the treatment comparison confidence intervals. Only the treatment bars will change as treatment interacts with all variables. ")),
                                        
@@ -967,17 +981,35 @@ server <- shinyServer(function(input, output   ) {
     label(da$trt)                <- 'Treatment'
     label(da$bmi)                <- 'Body Mass Index'
     label(da$smoking)            <- 'Smoking'
-    label(da$covar3)                <- 'Biomarker'
+    label(da$covar3)             <- 'Biomarker'
     label(da$covar1)             <- 'Blood score'
     label(da$vas)                <- 'Visual analogue score'
     label(da$time)               <- 'Time since diagnosis'
     label(da$covar2)             <- 'Fitness score'
     label(da$fact1)              <- "History"
-    label(da$binary2)           <- "Employed"
+    label(da$binary2)            <- "Employed"
     label(da$sex)                <- 'Sex'
     
     dd <<- datadist(da)
     options(datadist="dd")
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # lets allow us to change the range at which effects are evaluated for continuous vars
+    dd$limits$age[1] <<- 30    # make 20 the reference value for age
+    dd$limits$age[3] <<- 54    # make 20 the reference value for age
+    
+    dd$limits$covar3[1] <<- 0.7675    # see above
+    dd$limits$covar3[3] <<- 2.2300     # see above
+    
+    dd$limits$covar1[1] <<- 2.5700    # see above
+    dd$limits$covar1[3] <<- 7.7525    # see above
+    
+    dd$limits$vas[1] <<- 8    # see above
+    dd$limits$vas[3] <<- 23    # see above
+    
+    dd$limits$time[1] <<- 2.355    # see above
+    dd$limits$time[3] <<- 7.420    # see above
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     A<-lrm(y~   trt * (smoking  + age  + bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex),da, y=TRUE, x=TRUE)   # all interact with trt
     B<-lrm(y~  (trt *  smoking) + age  + bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex, da, y=TRUE, x=TRUE)   # smoking * trt only
