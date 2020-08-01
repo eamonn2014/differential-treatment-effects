@@ -234,7 +234,9 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                               h4(paste("Tab 4 presents the likelihood ratio test assessing each model with each other.")),
                                              
                                               h4(paste("Tab 5 presents the forest plots by treatment for the treatment interacting with all baseline covariates model plus 
-                                                       tables of the ORs and log odds ratios and the regression tables. For good measure we also describe a couple of the estimated regression coefficients.")),
+                                                       tables of the ORs and log odds ratios and the regression tables. We allow the user to adjust reference levels 
+                                                       and the range for which continuous predictor effects are estimated and presented. 
+                                                       For good measure we also describe a couple of the estimated regression coefficients.")),
                                               h4(paste("Tab 6 presents the forest plots by treatment for the treatment x smoking interaction model and 
                                                        tables of the ORs and log odds ratios.")),
                                               h4(paste("Tab 7 presents relative measures of explained variation and the AIC of each model is reported.")),
@@ -333,7 +335,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               ) ,
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                               
-                              tabPanel("5 Forest plot, treatment. x all variables", value=3, 
+                              tabPanel("5 Forest plot, treat. x all variables", value=3, 
                                        h4(paste("Figure 2 Forest plots by treatment for the model in which treatment is interacted with all baseline covariates")),
                                        
                                        h4(paste("The boxes below can be used to adjust the range for which the effect is estimated for continuous predictors. 
@@ -446,7 +448,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                        
                               ),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("6 Forest plot, treatment x smoking only", value=3, 
+                              tabPanel("6 Forest plot, treat. x smoking only", value=3, 
                                        h4(paste("Figure 3 Forest plots by treatment for the model in which treatment is interacted with smoking covariate only")), 
                                        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                        fluidRow(
@@ -485,7 +487,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                      
                               ),
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("7 Relative measures of effect", value=3, 
+                              tabPanel("7 Rel. measures of effect", value=3, 
 
                                        h4(htmlOutput("textWithNumber1",) ),
                                        fluidRow(
@@ -678,7 +680,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                
                               #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              tabPanel("11 Contrast example", value=3, 
+                              tabPanel("11 Contrast", value=3, 
                                      
                                         
                                      # selectInput("predictors",
