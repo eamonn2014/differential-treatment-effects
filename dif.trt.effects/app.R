@@ -336,14 +336,15 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                               tabPanel("5 Forest plot, treatment. x all variables", value=3, 
                                        h4(paste("Figure 2 Forest plots by treatment for the model in which treatment is interacted with all baseline covariates")),
                                        
-                                       h4(paste("The boxes below can be used to adjust the range for which the effect is estimated. Default is from the 25th to 75th percentile of the variables distribution")),
+                                       h4(paste("The boxes below can be used to adjust the range for which the effect is estimated for continuous predictors. 
+                                                Default is from the 25th to 75th percentile of the variables distribution.")),
                                        
                                        splitLayout(
-                                         textInput("age.range", div(h5(tags$span(style="color:blue", "Age (continuous)"))), value= "30,54"),
-                                         textInput("biomarker.range", div(h5(tags$span(style="color:blue", "covar3 (biomarker)"))), value= "0.7675,2.2300"),  #18
+                                         textInput("age.range", div(h5(tags$span(style="color:blue", "Age (continuous)"))), value= "30, 54"),
+                                         textInput("biomarker.range", div(h5(tags$span(style="color:blue", "covar3 (biomarker)"))), value= "0.7675, 2.2300"),  #18
                                          textInput("blood.range", div(h5(tags$span(style="color:blue", "covar1 (Blood score)"))), value= "2.5700, 7.7525"),
-                                         textInput("vas.range", div(h5(tags$span(style="color:blue", "Vas (continuous)"))), value= "18,23"),  #1
-                                         textInput("time.range", div(h5(tags$span(style="color:blue", "Time (continuous)"))), value= "2.355,7.420")
+                                         textInput("vas.range", div(h5(tags$span(style="color:blue", "Vas (continuous)"))), value= "18, 23"),  #1
+                                         textInput("time.range", div(h5(tags$span(style="color:blue", "Time (continuous)"))), value= "2.355, 7.420")
                                        ),
                                        
                                     
@@ -849,12 +850,12 @@ server <- shinyServer(function(input, output   ) {
     sex      <- sample(0:1,  n, replace=TRUE)
     
     # get means of continuous vars for presentation of forest plot
-    mage   <-   mean(age)
-    mcovar3 <-   mean(covar3)
-    mcovar1 <- mean(covar1)
-    mvas  <- mean(vas)
-    mtime <- mean(time)
-    mcovar2   <- getmode(covar2)
+    # mage   <-   mean(age)
+    # mcovar3 <-   mean(covar3)
+    # mcovar1 <- mean(covar1)
+    # mvas  <- mean(vas)
+    # mtime <- mean(time)
+    # mcovar2   <- getmode(covar2)
   
     
     return(list(    
@@ -886,12 +887,12 @@ server <- shinyServer(function(input, output   ) {
       sex=sex,
       
       #not used
-      mage   <-   mage,
-      mcovar3 <-  mcovar3,
-      mcovar1 <- mcovar1,
-      mvas  <- mvas,
-      mtime <- mtime,
-      mcovar2   <- mcovar2,
+      # mage   <-   mage,
+      # mcovar3 <-  mcovar3,
+      # mcovar1 <- mcovar1,
+      # mvas  <- mvas,
+      # mtime <- mtime,
+      # mcovar2   <- mcovar2,
     
   
       randomi=randomi))
@@ -994,21 +995,34 @@ server <- shinyServer(function(input, output   ) {
     options(datadist="dd")
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # lets allow us to change the range at which effects are evaluated for continuous vars
-    dd$limits$age[1] <<- 30    # make 20 the reference value for age
-    dd$limits$age[3] <<- 54    # make 20 the reference value for age
+    # user can change the range at which effects are estimated
     
-    dd$limits$covar3[1] <<- 0.7675    # see above
-    dd$limits$covar3[3] <<- 2.2300     # see above
+    Ages <-   (as.numeric(unlist(strsplit(input$age.range,","))))    
     
-    dd$limits$covar1[1] <<- 2.5700    # see above
-    dd$limits$covar1[3] <<- 7.7525    # see above
+    dd$limits$age[1] <<- Ages[1]
+    dd$limits$age[3] <<- Ages[2]
     
-    dd$limits$vas[1] <<- 8    # see above
-    dd$limits$vas[3] <<- 23    # see above
+    Ages <-   (as.numeric(unlist(strsplit(input$biomarker.range,","))))    
     
-    dd$limits$time[1] <<- 2.355    # see above
-    dd$limits$time[3] <<- 7.420    # see above
+    dd$limits$covar3[1] <<- Ages[1]
+    dd$limits$covar3[3] <<- Ages[2]
+    
+    Ages <-   (as.numeric(unlist(strsplit(input$blood.range,","))))    
+    
+    dd$limits$covar1[1] <<- Ages[1]
+    dd$limits$covar1[3] <<- Ages[2]
+   
+    
+    Ages <-   (as.numeric(unlist(strsplit(input$vas.range,","))))    
+    
+    dd$limits$vas[1] <<- Ages[1]
+    dd$limits$vas[3] <<- Ages[2]
+    
+    Ages <-   (as.numeric(unlist(strsplit(input$time.range,","))))    
+    
+    dd$limits$time[1] <<- Ages[1]
+    dd$limits$time[3] <<- Ages[2]
+    
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     A<-lrm(y~   trt * (smoking  + age  + bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex),da, y=TRUE, x=TRUE)   # all interact with trt
