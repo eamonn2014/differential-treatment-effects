@@ -386,7 +386,7 @@ ui <- fluidPage(theme = shinytheme("journal"), #https://www.rdocumentation.org/p
                                                 div(plotOutput("f.plot1", width=fig.width4, height=fig.height7)),
                                                 
                                          )),
-                                       h4(paste("Examples describing the regression coefficients. For continuous variables we estimate the effect based on the 25th and 75th percentile of the variables distribution. Better outcomes are indicated on the right of dotted line, worse outcomes to the left.")),
+                                       h4(paste("Examples describing the regression coefficients. For continuous variables the default is to estimate the effect based on the 25th and 75th percentile of the variables distribution (we can change this using the top boxes). Better outcomes are indicated on the right of dotted line, worse outcomes to the left.")),
                                        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                        #h4(paste("We can interpret the forest plot effect estimates thus...")),
                                        h4(htmlOutput("textWithNumber3",) ),
