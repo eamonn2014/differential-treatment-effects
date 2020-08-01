@@ -1318,7 +1318,7 @@ server <- shinyServer(function(input, output   ) {
                     The odds (and hence probability) of a good outcome are decreased for the older patient by taking the treatment 2. ")
       
       txt3.2 <- paste0( "We can also express the decrease by saying that the odds are decreased by approximately ",p0 (abs(x2[2,4]-1)*100),"%,
-                      since the odds are reduced by a factor of ",p1(x2[2,4]),"")
+                      since the odds are reduced by a factor of ",p2(x2[2,4]),"")
       
     }
     
