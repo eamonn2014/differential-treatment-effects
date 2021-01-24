@@ -433,6 +433,13 @@ Treatment comparison for each factor levels
                  first.grp="Absent", 
                second.grp="Present") 
 
+```
+
+#  Execute plot function
+
+Treatment comparison for each factor levels
+
+```{r,}
 
 # its only the orange that is important. And will not change if other values in model are altered.
 # the actual OR will change if the covariates change, but the same amount in both levels.
@@ -449,7 +456,7 @@ grid.arrange(p1x,p2x,p3x)
 
 This is the way we presented, is the previous way better?
 
-```{r, } 
+```{r, results='hide'} 
 
   # now try the original approach
   age.=sample(30:80,1)  # showing it is the interaction that counts.
@@ -464,6 +471,10 @@ This is the way we presented, is the previous way better?
   k3 <- contrast(A, list(fact1=c(1),  age=age.,trt=c(3)), list(fact1=c(0),  age=age.,trt=c(3)) , fun=exp) 
   z3 <- print(k3, X=TRUE)   
 
+  
+```
+
+```{r, } 
   
   zz<-rbind(k1,k2,k3)
   zz<-zz[,c("Contrast","Lower","Upper")]
@@ -544,7 +555,7 @@ This is the way we presented, is the previous way better?
   ## add text to accompany arrow
   m <- k + geom_text( aes(
     x = 1.5, y = ((zz$Score[2]+zz$Score[3])/2),
-    label = paste0("300mg v placebo odds of response ",
+    label = paste0("300mg v 150mg odds of response ",
                    p0(exp(   max(zz$Score[3],zz$Score[2]) -  min(zz$Score[3],zz$Score[2])  ))," x "), 
     group = NULL,
     vjust = -1,
@@ -561,10 +572,70 @@ This is the way we presented, is the previous way better?
   ), size=2.8 , color="blue") 
   
   
-  n
-
-
+   q <- n + geom_text( aes(
+    x = 0.5, y = ((zz$Score[1]+zz$Score[3])/2),
+    label = paste0("300mg v placebo odds of response ",
+                   p0(exp(   max(zz$Score[3],zz$Score[1]) -  min(zz$Score[3],zz$Score[1])  ))," x "), 
+    group = NULL,
+    vjust = -1,
+    hjust = .5
+  ), size=2.8 , color="#EC7014") 
+   
+   
      
+  ## add arrows
+  r <- q + geom_segment(
+    x = 0.5, y =  zz$Score[1],
+    xend = 0.5, yend =  zz$Score[3],
+    lineend = "round", # See available arrow types in example above
+    linejoin = "round",
+    size = .5, 
+    arrow = arrow(length = unit(0.2, "cm")),
+    colour = "#EC7014" # Also accepts "red", "blue' etc
+  ) 
+  
+  
+  
+```
+
+#  Execute plot
+
+Treatment comparison within treatments
+
+```{r,}  
+  
+  r
+
+
+```
+
+#  The interaction model
+
+
+```{r, results='asis'}  
+  
+  A
+
+```
+
+#  conclusion
+
+We have evidence against the assumption that the overall effect of treatment is applicable to all patients.
+
+Interactions are the key. 
+
+In section 11, we see plots that might be more intuitive, the treatment effect within a covariate's levels.
+
+As the factor of interest only interacts with treatment. The values of the other covarites do not change the magnitude of the interaction (eg changing age, just shift both effects by the same amount).
+
+So in figure 13 comparing 150mg v placebo the interaction effect quoted in orange applies equally also to the treatment effect comparing factor levels.
+
+That is the interaction comparing 150mg v placebo is the same effect comparing absent v present...and so on
+
+```{r,}  
+
+
+
 ```
 
 # Computing Environment
