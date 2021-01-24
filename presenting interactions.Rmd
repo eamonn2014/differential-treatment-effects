@@ -657,6 +657,22 @@ Examine the anova table and look at the interaction hypothesis test p-value to s
 
 ```
 
+# References
+
+https://www.fharrell.com/post/path/
+https://www.fharrell.com/post/covadj/
+https://www.fharrell.com/post/ia/
+https://www.fharrell.com/post/varyor/
+
+
+
+
+```{r,}  
+
+
+
+```
+
 # Computing Environment
 
 `r markupSpecs$html$session()`
