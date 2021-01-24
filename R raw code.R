@@ -132,6 +132,10 @@ options(width=200)
     dd <<- datadist(da)
     options(datadist="dd")
     
+    
+    
+    
+    
     # RUN REGRESSONS
     A<-lrm(y~   trt * (smoking  + age  + bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex),da, y=TRUE ,x=TRUE)  # all interact with trt
     B<-lrm(y~  (trt *  smoking) + age  + bmi + covar3 + covar1 + vas + time + covar2 + fact1 + binary2 +sex, da, y=TRUE, x=TRUE)  # smoking * trt only
