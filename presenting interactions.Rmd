@@ -616,6 +616,17 @@ Treatment comparison within treatments
   
   A
 
+
+```
+
+#  The interaction model anova
+
+
+```{r, results='asis'}  
+  
+     x <- anova(A, india=FALSE, vnames='labels' )
+    print(x, which=c( 'subscripts' ))
+    
 ```
 
 #  conclusion
@@ -632,7 +643,13 @@ So in figure 13 comparing 150mg v placebo the interaction effect quoted in orang
 
 That is the interaction comparing 150mg v placebo is the same effect comparing absent v present...and so on.
 
-We can examine the regression table and see these effects directly (one comparison will not be presented as comparisons are made to a reference).
+We can examine the regression table and see these effects directly (one comparison will not be presented as comparisons are made to a reference). 
+
+So the answer can be found by examining 'trt=2 × fact1=1' and 'trt=3 × fact1=1' and of course exponentiating the coefficients. 
+
+Examine the anova table and look at the interaction hypothesis test p-value to see if the interaction test for the factor provides evidence against the null of no interaction.
+
+
 
 ```{r,}  
 
