@@ -630,7 +630,9 @@ As the factor of interest only interacts with treatment. The values of the other
 
 So in figure 13 comparing 150mg v placebo the interaction effect quoted in orange applies equally also to the treatment effect comparing factor levels.
 
-That is the interaction comparing 150mg v placebo is the same effect comparing absent v present...and so on
+That is the interaction comparing 150mg v placebo is the same effect comparing absent v present...and so on.
+
+We can examine the regression table and see these effects directly (one comparison will not be presented as comparisons are made to a reference).
 
 ```{r,}  
 
