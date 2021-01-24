@@ -39,7 +39,7 @@ body {
 
 ```{r setup,echo=FALSE,include=FALSE}
 
-    set.seed(124)
+    set.seed(1234)
     library(rms)          # automatically engages rms(Hmisc)
     library(tidyverse)
     library(kableExtra) 
