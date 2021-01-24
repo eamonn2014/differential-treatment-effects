@@ -12,7 +12,7 @@ output:
     toc_depth: 3
     fig_caption: true
     code_folding: hide
-link-citations: yes
+    link-citations: yes
 description: "xxxxxx"
 ---
 <style>
@@ -634,6 +634,9 @@ Treatment comparison within treatments
 We have evidence against the assumption that the overall effect of treatment is applicable to all patients.
 
 Interactions are the key. 
+
+The interaction says that the effect of treatment on the outcome ASAS20, could depend on the nail dystrophy level
+we can also put this the other way around...the effect of the nail dystrophy level on the outcome ASAS20 might depend on the level of the treatment variable.
 
 In section 11, we see plots that might be more intuitive, the treatment effect within a covariate's levels.
 
