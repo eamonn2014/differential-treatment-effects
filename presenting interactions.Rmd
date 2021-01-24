@@ -435,7 +435,8 @@ Treatment comparison for each factor levels
 
 ```
 
-#  Execute plot function
+# The interaction says that the effect of treatment on the outcome ASAS20, could depend on the nail dystrophy level
+
 
 Treatment comparison for each factor levels
 
@@ -598,7 +599,7 @@ This is the way we presented, is the previous way better?
   
 ```
 
-#  Execute plot
+#  The interaction says the effect of the nail dystrophy level on the outcome ASAS20 might depend on the level of the treatment variable.
 
 Treatment comparison within treatments
 
