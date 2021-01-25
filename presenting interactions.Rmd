@@ -244,9 +244,9 @@ Treatment interacting with all covariates vrs No-interaction logit-additive mode
    
 ```
 
-# Three Summaries if regression models  
+# Three Summaries of regression models  
 
-Treatment interacting with all covariates vrs No-interaction logit-additive model
+Treatment interacting with all covariates  stratified by treatment
 
 ```{r, results='asis'}   
    
