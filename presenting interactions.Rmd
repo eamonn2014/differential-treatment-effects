@@ -641,7 +641,7 @@ we can also put this the other way around...the effect of the nail dystrophy lev
 
 In section 11, we see plots that might be more intuitive, the treatment effect within a covariate's levels.
 
-As the factor of interest only interacts with treatment. The values of the other covarites do not change the magnitude of the interaction (eg changing age, just shift both effects by the same amount).
+As the factor of interest only interacts with treatment. The values of the other covariates do not change the magnitude of the interaction (e.g. changing age, just shift both effects by the same amount).
 
 So in figure 13 comparing 150mg v placebo the interaction effect quoted in orange applies equally also to the treatment effect comparing factor levels.
 
