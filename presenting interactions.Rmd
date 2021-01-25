@@ -438,7 +438,7 @@ Treatment comparison for each factor levels
 # The interaction says that the effect of treatment on the outcome ASAS20, could depend on the nail dystrophy level
 
 
-Treatment comparison for each factor levels
+Treatment comparison for each factor levels, focus on orange arrows
 
 ```{r,}
 
@@ -601,7 +601,7 @@ This is the way we presented, is the previous way better?
 
 #  The interaction says the effect of the nail dystrophy level on the outcome ASAS20 might depend on the level of the treatment variable.
 
-Treatment comparison within treatments
+Treatment comparison within treatments, focus on orange arrows
 
 ```{r,}  
   
