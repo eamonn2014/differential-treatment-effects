@@ -630,7 +630,7 @@ Treatment comparison within treatments
     
 ```
 
-#  conclusion
+#  Conclusion
 
 We have evidence against the assumption that the overall effect of treatment is applicable to all patients.
 
