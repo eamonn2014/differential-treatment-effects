@@ -473,6 +473,20 @@ This is the way we presented, is the previous way better?
   z3 <- print(k3, X=TRUE)   
 
   
+  
+  
+# with(da,addmargins(table(trt, fact1)))               # all
+# with(da[da$y==1 ,],addmargins(table(trt, fact1)))[]  # response
+# with(da[da$y==0 ,],addmargins(table(trt, fact1)))[]  # non response
+# 
+# 
+# # responders in trt 1 by fact1
+# with(da[da$y==1 & da$trt==1,],addmargins(table(trt, fact1)))[1,]
+# # non responders in trt 1
+# with(da[da$y==0 & da$trt==1,],addmargins(table(trt, fact1)))[1,]
+#   
+  
+  
 ```
 
 ```{r, } 
@@ -653,7 +667,7 @@ So the answer can be found by examining 'trt=2 × fact1=1' and 'trt=3 × fact1=1
 
 Examine the anova table and look at the interaction hypothesis test p-value to see if the interaction test for the factor provides evidence against the null of no interaction.
 
-
+Notes: If the confidence interval profile for a variable is similar across all three forest plots, this is suggestive the observed effect is similar in all treatment groups (does not depend on treatment). If the confidence interval profile is similar across all three forest plots but exclude the null value, this is suggestive that one level is more likely to respond, but the response does not depend on treatment. If the confidence interval profile is dissimilar across the forest plots, this is suggestive if a differential treatment effect dependent on a patient's variable value, or level. 
 
 ```{r,}  
 
@@ -671,9 +685,17 @@ https://www.fharrell.com/post/varyor/
 
 
 
-```{r,}  
+```{r, eval=FALSE}  
+
+with(da,addmargins(table(trt, fact1)))               # all
+with(da[da$y==1 ,],addmargins(table(trt, fact1)))[]  # response
+with(da[da$y==0 ,],addmargins(table(trt, fact1)))[]  # non response
 
 
+# responders in trt 1
+with(da[da$y==1 & da$trt==1,],addmargins(table(trt, fact1)))[1,]
+# non responders in trt 1
+with(da[da$y==0 & da$trt==1,],addmargins(table(trt, fact1)))[1,]
 
 ```
 
